@@ -1,13 +1,19 @@
 package com.vaadin.tutorial.crm.service;
 
+import com.vaadin.tutorial.crm.domain.CandleResponse;
 import com.vaadin.tutorial.crm.domain.TickerResponse;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+
 @Service
 public class JsonService {
 
+    private ZoneId zoneId = ZoneId.systemDefault();
     private RestTemplateBuilder builder;
     private RestTemplate restTemplate;
 
@@ -18,5 +24,10 @@ public class JsonService {
 
     public TickerResponse getMarkets(String name) {
         return restTemplate.getForObject("https://api.bitbay.net/rest/trading/ticker", TickerResponse.class);
+    }
+
+    public CandleResponse getCandles(String market, Integer resolution, LocalDateTime from, LocalDateTime to) {
+        String url = "https://api.bitbay.net/rest/trading/candle/history/"+market+"/"+resolution+"?from="+ from.toEpochSecond(ZoneOffset.UTC)+"000&to="+to.toEpochSecond(ZoneOffset.UTC)+"000";
+        return restTemplate.getForObject(url, CandleResponse.class);
     }
 }
