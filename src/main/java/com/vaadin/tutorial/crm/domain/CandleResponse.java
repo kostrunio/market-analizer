@@ -46,7 +46,7 @@ public class CandleResponse {
     }
 
     public Double getLow(int i) {
-        if (items.get(i).get(1) instanceof Map)
+        if (items.size() > i && items.get(i).get(1) instanceof Map)
             return Double.parseDouble(((Map<String, String>)items.get(i).get(1)).get("l"));
         return null;
     }
