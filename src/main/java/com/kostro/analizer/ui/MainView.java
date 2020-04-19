@@ -32,19 +32,47 @@ public class MainView extends VerticalLayout {
         double sellSucessLast = 1.10;
         int hours = 1;
 
-        LocalDateTime startDate = LocalDateTime.of(2020, 03, 18, 00, 00, 00);
+        LocalDateTime startDate = LocalDateTime.of(2019, 12, 16, 00, 00, 00);
         LocalDateTime endDate = LocalDateTime.now();
         CandleResponse response = jsonService.getCandles("BTC-PLN", 3600, startDate, endDate);
 
-        System.out.println("buy;sellFailure;sellSucess;wallet");
-
-        /*for (double buy = buyFirst; buy > buyLast; buy -= 0.01)
-            for (double sellFailure = sellFailureFirst; sellFailure > sellFailureLast; sellFailure -= 0.01)
-                for (double sellSucess = sellSucessFirst; sellSucess < sellSucessLast; sellSucess += 0.01) {
+        startDate = LocalDateTime.of(2019, 12, 16, 00, 00, 00);
+        endDate = LocalDateTime.of(2020, 01, 15, 23, 59, 59);
+        System.out.println("buy;sellFailure;sellSucess;wallet;" + startDate.toString() + ';' + endDate.toString());
+        for (double buy = buyFirst; buy >= buyLast; buy -= 0.01)
+            for (double sellFailure = sellFailureFirst; sellFailure >= sellFailureLast; sellFailure -= 0.01)
+                for (double sellSucess = sellSucessFirst; sellSucess <= sellSucessLast; sellSucess += 0.01) {
                     count(new Wallet(1000, 0.9953), startDate, endDate, response, buy, sellFailure, sellSucess);
-        }*/
+        }
 
-        count(new Wallet(1000, 0.9953), startDate, endDate, response, 0.97, 0.94, 1.09);
+        startDate = LocalDateTime.of(2020, 01, 16, 00, 00, 00);
+        endDate = LocalDateTime.of(2020, 02, 15, 23, 59, 59);
+        System.out.println("buy;sellFailure;sellSucess;wallet;" + startDate.toString() + ';' + endDate.toString());
+        for (double buy = buyFirst; buy >= buyLast; buy -= 0.01)
+            for (double sellFailure = sellFailureFirst; sellFailure >= sellFailureLast; sellFailure -= 0.01)
+                for (double sellSucess = sellSucessFirst; sellSucess <= sellSucessLast; sellSucess += 0.01) {
+                    count(new Wallet(1000, 0.9953), startDate, endDate, response, buy, sellFailure, sellSucess);
+                }
+
+        startDate = LocalDateTime.of(2020, 02, 16, 00, 00, 00);
+        endDate = LocalDateTime.of(2020, 03, 15, 23, 59, 59);
+        System.out.println("buy;sellFailure;sellSucess;wallet;" + startDate.toString() + ';' + endDate.toString());
+        for (double buy = buyFirst; buy >= buyLast; buy -= 0.01)
+            for (double sellFailure = sellFailureFirst; sellFailure >= sellFailureLast; sellFailure -= 0.01)
+                for (double sellSucess = sellSucessFirst; sellSucess <= sellSucessLast; sellSucess += 0.01) {
+                    count(new Wallet(1000, 0.9953), startDate, endDate, response, buy, sellFailure, sellSucess);
+                }
+
+        startDate = LocalDateTime.of(2020, 03, 16, 00, 00, 00);
+        endDate = LocalDateTime.of(2020, 04, 15, 23, 59, 59);
+        System.out.println("buy;sellFailure;sellSucess;wallet;" + startDate.toString() + ';' + endDate.toString());
+        for (double buy = buyFirst; buy >= buyLast; buy -= 0.01)
+            for (double sellFailure = sellFailureFirst; sellFailure >= sellFailureLast; sellFailure -= 0.01)
+                for (double sellSucess = sellSucessFirst; sellSucess <= sellSucessLast; sellSucess += 0.01) {
+                    count(new Wallet(1000, 0.9953), startDate, endDate, response, buy, sellFailure, sellSucess);
+                }
+
+//        count(new Wallet(1000, 0.9953), startDate, endDate, response, 0.97, 0.94, 1.09);
     }
 
     private void count(Wallet wallet, LocalDateTime startDate, LocalDateTime endDate, CandleResponse response, double buy, double sellFailure, double sellSucess) {
@@ -66,8 +94,6 @@ public class MainView extends VerticalLayout {
             }
         }
         if (!wallet.hasMoney()) wallet.sell(lastPrice);
-//        if (wallet.getMoney() > 1100)
-
-            System.out.println(buy + ";" + sellFailure + ";" + sellSucess + ";" + wallet.getMoney());
+        System.out.println(buy + ";" + sellFailure + ";" + sellSucess + ";" + wallet.getMoney());
     }
 }
