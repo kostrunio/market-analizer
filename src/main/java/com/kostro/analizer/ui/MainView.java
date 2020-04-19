@@ -1,10 +1,10 @@
-package com.vaadin.tutorial.crm.ui;
+package com.kostro.analizer.ui;
 
+import com.kostro.analizer.json.domain.candle.CandleResponse;
+import com.kostro.analizer.json.service.JsonService;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-import com.vaadin.tutorial.crm.domain.candle.CandleResponse;
-import com.vaadin.tutorial.crm.service.JsonService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

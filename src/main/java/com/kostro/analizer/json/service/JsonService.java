@@ -1,7 +1,7 @@
-package com.vaadin.tutorial.crm.service;
+package com.kostro.analizer.json.service;
 
-import com.vaadin.tutorial.crm.domain.candle.CandleResponse;
-import com.vaadin.tutorial.crm.domain.ticker.TickerResponse;
+import com.kostro.analizer.json.domain.ticker.TickerResponse;
+import com.kostro.analizer.json.domain.candle.CandleResponse;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

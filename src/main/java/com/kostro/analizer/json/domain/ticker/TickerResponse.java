@@ -1,4 +1,4 @@
-package com.vaadin.tutorial.crm.domain.ticker;
+package com.kostro.analizer.json.domain.ticker;
 
 import java.util.Map;
 

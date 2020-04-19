@@ -1,4 +1,4 @@
-package com.vaadin.tutorial.crm.domain.candle;
+package com.kostro.analizer.json.domain.candle;
 
 import java.util.List;
 import java.util.Map;
