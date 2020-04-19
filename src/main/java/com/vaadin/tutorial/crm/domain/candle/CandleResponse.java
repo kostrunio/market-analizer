@@ -1,4 +1,4 @@
-package com.vaadin.tutorial.crm.domain;
+package com.vaadin.tutorial.crm.domain.candle;
 
 import java.util.List;
 import java.util.Map;

@@ -1,7 +1,7 @@
 package com.vaadin.tutorial.crm.service;
 
-import com.vaadin.tutorial.crm.domain.CandleResponse;
-import com.vaadin.tutorial.crm.domain.TickerResponse;
+import com.vaadin.tutorial.crm.domain.candle.CandleResponse;
+import com.vaadin.tutorial.crm.domain.ticker.TickerResponse;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -22,7 +22,7 @@ public class JsonService {
         restTemplate = builder.build();
     }
 
-    public TickerResponse getMarkets(String name) {
+    public TickerResponse getTickers(String name) {
         return restTemplate.getForObject("https://api.bitbay.net/rest/trading/ticker", TickerResponse.class);
     }
 

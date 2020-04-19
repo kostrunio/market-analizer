@@ -3,7 +3,7 @@ package com.vaadin.tutorial.crm.ui;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-import com.vaadin.tutorial.crm.domain.CandleResponse;
+import com.vaadin.tutorial.crm.domain.candle.CandleResponse;
 import com.vaadin.tutorial.crm.service.JsonService;
 
 import java.time.LocalDate;

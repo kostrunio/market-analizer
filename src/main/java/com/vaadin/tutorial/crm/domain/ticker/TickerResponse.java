@@ -1,4 +1,4 @@
-package com.vaadin.tutorial.crm.domain;
+package com.vaadin.tutorial.crm.domain.ticker;
 
 import java.util.Map;
 
