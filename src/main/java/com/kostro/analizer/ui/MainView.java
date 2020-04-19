@@ -22,7 +22,8 @@ public class MainView extends VerticalLayout {
     double sellSucessFirst = 1.02;
     double sellSucessLast = 1.10;
     double step = 0.01;
-    int wrongLimit = -1;
+    int wrongLimit = 2;
+    int days = 30;
     int hours = 1;
 
     private JsonService jsonService;
@@ -43,14 +44,14 @@ public class MainView extends VerticalLayout {
         LocalDateTime endDate = LocalDateTime.now();
         CandleResponse response = jsonService.getCandles("BTC-PLN", 3600, startDate, endDate);
         //startDate
-        endDate = LocalDateTime.now().isAfter(startDate.plusMonths(1).minusSeconds(1)) ? startDate.plusMonths(1).minusSeconds(1) : LocalDateTime.now();
+        endDate = LocalDateTime.now().isAfter(startDate.plusDays(days).minusSeconds(1)) ? startDate.plusDays(days).minusSeconds(1) : LocalDateTime.now();
         do {
             Configuration configuration = countConfiguration(startDate, endDate, response);
             System.out.println(configuration);
-            startDate = startDate.plusMonths(1);
-            endDate = LocalDateTime.now().isAfter(startDate.plusMonths(1).minusSeconds(1)) ? startDate.plusMonths(1).minusSeconds(1) : LocalDateTime.now();
+            startDate = startDate.plusDays(days);
+            endDate = LocalDateTime.now().isAfter(startDate.plusDays(days).minusSeconds(1)) ? startDate.plusDays(days).minusSeconds(1) : LocalDateTime.now();
             count(wallet, startDate, endDate, response, configuration.getBuy(), configuration.getSellFailure(), configuration.getSellSuccess(), true, wrongLimit);
-        } while(startDate.plusMonths(1).isBefore(LocalDateTime.now()));
+        } while(startDate.plusDays(days).isBefore(LocalDateTime.now()));
     }
 
     private Configuration countConfiguration(LocalDateTime startDate, LocalDateTime endDate, CandleResponse response) {
