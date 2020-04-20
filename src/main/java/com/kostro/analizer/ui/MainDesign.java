@@ -1,5 +1,6 @@
 package com.kostro.analizer.ui;
 
+import com.kostro.analizer.wallet.Configuration;
 import com.kostro.analizer.wallet.Resolution;
 import com.kostro.analizer.wallet.Transaction;
 import com.vaadin.flow.component.Component;
@@ -29,6 +30,8 @@ public class MainDesign extends VerticalLayout {
     protected NumberField sellSucessToField = new NumberField("sell with sucess to");
     protected NumberField stepField = new NumberField("minimal change");
     protected NumberField wrongField = new NumberField("wrong decisions");
+    protected NumberField startDayNumberFromField = new NumberField("day start from");
+    protected NumberField startDayNumberToField = new NumberField("day start to");
     protected NumberField daysNumberFromField = new NumberField("days number from");
     protected NumberField daysNumberToField = new NumberField("days number to");
     protected NumberField hoursFromField = new NumberField("hours to analize from");
@@ -37,6 +40,7 @@ public class MainDesign extends VerticalLayout {
 
     protected NumberField moneyField = new NumberField("money");
 
+    protected Grid<Configuration> configurationsGrid = new Grid<>(Configuration.class);
     protected Grid<Transaction> transactionsGrid = new Grid<>(Transaction.class);
 
     public MainDesign() {
@@ -55,7 +59,7 @@ public class MainDesign extends VerticalLayout {
         resolutionBox.setItems(Resolution.ONE_MIN, Resolution.THREE_MINS, Resolution.FIVE_MINS, Resolution.FIFTEEN_MINS, Resolution.THIRTY_MINS,
                 Resolution.ONE_HOUR, Resolution.TWO_HOURS, Resolution.FOUR_HOURS, Resolution.SIX_HOURS, Resolution.TWELWE_HOURS,
                 Resolution.ONE_DAY, Resolution.THREE_DAYS, Resolution.ONE_WEEK);
-        resolutionBox.setValue(Resolution.FIVE_MINS);
+        resolutionBox.setValue(Resolution.ONE_HOUR);
         layout.add(fromDatePicker, toDatePicker, resolutionBox, jsonButton);
         return layout;
     }
@@ -74,13 +78,14 @@ public class MainDesign extends VerticalLayout {
         stepField.setValue(0.01);
         wrongField.setValue(-1d);
         layout.add(stepField, wrongField);
-        daysNumberFromField.setValue(5d);
-        daysNumberToField.setValue(20d);
-        daysNumberFromField.setValue(16d);
-        daysNumberToField.setValue(16d);
+        startDayNumberFromField.setValue(0d);
+        startDayNumberToField.setValue(0d);
+        layout.add(startDayNumberFromField, startDayNumberToField);
+        daysNumberFromField.setValue(2d);
+        daysNumberToField.setValue(2d);
         layout.add(daysNumberFromField, daysNumberToField);
         hoursFromField.setValue(1d);
-        hoursToField.setValue(2d);
+        hoursToField.setValue(1d);
         layout.add(hoursFromField, hoursToField);
         layout.add(analizeButton);
         return layout;
@@ -94,7 +99,10 @@ public class MainDesign extends VerticalLayout {
     }
 
     private Component createGridLayout() {
+        VerticalLayout layout = new VerticalLayout();
+        configurationsGrid.setColumns("offerLong", "startDate", "periodLong", "buy", "sellFailure", "sellSuccess", "result");
         transactionsGrid.setColumns("buyDate", "buyPrice", "sellDate", "sellPrice", "success");
-        return transactionsGrid;
+        layout.add(configurationsGrid, transactionsGrid);
+        return layout;
     }
 }

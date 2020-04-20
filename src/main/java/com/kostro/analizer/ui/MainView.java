@@ -23,7 +23,9 @@ import java.util.Map;
 @Route("")
 public class MainView extends MainDesign {
 
-    int hours = 1;
+    private int offerLong;
+    private int startDay;
+    private int periodLong;
 
     double lastPrice = 0;
 
@@ -41,26 +43,34 @@ public class MainView extends MainDesign {
     };
 
     ComponentEventListener<ClickEvent<Button>> analizeButtonClicked = e -> {
+        List<Configuration> configurationList = new ArrayList<>();
         LocalDateTime startDate = LocalDateTime.of(fromDatePicker.getValue(), LocalTime.of(0, 0, 0, 0));
         LocalDateTime endDate = LocalDateTime.of(toDatePicker.getValue(), LocalTime.of(23, 59, 59, 999));
         List<Candel> candelsList = candleService.find(startDate, endDate, resolutionBox.getValue().getSecs());
         Map<LocalDateTime, Candel> candels = createCandels(candelsList);
 
-        for (int days = daysNumberFromField.getValue().intValue(); days <= daysNumberToField.getValue().intValue(); days++) {
-            Wallet wallet = new Wallet(moneyField.getValue(), 0.9953);
-            endDate = LocalDateTime.now().isAfter(startDate.plusDays(days).minusSeconds(1)) ? startDate.plusDays(days).minusSeconds(1) : LocalDateTime.now();
-            do {
-                Configuration configuration = countConfiguration(startDate, endDate, candels);
-                System.out.println(configuration);
-                startDate = startDate.plusDays(days);
-                endDate = LocalDateTime.now().isAfter(startDate.plusDays(days).minusSeconds(1)) ? startDate.plusDays(days).minusSeconds(1) : LocalDateTime.now();
-                if (configuration.getResult() < 1010) continue;
-                count(wallet, startDate, endDate, candels, configuration.getBuy(), configuration.getSellFailure(), configuration.getSellSuccess(), false, wrongField.getValue().intValue());
-            } while (startDate.plusDays(days).isBefore(LocalDateTime.now()));
-            System.out.println("RESULT:" + (wallet.getMoney() + wallet.getBitcoin() * lastPrice) + " for " + days);
-            moneyField.setValue(wallet.getMoney()+wallet.getBitcoin()*lastPrice);
-            transactionsGrid.setItems(wallet.getTransactionHistory());
+        for (offerLong = hoursFromField.getValue().intValue(); offerLong <= hoursToField.getValue().intValue(); offerLong++) {
+            for (startDay = startDayNumberFromField.getValue().intValue(); startDay <= startDayNumberToField.getValue().intValue(); startDay++) {
+                for (periodLong = daysNumberFromField.getValue().intValue(); periodLong <= daysNumberToField.getValue().intValue(); periodLong++) {
+                    startDate = LocalDateTime.of(fromDatePicker.getValue(), LocalTime.of(0, 0, 0, 0)).plusDays(startDay);
+                    Wallet wallet = new Wallet(moneyField.getValue(), 0.9953);
+                    endDate = LocalDateTime.of(toDatePicker.getValue(), LocalTime.of(23, 59, 59, 999)).isAfter(startDate.plusDays(periodLong).minusSeconds(1)) ? startDate.plusDays(periodLong).minusSeconds(1) : LocalDateTime.of(toDatePicker.getValue(), LocalTime.of(23, 59, 59, 999));
+                    do {
+                        Configuration configuration = countConfiguration(startDate, endDate, candels);
+                        startDate = startDate.plusDays(periodLong);
+                        endDate = LocalDateTime.of(toDatePicker.getValue(), LocalTime.of(23, 59, 59, 999)).isAfter(startDate.plusDays(periodLong).minusSeconds(1)) ? startDate.plusDays(periodLong).minusSeconds(1) : LocalDateTime.of(toDatePicker.getValue(), LocalTime.of(23, 59, 59, 999));
+                        if (configuration.getResult() < 1010) continue;
+                        System.out.println(configuration);
+                        configurationList.add(configuration);
+                        count(wallet, startDate, endDate, candels, configuration.getBuy(), configuration.getSellFailure(), configuration.getSellSuccess(), false, wrongField.getValue().intValue());
+                    } while (startDate.plusDays(periodLong).isBefore(LocalDateTime.of(toDatePicker.getValue(), LocalTime.of(23, 59, 59, 999))));
+                    System.out.println("RESULT:" + (wallet.getMoney() + wallet.getBitcoin() * lastPrice) + " for " + periodLong);
+//                    moneyField.setValue(wallet.getMoney() + wallet.getBitcoin() * lastPrice);
+                    transactionsGrid.setItems(wallet.getTransactionHistory());
+                }
+            }
         }
+        configurationsGrid.setItems(configurationList);
     };
 
     public MainView(JsonService jsonService, CandleService candleService) {
@@ -73,17 +83,16 @@ public class MainView extends MainDesign {
     }
 
     private Configuration countConfiguration(LocalDateTime startDate, LocalDateTime endDate, Map<LocalDateTime, Candel> candels) {
-//        System.out.println("buy;sellFailure;sellSucess;wallet;" + startDate.toString() + ';' + endDate.toString());
         List<Configuration> configurationList = new ArrayList<>();
         for (double buy = buyFromField.getValue(); buy >= buyToField.getValue(); buy -= stepField.getValue())
             for (double sellFailure = sellFailureFromField.getValue(); sellFailure >= sellFailureToField.getValue(); sellFailure -= stepField.getValue())
-                for (double sellSucess = sellSucessToField.getValue(); sellSucess <= sellSucessToField.getValue(); sellSucess += stepField.getValue())
+                for (double sellSucess = sellSuccessFromField.getValue(); sellSucess <= sellSucessToField.getValue(); sellSucess += stepField.getValue())
                     configurationList.add(count(new Wallet(1000, 0.9953), startDate, endDate, candels, buy, sellFailure, sellSucess, false, -1));
         return findConfiguration(configurationList);
     }
 
     private Configuration findConfiguration(List<Configuration> configurationList) {
-        Configuration toReturn = new Configuration(0, 0, 0, 0);
+        Configuration toReturn = new Configuration(offerLong, startDay, periodLong, 0, 0, 0, 0, LocalDateTime.now(), LocalDateTime.now());
         for (Configuration configuration : configurationList)
             if (configuration.getResult() > toReturn.getResult())
                 toReturn = configuration;
@@ -94,29 +103,29 @@ public class MainView extends MainDesign {
         lastPrice = 0;
         int wrong = 0;
         hour:for (LocalDateTime date = LocalDateTime.from(startDate); date.isBefore(endDate); date = date.plusHours(1)) {
-            if (candels.get(date) == null || candels.get(date.plusHours(1)) == null) continue hour;
-            lastPrice = candels.get(date.plusHours(1)).getLow();
+            if (candels.get(date) == null || candels.get(date.plusHours(offerLong)) == null) continue hour;
+            lastPrice = candels.get(date.plusHours(offerLong)).getLow();
             if (wallet.hasMoney()) {
                 if (wrongLimit > 0 && wrong > wrongLimit) break;
-                if (candels.get(date.plusHours(1)).getLow() < candels.get(date).getHigh() * buy) {
-                    wallet.buy(date.plusHours(1), candels.get(date).getHigh() * buy);
+                if (candels.get(date.plusHours(offerLong)).getLow() < candels.get(date).getHigh() * buy) {
+                    wallet.buy(date.plusHours(offerLong), candels.get(date).getHigh() * buy);
                 }
             } else {
-                if (candels.get(date.plusHours(1)).getLow() < wallet.getPrice() * sellFailure) {
-                    wallet.sell(date.plusHours(1), wallet.getPrice() * sellFailure);
+                if (candels.get(date.plusHours(offerLong)).getLow() < wallet.getPrice() * sellFailure) {
+                    wallet.sell(date.plusHours(offerLong), wallet.getPrice() * sellFailure);
                     wrong++;
-                } else if (candels.get(date.plusHours(1)).getHigh() > wallet.getPrice() * sellSucess) {
-                    wallet.sell(date.plusHours(1), wallet.getPrice() * sellSucess);
+                } else if (candels.get(date.plusHours(offerLong)).getHigh() > wallet.getPrice() * sellSucess) {
+                    wallet.sell(date.plusHours(offerLong), wallet.getPrice() * sellSucess);
 
                 }
             }
         }
         if (withDetails) {
-        System.out.println(buy + ";" + sellFailure + ";" + sellSucess + ";" + (wallet.getMoney() + wallet.getBitcoin()*lastPrice));
+            System.out.println(buy + ";" + sellFailure + ";" + sellSucess + ";" + (wallet.getMoney() + wallet.getBitcoin()*lastPrice));
             for (Transaction transaction : wallet.getTransactionHistory())
                 System.out.println(transaction);
         }
-        return new Configuration(buy, sellFailure, sellSucess, wallet.getMoney() + wallet.getBitcoin()*lastPrice);
+        return new Configuration(offerLong, startDay, periodLong, buy, sellFailure, sellSucess, wallet.getMoney() + wallet.getBitcoin()*lastPrice, startDate, endDate);
     }
 
     private Map<String, Candel> createCandels(CandleResponse response) {
