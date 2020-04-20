@@ -33,7 +33,7 @@ public class CandleService {
 
     public static CandelEntity from(Candel candel) {
         CandelEntity entity = new CandelEntity();
-        entity.setTime(new Timestamp(Long.parseLong(candel.getTimestamp())));
+        entity.setTime(candel.getTime());
         entity.setResolution(candel.getResolution());
         entity.setOpen(candel.getOpen());
         entity.setHigh(candel.getHigh());
@@ -44,12 +44,12 @@ public class CandleService {
     }
 
     public static Candel from(CandelEntity candleEntity) {
-        return new Candel(candleEntity.getTime().toString(), candleEntity.getResolution(), candleEntity.getOpen(), candleEntity.getHigh(), candleEntity.getLow(), candleEntity.getClose(), candleEntity.getVolume());
+        return new Candel(candleEntity.getTime(), candleEntity.getResolution(), candleEntity.getOpen(), candleEntity.getHigh(), candleEntity.getLow(), candleEntity.getClose(), candleEntity.getVolume());
     }
 
     public List<Candel> find(LocalDateTime startDate, LocalDateTime endDate, int resolution) {
         List<Candel> candles = new ArrayList<>();
-        for(CandelEntity entity : repository.find(Timestamp.valueOf(startDate), Timestamp.valueOf(endDate), resolution)) {
+        for(CandelEntity entity : repository.find(startDate, endDate, resolution)) {
             candles.add(from(entity));
         }
         return candles;

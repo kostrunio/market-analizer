@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Candels")
@@ -19,7 +20,7 @@ public class CandelEntity {
     @Column(name = "c_id")
     private Long id;
     @Column(name = "c_time")
-    private Timestamp time;
+    private LocalDateTime time;
     @Column(name = "c_resolution")
     private int resolution;
     @Column(name = "c_open")
@@ -41,11 +42,11 @@ public class CandelEntity {
         this.id = id;
     }
 
-    public Timestamp getTime() {
+    public LocalDateTime getTime() {
         return time;
     }
 
-    public void setTime(Timestamp time) {
+    public void setTime(LocalDateTime time) {
         this.time = time;
     }
 

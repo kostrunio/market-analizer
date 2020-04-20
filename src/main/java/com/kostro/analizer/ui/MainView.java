@@ -44,7 +44,7 @@ public class MainView extends MainDesign {
         LocalDateTime startDate = LocalDateTime.of(fromDatePicker.getValue(), LocalTime.of(0, 0, 0, 0));
         LocalDateTime endDate = LocalDateTime.of(toDatePicker.getValue(), LocalTime.of(23, 59, 59, 999));
         List<Candel> candelsList = candleService.find(startDate, endDate, resolutionBox.getValue().getSecs());
-        Map<String, Candel> candels = createCandels(candelsList);
+        Map<LocalDateTime, Candel> candels = createCandels(candelsList);
 
         for (int days = daysNumberFromField.getValue().intValue(); days <= daysNumberToField.getValue().intValue(); days++) {
             Wallet wallet = new Wallet(moneyField.getValue(), 0.9953);
@@ -72,7 +72,7 @@ public class MainView extends MainDesign {
 
     }
 
-    private Configuration countConfiguration(LocalDateTime startDate, LocalDateTime endDate, Map<String, Candel> candels) {
+    private Configuration countConfiguration(LocalDateTime startDate, LocalDateTime endDate, Map<LocalDateTime, Candel> candels) {
 //        System.out.println("buy;sellFailure;sellSucess;wallet;" + startDate.toString() + ';' + endDate.toString());
         List<Configuration> configurationList = new ArrayList<>();
         for (double buy = buyFromField.getValue(); buy >= buyToField.getValue(); buy -= stepField.getValue())
@@ -90,22 +90,22 @@ public class MainView extends MainDesign {
             return toReturn;
     }
 
-    private Configuration count(Wallet wallet, LocalDateTime startDate, LocalDateTime endDate, Map<String, Candel> candels, double buy, double sellFailure, double sellSucess, boolean withDetails, int wrongLimit) {
+    private Configuration count(Wallet wallet, LocalDateTime startDate, LocalDateTime endDate, Map<LocalDateTime, Candel> candels, double buy, double sellFailure, double sellSucess, boolean withDetails, int wrongLimit) {
         lastPrice = 0;
         int wrong = 0;
         hour:for (LocalDateTime date = LocalDateTime.from(startDate); date.isBefore(endDate); date = date.plusHours(1)) {
-            if (candels.get(dateToTimestamp(date)) == null || candels.get(dateToTimestamp(date.plusHours(1))) == null) continue hour;
-            lastPrice = candels.get(dateToTimestamp(date.plusHours(1))).getLow();
+            if (candels.get(date) == null || candels.get(date.plusHours(1)) == null) continue hour;
+            lastPrice = candels.get(date.plusHours(1)).getLow();
             if (wallet.hasMoney()) {
                 if (wrongLimit > 0 && wrong > wrongLimit) break;
-                if (candels.get(dateToTimestamp(date.plusHours(1))).getLow() < candels.get(dateToTimestamp(date)).getHigh() * buy) {
-                    wallet.buy(date.plusHours(1), candels.get(dateToTimestamp(date)).getHigh() * buy);
+                if (candels.get(date.plusHours(1)).getLow() < candels.get(date).getHigh() * buy) {
+                    wallet.buy(date.plusHours(1), candels.get(date).getHigh() * buy);
                 }
             } else {
-                if (candels.get(dateToTimestamp(date.plusHours(1))).getLow() < wallet.getPrice() * sellFailure) {
+                if (candels.get(date.plusHours(1)).getLow() < wallet.getPrice() * sellFailure) {
                     wallet.sell(date.plusHours(1), wallet.getPrice() * sellFailure);
                     wrong++;
-                } else if (candels.get(dateToTimestamp(date.plusHours(1))).getHigh() > wallet.getPrice() * sellSucess) {
+                } else if (candels.get(date.plusHours(1)).getHigh() > wallet.getPrice() * sellSucess) {
                     wallet.sell(date.plusHours(1), wallet.getPrice() * sellSucess);
 
                 }
@@ -128,20 +128,16 @@ public class MainView extends MainDesign {
             double low = Double.parseDouble(((Map<String, String>)item.get(1)).get("l"));
             double high = Double.parseDouble(((Map<String, String>)item.get(1)).get("h"));
             double volume = Double.parseDouble(((Map<String, String>)item.get(1)).get("v"));
-            candels.put(timestamp, new Candel(timestamp, resolutionBox.getValue().getSecs(), open, close, low, high, volume));
+            candels.put(timestamp, new Candel(LocalDateTime.ofEpochSecond(Long.parseLong(timestamp.substring(0, 10)), Integer.parseInt(timestamp.substring(11)), ZoneOffset.of("+2")), resolutionBox.getValue().getSecs(), open, close, low, high, volume));
         }
         return candels;
     }
 
-    private Map<String, Candel> createCandels(List<Candel> candelsList) {
-        Map<String, Candel> candels = new HashMap<>();
+    private Map<LocalDateTime, Candel> createCandels(List<Candel> candelsList) {
+        Map<LocalDateTime, Candel> candels = new HashMap<>();
         for (Candel candel : candelsList) {
-            candels.put(candel.getTimestamp(), candel);
+            candels.put(candel.getTime(), candel);
         }
         return candels;
-    }
-
-    private String dateToTimestamp(LocalDateTime date) {
-        return date.toEpochSecond(ZoneOffset.of("+1"))+"000";
     }
 }

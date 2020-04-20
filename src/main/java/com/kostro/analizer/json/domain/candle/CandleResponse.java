@@ -54,7 +54,7 @@ public class CandleResponse {
     }
 
     private Map<String, String> findCandle(LocalDateTime time) {
-        String timestamp = time.toEpochSecond(ZoneOffset.of("+1"))+"000";
+        String timestamp = time.toEpochSecond(ZoneOffset.of("+2"))+"000";
         for (List<Object> item : items) {
             if (item.get(0).toString().equals(timestamp))
                 return (Map<String, String>) item.get(1);
