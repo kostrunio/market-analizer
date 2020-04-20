@@ -1,15 +1,19 @@
 package com.kostro.analizer.ui;
 
+import com.kostro.analizer.db.service.CandleService;
 import com.kostro.analizer.json.domain.candle.CandleResponse;
 import com.kostro.analizer.json.service.JsonService;
 import com.kostro.analizer.wallet.Candel;
 import com.kostro.analizer.wallet.Configuration;
 import com.kostro.analizer.wallet.Transaction;
 import com.kostro.analizer.wallet.Wallet;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.router.Route;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,63 +21,63 @@ import java.util.List;
 import java.util.Map;
 
 @Route("")
-public class MainView extends VerticalLayout {
+public class MainView extends MainDesign {
 
-    double buyFirst = 0.99;
-    double buyLast = 0.90;
-    double sellFailureFirst = 0.99;
-    double sellFailureLast = 0.90;
-    double sellSucessFirst = 1.02;
-    double sellSucessLast = 1.10;
-    double step = 0.01;
-    int wrongLimit = -1;
-    int daysFirst = 5;
-    int daysLast = 20;
     int hours = 1;
 
     double lastPrice = 0;
 
     private JsonService jsonService;
+    private CandleService candleService;
 
-    public MainView(JsonService jsonService) {
-        this.jsonService = jsonService;
-
-        setSizeFull();
-
-        updateList();
-    }
-
-    private void updateList() {
-
-        LocalDateTime startDate = LocalDateTime.of(2019, 12, 16, 00, 00, 00);
-        LocalDateTime endDate = LocalDateTime.now();
-        CandleResponse response = jsonService.getCandles("BTC-PLN", 3600, startDate, endDate);
-        Map<String, Candel> candels = createCandels(response, startDate, endDate);
-
-        for (int days = daysFirst; days <= daysLast; days++) {
-            for (int day = 16; day < 30; day++) {
-                startDate = LocalDateTime.of(2019, 12, day, 00, 00, 00);
-                Wallet wallet = new Wallet(1000, 0.9953);
-                endDate = LocalDateTime.now().isAfter(startDate.plusDays(days).minusSeconds(1)) ? startDate.plusDays(days).minusSeconds(1) : LocalDateTime.now();
-                do {
-                    Configuration configuration = countConfiguration(startDate, endDate, candels);
-//                System.out.println(configuration);
-                    startDate = startDate.plusDays(days);
-                    endDate = LocalDateTime.now().isAfter(startDate.plusDays(days).minusSeconds(1)) ? startDate.plusDays(days).minusSeconds(1) : LocalDateTime.now();
-                    if (configuration.getResult() < 1010) continue;
-                    count(wallet, startDate, endDate, candels, configuration.getBuy(), configuration.getSellFailure(), configuration.getSellSuccess(), false, wrongLimit);
-                } while (startDate.plusDays(days).isBefore(LocalDateTime.now()));
-                System.out.println("RESULT:" + (wallet.getMoney() + wallet.getBitcoin() * lastPrice) + " for " + days + " from " + day);
-            }
+    ComponentEventListener<ClickEvent<Button>> jsonButtonClicked = e -> {
+        LocalDateTime fromDate = LocalDateTime.of(fromDatePicker.getValue(), LocalTime.of(0, 0, 0, 0));
+        LocalDateTime toDate = LocalDateTime.of(toDatePicker.getValue(), LocalTime.of(23, 59, 59, 999));
+        CandleResponse response = jsonService.getCandles("BTC-PLN", resolutionBox.getValue().getSecs(), fromDate, toDate);
+        Map<String, Candel> candels = createCandels(response);
+        for (Candel candel : candels.values()) {
+            candleService.save(candleService.from(candel));
         }
+    };
+
+    ComponentEventListener<ClickEvent<Button>> analizeButtonClicked = e -> {
+        LocalDateTime startDate = LocalDateTime.of(fromDatePicker.getValue(), LocalTime.of(0, 0, 0, 0));
+        LocalDateTime endDate = LocalDateTime.of(toDatePicker.getValue(), LocalTime.of(23, 59, 59, 999));
+        List<Candel> candelsList = candleService.find(startDate, endDate, resolutionBox.getValue().getSecs());
+        Map<String, Candel> candels = createCandels(candelsList);
+
+        for (int days = daysNumberFromField.getValue().intValue(); days <= daysNumberToField.getValue().intValue(); days++) {
+            Wallet wallet = new Wallet(moneyField.getValue(), 0.9953);
+            endDate = LocalDateTime.now().isAfter(startDate.plusDays(days).minusSeconds(1)) ? startDate.plusDays(days).minusSeconds(1) : LocalDateTime.now();
+            do {
+                Configuration configuration = countConfiguration(startDate, endDate, candels);
+                System.out.println(configuration);
+                startDate = startDate.plusDays(days);
+                endDate = LocalDateTime.now().isAfter(startDate.plusDays(days).minusSeconds(1)) ? startDate.plusDays(days).minusSeconds(1) : LocalDateTime.now();
+                if (configuration.getResult() < 1010) continue;
+                count(wallet, startDate, endDate, candels, configuration.getBuy(), configuration.getSellFailure(), configuration.getSellSuccess(), false, wrongField.getValue().intValue());
+            } while (startDate.plusDays(days).isBefore(LocalDateTime.now()));
+            System.out.println("RESULT:" + (wallet.getMoney() + wallet.getBitcoin() * lastPrice) + " for " + days);
+            moneyField.setValue(wallet.getMoney()+wallet.getBitcoin()*lastPrice);
+            transactionsGrid.setItems(wallet.getTransactionHistory());
+        }
+    };
+
+    public MainView(JsonService jsonService, CandleService candleService) {
+        this.jsonService = jsonService;
+        this.candleService = candleService;
+
+        jsonButton.addClickListener(jsonButtonClicked);
+        analizeButton.addClickListener(analizeButtonClicked);
+
     }
 
     private Configuration countConfiguration(LocalDateTime startDate, LocalDateTime endDate, Map<String, Candel> candels) {
 //        System.out.println("buy;sellFailure;sellSucess;wallet;" + startDate.toString() + ';' + endDate.toString());
         List<Configuration> configurationList = new ArrayList<>();
-        for (double buy = buyFirst; buy >= buyLast; buy -= step)
-            for (double sellFailure = sellFailureFirst; sellFailure >= sellFailureLast; sellFailure -= step)
-                for (double sellSucess = sellSucessFirst; sellSucess <= sellSucessLast; sellSucess += step)
+        for (double buy = buyFromField.getValue(); buy >= buyToField.getValue(); buy -= stepField.getValue())
+            for (double sellFailure = sellFailureFromField.getValue(); sellFailure >= sellFailureToField.getValue(); sellFailure -= stepField.getValue())
+                for (double sellSucess = sellSucessToField.getValue(); sellSucess <= sellSucessToField.getValue(); sellSucess += stepField.getValue())
                     configurationList.add(count(new Wallet(1000, 0.9953), startDate, endDate, candels, buy, sellFailure, sellSucess, false, -1));
         return findConfiguration(configurationList);
     }
@@ -115,7 +119,7 @@ public class MainView extends VerticalLayout {
         return new Configuration(buy, sellFailure, sellSucess, wallet.getMoney() + wallet.getBitcoin()*lastPrice);
     }
 
-    private Map<String, Candel> createCandels(CandleResponse response, LocalDateTime startDate, LocalDateTime endDate) {
+    private Map<String, Candel> createCandels(CandleResponse response) {
         Map<String, Candel> candels = new HashMap<>();
         for (List<Object> item : response.getItems()) {
             String timestamp = item.get(0).toString();
@@ -123,7 +127,16 @@ public class MainView extends VerticalLayout {
             double close = Double.parseDouble(((Map<String, String>)item.get(1)).get("c"));
             double low = Double.parseDouble(((Map<String, String>)item.get(1)).get("l"));
             double high = Double.parseDouble(((Map<String, String>)item.get(1)).get("h"));
-            candels.put(timestamp, new Candel(timestamp, open, close, low, high));
+            double volume = Double.parseDouble(((Map<String, String>)item.get(1)).get("v"));
+            candels.put(timestamp, new Candel(timestamp, resolutionBox.getValue().getSecs(), open, close, low, high, volume));
+        }
+        return candels;
+    }
+
+    private Map<String, Candel> createCandels(List<Candel> candelsList) {
+        Map<String, Candel> candels = new HashMap<>();
+        for (Candel candel : candelsList) {
+            candels.put(candel.getTimestamp(), candel);
         }
         return candels;
     }

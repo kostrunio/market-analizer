@@ -1,6 +1,9 @@
 package com.kostro.analizer.wallet;
 
 public class Configuration {
+    private int offerLong;
+    private int startDate;
+    private int periodLong;
     private double buy;
     private double sellFailure;
     private double sellSuccess;

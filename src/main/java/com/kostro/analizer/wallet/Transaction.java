@@ -14,6 +14,26 @@ public class Transaction {
         this.buyPrice = buyPrice;
     }
 
+    public LocalDateTime getBuyDate() {
+        return buyDate;
+    }
+
+    public double getBuyPrice() {
+        return buyPrice;
+    }
+
+    public LocalDateTime getSellDate() {
+        return sellDate;
+    }
+
+    public double getSellPrice() {
+        return sellPrice;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
     public Transaction setSellDate(LocalDateTime sellDate) {
         this.sellDate = sellDate;
         return this;
