@@ -100,7 +100,7 @@ public class MainDesign extends VerticalLayout {
 
     private Component createGridLayout() {
         VerticalLayout layout = new VerticalLayout();
-        configurationsGrid.setColumns("offerLong", "startDate", "periodLong", "buy", "sellFailure", "sellSuccess", "result");
+        configurationsGrid.setColumns("offerLong", "startDay", "periodLong", "buy", "sellFailure", "sellSuccess", "result", "startDate", "endDate");
         transactionsGrid.setColumns("buyDate", "buyPrice", "sellDate", "sellPrice", "success");
         layout.add(configurationsGrid, transactionsGrid);
         return layout;
