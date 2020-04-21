@@ -3,6 +3,7 @@ package com.kostro.analizer.ui.analizer;
 import com.kostro.analizer.db.service.CandleService;
 import com.kostro.analizer.json.domain.candle.CandleResponse;
 import com.kostro.analizer.json.service.JsonService;
+import com.kostro.analizer.ui.MainLayout;
 import com.kostro.analizer.wallet.Candel;
 import com.kostro.analizer.wallet.Configuration;
 import com.kostro.analizer.wallet.Transaction;
@@ -10,6 +11,7 @@ import com.kostro.analizer.wallet.Wallet;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import java.time.LocalDateTime;
@@ -20,8 +22,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Route("analizer")
+@Route(value="analizer", layout = MainLayout.class)
+@PageTitle("Analizer | Market Analizer")
 public class AnalizerView extends AnalizerDesign {
+    public static String VIEW_NAME = "Analizer";
 
     private int offerLong;
     private int startDay;
