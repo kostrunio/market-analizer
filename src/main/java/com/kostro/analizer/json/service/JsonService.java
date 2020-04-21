@@ -27,9 +27,8 @@ public class JsonService {
     }
 
     public CandleResponse getCandles(String market, Integer resolution, LocalDateTime from, LocalDateTime to) {
-        String url = "https://api.bitbay.net/rest/trading/candle/history/"+market+"/"+resolution+"?from="+ from.toEpochSecond(ZoneOffset.of("+1"))+"000&to="+to.toEpochSecond(ZoneOffset.of("+1"))+"000";
-//        System.out.println("from: " + from + "; to: " + to);
-//        System.out.println("REQUEST: " + url);
+        String url = "https://api.bitbay.net/rest/trading/candle/history/"+market+"/"+resolution+"?from="+ from.toEpochSecond(ZoneOffset.of("+2"))+"000&to="+to.toEpochSecond(ZoneOffset.of("+2"))+"000";
+        System.out.println("REQUEST: " + url);
         return restTemplate.getForObject(url, CandleResponse.class);
     }
 }

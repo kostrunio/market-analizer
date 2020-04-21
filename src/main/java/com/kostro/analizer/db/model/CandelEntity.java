@@ -17,37 +17,30 @@ public class CandelEntity extends AbstractEntity implements Cloneable {
 
     @Column(name = "c_time")
     @NotNull
-    @NotEmpty
     private LocalDateTime time;
 
     @Column(name = "c_resolution")
     @NotNull
-    @NotEmpty
     private int resolution;
 
     @Column(name = "c_open")
     @NotNull
-    @NotEmpty
     private double open;
 
     @Column(name = "c_high")
     @NotNull
-    @NotEmpty
     private double high;
 
     @Column(name = "c_low")
     @NotNull
-    @NotEmpty
     private double low;
 
     @Column(name = "c_close")
     @NotNull
-    @NotEmpty
     private double close;
 
     @Column(name = "c_volume")
     @NotNull
-    @NotEmpty
     private double volume;
 
     public LocalDateTime getTime() {
