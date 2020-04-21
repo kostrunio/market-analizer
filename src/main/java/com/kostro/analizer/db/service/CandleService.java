@@ -5,13 +5,15 @@ import com.kostro.analizer.db.repository.CandelsRepository;
 import com.kostro.analizer.wallet.Candel;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Service
 public class CandleService {
+
+    private static final Logger LOGGER = Logger.getLogger(CandleService.class.getName());
 
     private CandelsRepository repository;
 
