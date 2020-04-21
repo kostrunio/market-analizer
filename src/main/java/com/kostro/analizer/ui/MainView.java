@@ -60,11 +60,11 @@ public class MainView extends MainDesign {
                         startDate = startDate.plusDays(periodLong);
                         endDate = LocalDateTime.of(toDatePicker.getValue(), LocalTime.of(23, 59, 59, 999)).isAfter(startDate.plusDays(periodLong).minusSeconds(1)) ? startDate.plusDays(periodLong).minusSeconds(1) : LocalDateTime.of(toDatePicker.getValue(), LocalTime.of(23, 59, 59, 999));
                         if (configuration.getResult() < 1010) continue;
-                        System.out.println(configuration);
+//                        System.out.println(configuration);
                         configurationList.add(configuration);
                         count(wallet, startDate, endDate, candels, configuration.getBuy(), configuration.getSellFailure(), configuration.getSellSuccess(), false, wrongField.getValue().intValue());
                     } while (startDate.plusDays(periodLong).isBefore(LocalDateTime.of(toDatePicker.getValue(), LocalTime.of(23, 59, 59, 999))));
-                    System.out.println("RESULT:" + (wallet.getMoney() + wallet.getBitcoin() * lastPrice) + " for " + periodLong);
+                    System.out.println("RESULT:" + (wallet.getMoney() + wallet.getBitcoin() * lastPrice) + " for " + offerLong + ";" + startDay + ";" + periodLong);
 //                    moneyField.setValue(wallet.getMoney() + wallet.getBitcoin() * lastPrice);
                     transactionsGrid.setItems(wallet.getTransactionHistory());
                 }
