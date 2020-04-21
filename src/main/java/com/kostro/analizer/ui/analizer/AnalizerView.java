@@ -1,4 +1,4 @@
-package com.kostro.analizer.ui;
+package com.kostro.analizer.ui.analizer;
 
 import com.kostro.analizer.db.service.CandleService;
 import com.kostro.analizer.json.domain.candle.CandleResponse;
@@ -20,8 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Route("")
-public class MainView extends MainDesign {
+@Route("analizer")
+public class AnalizerView extends AnalizerDesign {
 
     private int offerLong;
     private int startDay;
@@ -73,7 +73,7 @@ public class MainView extends MainDesign {
         configurationsGrid.setItems(configurationList);
     };
 
-    public MainView(JsonService jsonService, CandleService candleService) {
+    public AnalizerView(JsonService jsonService, CandleService candleService) {
         this.jsonService = jsonService;
         this.candleService = candleService;
 

@@ -1,4 +1,4 @@
-package com.kostro.analizer.ui;
+package com.kostro.analizer.ui.analizer;
 
 import com.kostro.analizer.wallet.Configuration;
 import com.kostro.analizer.wallet.Resolution;
@@ -15,7 +15,7 @@ import com.vaadin.flow.component.textfield.NumberField;
 
 import java.time.LocalDate;
 
-public class MainDesign extends VerticalLayout {
+public class AnalizerDesign extends VerticalLayout {
 
     protected DatePicker fromDatePicker = new DatePicker("from date");
     protected DatePicker toDatePicker = new DatePicker("to date");
@@ -43,7 +43,7 @@ public class MainDesign extends VerticalLayout {
     protected Grid<Configuration> configurationsGrid = new Grid<>(Configuration.class);
     protected Grid<Transaction> transactionsGrid = new Grid<>(Transaction.class);
 
-    public MainDesign() {
+    public AnalizerDesign() {
         setSizeFull();
         add(createJsonLayout());
         add(createAnalizeLayout());
