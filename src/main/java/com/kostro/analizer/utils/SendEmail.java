@@ -20,7 +20,7 @@ public class SendEmail {
 
   private static final Logger log = LoggerFactory.getLogger(Scheduler.class);
   
-  public static void volume(Candel candel, List<Candel> fiveMins, List<Candel> oneHour, List<Candel> twoHours, List<Candel> oneDay) {
+  public static void volume(Candel candel, Candel fiveMins, Candel oneHour, Candel twoHours, Candel oneDay) {
     try {
       Message message = new MimeMessage(prepareSession());
       message.setFrom(new InternetAddress("ExpenseSystem <expense_system@mailplus.pl>"));
@@ -28,8 +28,14 @@ public class SendEmail {
       
       message.setSubject("HUGE VOLUME: " + candel.getVolume() + " on " + candel.getTime());
       message.setContent(
-          MessageFormat.format("HUGE VOLUME: {0} on {1}<br>5 mins candel: {2}<br>1 hour candel: {3}<br>2 hours candel: {4}<br>1 day candel: {5}",
-              new Object[] {candel.getVolume(), candel.getTime(), fiveMins, oneHour, twoHours, oneDay}),
+          MessageFormat.format("HUGE VOLUME: {0} on {1}<br> {2}  -> change: {7}<br>5 mins candel: {3} -> change: {8}<br>1 hour candel: {4} -> change: {9}<br>2 hours candel: {5} -> change: {10}<br>1 day candel: {6} -> change: {11}",
+              new Object[] {candel.getVolume(), candel.getTime(), candel, fiveMins, oneHour, twoHours, oneDay,
+                      candel.getClose() > candel.getOpen() ? candel.getHigh()-candel.getLow() : candel.getLow() - candel.getHigh(),
+                      candel.getClose() - fiveMins.getHigh(),
+                      candel.getClose() - oneHour.getHigh(),
+                      candel.getClose() - twoHours.getHigh(),
+                      candel.getClose() - oneDay.getHigh(),
+              }),
           "text/html; charset=UTF-8");
 
       log.info("SendEmail: Sending");

@@ -77,7 +77,6 @@ public class Candel {
                 ", l=" + low +
                 ", h=" + high +
                 ", v=" + volume +
-                ", diff=" + (high-low) +
                 "]";
     }
 }

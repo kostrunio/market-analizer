@@ -53,16 +53,43 @@ public class Scheduler {
     private void checkCandels(List<Candel> candels) {
         for(Candel candel : candels) {
             if (candel.getVolume() > configurationService.getLimitFor(candel.getResolution())) {
-                log.info("HUGE VOLUME: {}", candel);
-                List<Candel> fiveMins = CandelUtils.prepareCandels(candels, Resolution.FIVE_MINS.getSecs(), candel.getTime().minusSeconds(Resolution.FIVE_MINS.getSecs()), candel.getTime().minusMinutes(1));
-                fiveMins.stream().forEach(c -> log.info(c.toString()));
-                List<Candel> oneHour = CandelUtils.prepareCandels(candels, Resolution.ONE_HOUR.getSecs(), candel.getTime().minusSeconds(Resolution.ONE_HOUR.getSecs()), candel.getTime().minusMinutes(1));
-                oneHour.stream().forEach(c -> log.info(c.toString()));
-                List<Candel> twoHours = CandelUtils.prepareCandels(candels, Resolution.TWO_HOURS.getSecs(), candel.getTime().minusSeconds(Resolution.TWO_HOURS.getSecs()), candel.getTime().minusMinutes(1));
-                twoHours.stream().forEach(c -> log.info(c.toString()));
-                List<Candel> oneDay = CandelUtils.prepareCandels(candels, Resolution.ONE_DAY.getSecs(), candel.getTime().minusSeconds(Resolution.ONE_DAY.getSecs()), candel.getTime().minusMinutes(1));
-                oneDay.stream().forEach(c -> log.info(c.toString()));
-                SendEmail.volume(candel, fiveMins, oneHour, twoHours, oneDay);
+                log.info("HUGE VOLUME: {} -> change: {}", candel, candel.getClose() > candel.getOpen() ? candel.getHigh()-candel.getLow() : candel.getLow() - candel.getHigh());
+                LocalDateTime dateTo = candel.getTime().minusMinutes(1);
+
+
+                LocalDateTime dateFrom = candel.getTime().minusSeconds(Resolution.FIVE_MINS.getSecs());
+                List<Candel> fiveMins = CandelUtils.prepareCandels(
+                        candleService.find(dateFrom, dateTo, Resolution.ONE_MIN.getSecs()),
+                        Resolution.FIVE_MINS.getSecs(),
+                        dateFrom,
+                        dateTo);
+                fiveMins.stream().forEach(c -> log.info("5 MINS: {} -> change: {}", c.toString(), candel.getClose() - c.getHigh()));
+
+                dateFrom = candel.getTime().minusSeconds(Resolution.ONE_HOUR.getSecs());
+                List<Candel> oneHour = CandelUtils.prepareCandels(
+                        candleService.find(dateFrom, dateTo, Resolution.ONE_MIN.getSecs()),
+                        Resolution.ONE_HOUR.getSecs(),
+                        dateFrom,
+                        dateTo);
+                oneHour.stream().forEach(c -> log.info("1 HOUR: {} -> change: {}", c.toString(), candel.getClose() - c.getHigh()));
+
+                dateFrom = candel.getTime().minusSeconds(Resolution.TWO_HOURS.getSecs());
+                List<Candel> twoHours = CandelUtils.prepareCandels(
+                        candleService.find(dateFrom, dateTo, Resolution.ONE_MIN.getSecs()),
+                        Resolution.TWO_HOURS.getSecs(),
+                        dateFrom,
+                        dateTo);
+                twoHours.stream().forEach(c -> log.info("2 HOURS: {} -> change: {}", c.toString(), candel.getClose() - c.getHigh()));
+
+                dateFrom = candel.getTime().minusSeconds(Resolution.ONE_DAY.getSecs());
+                List<Candel> oneDay = CandelUtils.prepareCandels(
+                        candleService.find(dateFrom, dateTo, Resolution.ONE_MIN.getSecs()),
+                        Resolution.ONE_DAY.getSecs(),
+                        dateFrom,
+                        dateTo);
+                oneDay.stream().forEach(c -> log.info("1 DAY: {} -> change: {}", c.toString(), candel.getClose() - c.getHigh()));
+
+                SendEmail.volume(candel, fiveMins.get(0), oneHour.get(0), twoHours.get(0), oneDay.get(0));
             }
         }
     }

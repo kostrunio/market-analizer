@@ -15,7 +15,7 @@ public class ConfigurationService {
     private static final Logger log = LoggerFactory.getLogger(ConfigurationService.class);
 
     //1st Jan 2020
-    private LocalDateTime lastCandel = LocalDateTime.of(2020, 4, 22, 12, 45, 0);
+    private LocalDateTime lastCandel = LocalDateTime.of(2020, 4, 22, 16, 10, 0);
 
     private ConfigurationRepository configurationRepository;
 
