@@ -1,5 +1,6 @@
 package com.kostro.analizer.utils;
 
+import com.kostro.analizer.db.model.CandelEntity;
 import com.kostro.analizer.json.domain.candle.CandleResponse;
 import com.kostro.analizer.wallet.Candel;
 
@@ -68,5 +69,26 @@ public class CandelUtils {
         if (newCandel.getLow() > candel.getLow()) newCandel.setLow(candel.getLow());
         newCandel.setClose(candel.getClose());
         newCandel.setVolume(newCandel.getVolume()+candel.getVolume());
+    }
+
+    public static CandelEntity from (Candel candel, Long id) {
+        CandelEntity entity = from(candel);
+        entity.setId(id);
+        return entity;
+    }
+    public static CandelEntity from(Candel candel) {
+        CandelEntity entity = new CandelEntity();
+        entity.setTime(candel.getTime());
+        entity.setResolution(candel.getResolution());
+        entity.setOpen(candel.getOpen());
+        entity.setHigh(candel.getHigh());
+        entity.setLow(candel.getLow());
+        entity.setClose(candel.getClose());
+        entity.setVolume(candel.getVolume());
+        return entity;
+    }
+
+    public static Candel from(CandelEntity candleEntity) {
+        return new Candel(candleEntity.getTime(), candleEntity.getResolution(), candleEntity.getOpen(), candleEntity.getHigh(), candleEntity.getLow(), candleEntity.getClose(), candleEntity.getVolume());
     }
 }

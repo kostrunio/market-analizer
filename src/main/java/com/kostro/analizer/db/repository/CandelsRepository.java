@@ -15,4 +15,6 @@ public interface CandelsRepository extends JpaRepository<CandelEntity, Long> {
     public List<CandelEntity> find(@Param("startDate") LocalDateTime startDate,
                                    @Param("endDate") LocalDateTime endDate,
                                    @Param("resolution") int resolution);
+
+    CandelEntity findByTimeAndResolution(LocalDateTime time, int resolution);
 }

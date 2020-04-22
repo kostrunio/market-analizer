@@ -2,18 +2,21 @@ package com.kostro.analizer.db.service;
 
 import com.kostro.analizer.db.model.CandelEntity;
 import com.kostro.analizer.db.repository.CandelsRepository;
+import com.kostro.analizer.scheduler.Scheduler;
+import com.kostro.analizer.utils.CandelUtils;
 import com.kostro.analizer.wallet.Candel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 @Service
 public class CandleService {
 
-    private static final Logger LOGGER = Logger.getLogger(CandleService.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(CandleService.class);
 
     private CandelsRepository repository;
 
@@ -33,27 +36,20 @@ public class CandleService {
         return repository.findAll();
     }
 
-    public static CandelEntity from(Candel candel) {
-        CandelEntity entity = new CandelEntity();
-        entity.setTime(candel.getTime());
-        entity.setResolution(candel.getResolution());
-        entity.setOpen(candel.getOpen());
-        entity.setHigh(candel.getHigh());
-        entity.setLow(candel.getLow());
-        entity.setClose(candel.getClose());
-        entity.setVolume(candel.getVolume());
-        return entity;
-    }
-
-    public static Candel from(CandelEntity candleEntity) {
-        return new Candel(candleEntity.getTime(), candleEntity.getResolution(), candleEntity.getOpen(), candleEntity.getHigh(), candleEntity.getLow(), candleEntity.getClose(), candleEntity.getVolume());
-    }
-
     public List<Candel> find(LocalDateTime startDate, LocalDateTime endDate, int resolution) {
         List<Candel> candles = new ArrayList<>();
         for(CandelEntity entity : repository.find(startDate, endDate, resolution)) {
-            candles.add(from(entity));
+            candles.add(CandelUtils.from(entity));
         }
         return candles;
     }
+
+    public void refreshCandels(List<Candel> candels) {
+        for (Candel candel : candels) {
+            CandelEntity entity = repository.findByTimeAndResolution(candel.getTime(), candel.getResolution());
+            entity = CandelUtils.from(candel, entity != null ? entity.getId() : null);
+            repository.save(entity);
+        }
+    }
+
 }

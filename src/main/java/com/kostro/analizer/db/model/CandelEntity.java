@@ -43,6 +43,10 @@ public class CandelEntity extends AbstractEntity implements Cloneable {
     @NotNull
     private double volume;
 
+    @Column(name = "c_co")
+    @NotNull
+    private double co;
+
     public LocalDateTime getTime() {
         return time;
     }
@@ -97,5 +101,13 @@ public class CandelEntity extends AbstractEntity implements Cloneable {
 
     public void setVolume(double volume) {
         this.volume = volume;
+    }
+
+    public double getCo() {
+        return co;
+    }
+
+    public void setCo(double co) {
+        this.co = co;
     }
 }

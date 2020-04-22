@@ -68,4 +68,16 @@ public class Candel {
     public void setVolume(double volume) {
         this.volume = volume;
     }
+
+    @Override
+    public String toString() {
+        return time + "[" +
+                "o=" + open +
+                ", c=" + close +
+                ", l=" + low +
+                ", h=" + high +
+                ", v=" + volume +
+                ", diff=" + (high-low) +
+                "]";
+    }
 }

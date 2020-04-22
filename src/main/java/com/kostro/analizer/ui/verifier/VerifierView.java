@@ -36,7 +36,7 @@ public class VerifierView extends VerifierDesign {
         CandleResponse response = jsonService.getCandles("BTC-PLN", resolutionBox.getValue().getSecs(), fromDate, toDate);
         List<Candel> candels = CandelUtils.createCandels(response, resolutionBox.getValue().getSecs());
         for (Candel candel : candels) {
-            candleService.save(candleService.from(candel));
+            candleService.save(CandelUtils.from(candel));
         }
     };
 
