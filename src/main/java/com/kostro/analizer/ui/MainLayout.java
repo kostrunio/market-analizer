@@ -2,6 +2,7 @@ package com.kostro.analizer.ui;
 
 import com.kostro.analizer.ui.analizer.AnalizerView;
 import com.kostro.analizer.ui.configuration.ConfigurationView;
+import com.kostro.analizer.ui.verifier.VerifierView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.H1;
@@ -33,11 +34,12 @@ public class MainLayout extends AppLayout {
 
     private void createDrawer() {
         RouterLink analizerLink = new RouterLink(AnalizerView.VIEW_NAME, AnalizerView.class);
+        RouterLink verifierLink = new RouterLink(VerifierView.VIEW_NAME, VerifierView.class);
         RouterLink configurationLink = new RouterLink(ConfigurationView.VIEW_NAME, ConfigurationView.class);
 
         analizerLink.setHighlightCondition(HighlightConditions.sameLocation());
         configurationLink.setHighlightCondition(HighlightConditions.sameLocation());
 
-        addToDrawer(new VerticalLayout(analizerLink, configurationLink));
+        addToDrawer(new VerticalLayout(analizerLink, verifierLink, configurationLink));
     }
 }

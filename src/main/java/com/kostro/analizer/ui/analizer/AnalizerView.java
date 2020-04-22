@@ -4,6 +4,7 @@ import com.kostro.analizer.db.service.CandleService;
 import com.kostro.analizer.json.domain.candle.CandleResponse;
 import com.kostro.analizer.json.service.JsonService;
 import com.kostro.analizer.ui.MainLayout;
+import com.kostro.analizer.utils.CandelUtils;
 import com.kostro.analizer.wallet.Candel;
 import com.kostro.analizer.wallet.Configuration;
 import com.kostro.analizer.wallet.Transaction;
@@ -40,8 +41,8 @@ public class AnalizerView extends AnalizerDesign {
         LocalDateTime fromDate = LocalDateTime.of(fromDatePicker.getValue(), LocalTime.of(0, 0, 0, 0));
         LocalDateTime toDate = LocalDateTime.of(toDatePicker.getValue(), LocalTime.of(23, 59, 59, 999));
         CandleResponse response = jsonService.getCandles("BTC-PLN", resolutionBox.getValue().getSecs(), fromDate, toDate);
-        Map<String, Candel> candels = createCandels(response);
-        for (Candel candel : candels.values()) {
+        List<Candel> candels = CandelUtils.createCandels(response, resolutionBox.getValue().getSecs());
+        for (Candel candel : candels) {
             candleService.save(candleService.from(candel));
         }
     };
@@ -51,7 +52,7 @@ public class AnalizerView extends AnalizerDesign {
         LocalDateTime startDate = LocalDateTime.of(fromDatePicker.getValue(), LocalTime.of(0, 0, 0, 0));
         LocalDateTime endDate = LocalDateTime.of(toDatePicker.getValue(), LocalTime.of(23, 59, 59, 999));
         List<Candel> candelsList = candleService.find(startDate, endDate, resolutionBox.getValue().getSecs());
-        Map<LocalDateTime, Candel> candels = createCandels(candelsList);
+        Map<LocalDateTime, Candel> candels = CandelUtils.createCandels(candelsList);
 
         for (offerLong = hoursFromField.getValue().intValue(); offerLong <= hoursToField.getValue().intValue(); offerLong++) {
             for (startDay = startDayNumberFromField.getValue().intValue(); startDay <= startDayNumberToField.getValue().intValue(); startDay++) {
@@ -132,25 +133,4 @@ public class AnalizerView extends AnalizerDesign {
         return new Configuration(offerLong, startDay, periodLong, buy, sellFailure, sellSucess, wallet.getMoney() + wallet.getBitcoin()*lastPrice, startDate, endDate);
     }
 
-    private Map<String, Candel> createCandels(CandleResponse response) {
-        Map<String, Candel> candels = new HashMap<>();
-        for (List<Object> item : response.getItems()) {
-            String timestamp = item.get(0).toString();
-            double open = Double.parseDouble(((Map<String, String>)item.get(1)).get("o"));
-            double close = Double.parseDouble(((Map<String, String>)item.get(1)).get("c"));
-            double low = Double.parseDouble(((Map<String, String>)item.get(1)).get("l"));
-            double high = Double.parseDouble(((Map<String, String>)item.get(1)).get("h"));
-            double volume = Double.parseDouble(((Map<String, String>)item.get(1)).get("v"));
-            candels.put(timestamp, new Candel(LocalDateTime.ofEpochSecond(Long.parseLong(timestamp.substring(0, 10)), Integer.parseInt(timestamp.substring(11)), ZoneOffset.of("+2")), resolutionBox.getValue().getSecs(), open, close, low, high, volume));
-        }
-        return candels;
-    }
-
-    private Map<LocalDateTime, Candel> createCandels(List<Candel> candelsList) {
-        Map<LocalDateTime, Candel> candels = new HashMap<>();
-        for (Candel candel : candelsList) {
-            candels.put(candel.getTime(), candel);
-        }
-        return candels;
-    }
 }
