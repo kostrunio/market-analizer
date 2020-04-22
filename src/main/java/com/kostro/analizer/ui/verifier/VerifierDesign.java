@@ -51,10 +51,12 @@ public class VerifierDesign extends VerticalLayout {
 
     private Component createGridLayout() {
         VerticalLayout layout = new VerticalLayout();
+        layout.setSizeFull();
         candelResolutionBox.setItems(Resolution.ONE_MIN, Resolution.THREE_MINS, Resolution.FIVE_MINS, Resolution.FIFTEEN_MINS, Resolution.THIRTY_MINS,
                 Resolution.ONE_HOUR, Resolution.TWO_HOURS, Resolution.FOUR_HOURS, Resolution.SIX_HOURS, Resolution.TWELWE_HOURS,
                 Resolution.ONE_DAY, Resolution.THREE_DAYS, Resolution.ONE_WEEK);
         candelResolutionBox.setValue(Resolution.ONE_MIN);
+        candelGrid.setSizeFull();
         candelGrid.setColumns("time", "resolution", "open", "close", "low", "high", "volume");
         candelGrid.addColumn(candel -> candel.getHigh()-candel.getLow()).setHeader("change");
         layout.add(candelResolutionBox, candelGrid);

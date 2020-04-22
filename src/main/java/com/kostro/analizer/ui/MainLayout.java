@@ -2,6 +2,7 @@ package com.kostro.analizer.ui;
 
 import com.kostro.analizer.ui.analizer.AnalizerView;
 import com.kostro.analizer.ui.configuration.ConfigurationView;
+import com.kostro.analizer.ui.dashboard.DashboardDesign;
 import com.kostro.analizer.ui.dashboard.DashboardView;
 import com.kostro.analizer.ui.verifier.VerifierView;
 import com.vaadin.flow.component.applayout.AppLayout;

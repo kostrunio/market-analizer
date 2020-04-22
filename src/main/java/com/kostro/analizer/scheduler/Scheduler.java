@@ -89,7 +89,8 @@ public class Scheduler {
                         dateTo);
                 oneDay.stream().forEach(c -> log.info("1 DAY: {} -> change: {}", c.toString(), candel.getClose() - c.getHigh()));
 
-                SendEmail.volume(candel, fiveMins.get(0), oneHour.get(0), twoHours.get(0), oneDay.get(0));
+                if (configurationService.getSendEmail())
+                    SendEmail.volume(candel, fiveMins.get(0), oneHour.get(0), twoHours.get(0), oneDay.get(0));
             }
         }
     }
