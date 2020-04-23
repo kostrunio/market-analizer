@@ -15,7 +15,7 @@ public class ConfigurationService {
     private static final Logger log = LoggerFactory.getLogger(ConfigurationService.class);
 
     //1st Jan 2020
-    private LocalDateTime lastCandel = LocalDateTime.of(2020, 4, 22, 20, 20, 0);
+    private LocalDateTime lastCandel;
 
     private ConfigurationRepository configurationRepository;
 
@@ -58,7 +58,11 @@ public class ConfigurationService {
         return 100;
     }
 
-    public boolean getSendEmail() {
-        return false;
+    public double getBuyChange() {
+        return 0.99;
+    }
+
+    public double getSellChange() {
+        return 1.02;
     }
 }

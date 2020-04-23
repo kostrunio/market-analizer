@@ -25,6 +25,7 @@ public class DashboardDesign extends VerticalLayout {
         conf.setTitle(new Title("BigFishes prices"));
 
         Tooltip tooltip = conf.getTooltip();
+        tooltip.setShared(true);
         tooltip.setValueSuffix("zł");
 
         chart.setTimeline(true);

@@ -23,7 +23,7 @@ public class SendEmail {
   public static void volume(Candel candel, Candel fiveMins, Candel oneHour, Candel twoHours, Candel oneDay) {
     try {
       Message message = new MimeMessage(prepareSession());
-      message.setFrom(new InternetAddress("Market Anizer <expense_system@mailplus.pl>"));
+      message.setFrom(new InternetAddress("Market Anilzer <expense_system@mailplus.pl>"));
       message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("miketo@o2.pl"));
       
       message.setSubject("HUGE VOLUME: " + candel.getVolume() + " on " + candel.getTime());
@@ -63,4 +63,87 @@ public class SendEmail {
     return session;
   }
 
+  public static void buy(Candel candel) {
+    try {
+      Message message = new MimeMessage(prepareSession());
+      message.setFrom(new InternetAddress("Market Anilzer <expense_system@mailplus.pl>"));
+      message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("miketo@o2.pl"));
+
+      message.setSubject("TRYING TO BUY: for " + candel.getClose() + " from " + candel.getTime());
+      message.setContent(
+              MessageFormat.format("TRYING TO BUY: for: {0} from {1}, volume: {2}",
+                      new Object[] {candel.getOpen(), candel.getTime(), candel.getVolume()}),
+              "text/html; charset=UTF-8");
+
+      log.info("SendEmail: Sending");
+      Transport.send(message);
+      log.info("SendEmail: Done");
+
+    } catch (MessagingException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public static void bought(Candel candel) {
+    try {
+      Message message = new MimeMessage(prepareSession());
+      message.setFrom(new InternetAddress("Market Anilzer <expense_system@mailplus.pl>"));
+      message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("miketo@o2.pl"));
+
+      message.setSubject("BOUGHT: " + candel);
+      message.setContent(
+              MessageFormat.format("BOUGHT: {0}",
+                      new Object[] {candel}),
+              "text/html; charset=UTF-8");
+
+      log.info("SendEmail: Sending");
+      Transport.send(message);
+      log.info("SendEmail: Done");
+
+    } catch (MessagingException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public static void sell(Candel candel) {
+    try {
+      Message message = new MimeMessage(prepareSession());
+      message.setFrom(new InternetAddress("Market Anilzer <expense_system@mailplus.pl>"));
+      message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("miketo@o2.pl"));
+
+      message.setSubject("TRYING TO SELL: for " + candel.getClose() + " from " + candel.getTime());
+      message.setContent(
+              MessageFormat.format("TRYING TO SELL: for: {0} from {1}, volume: {2}",
+                      new Object[] {candel.getOpen(), candel.getTime(), candel.getVolume()}),
+              "text/html; charset=UTF-8");
+
+      log.info("SendEmail: Sending");
+      Transport.send(message);
+      log.info("SendEmail: Done");
+
+    } catch (MessagingException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public static void sold(Candel candel) {
+    try {
+      Message message = new MimeMessage(prepareSession());
+      message.setFrom(new InternetAddress("Market Anilzer <expense_system@mailplus.pl>"));
+      message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("miketo@o2.pl"));
+
+      message.setSubject("SOLD: " + candel);
+      message.setContent(
+              MessageFormat.format("SOLD: {0}",
+                      new Object[] {candel}),
+              "text/html; charset=UTF-8");
+
+      log.info("SendEmail: Sending");
+      Transport.send(message);
+      log.info("SendEmail: Done");
+
+    } catch (MessagingException e) {
+      throw new RuntimeException(e);
+    }
+  }
 }

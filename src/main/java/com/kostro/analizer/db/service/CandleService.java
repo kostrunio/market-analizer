@@ -52,4 +52,7 @@ public class CandleService {
         }
     }
 
+    public LocalDateTime getLastDate() {
+        return repository.findLastCandel();
+    }
 }

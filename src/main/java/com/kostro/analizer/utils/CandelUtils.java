@@ -1,8 +1,14 @@
 package com.kostro.analizer.utils;
 
 import com.kostro.analizer.db.model.CandelEntity;
+import com.kostro.analizer.db.service.CandleService;
+import com.kostro.analizer.db.service.ConfigurationService;
 import com.kostro.analizer.json.domain.candle.CandleResponse;
 import com.kostro.analizer.wallet.Candel;
+import com.kostro.analizer.wallet.Resolution;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -14,6 +20,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CandelUtils {
+    private static final Logger log = LoggerFactory.getLogger(CandelUtils.class);
 
     public static List<Candel> createCandels(CandleResponse response, int resolution) {
         List<Candel> candels = new ArrayList<>();
