@@ -3,8 +3,8 @@ package com.kostro.analizer.ui.dashboard;
 import com.kostro.analizer.db.service.CandleService;
 import com.kostro.analizer.db.service.ConfigurationService;
 import com.kostro.analizer.ui.MainLayout;
-import com.kostro.analizer.utils.CandelOperation;
-import com.kostro.analizer.wallet.Candel;
+import com.kostro.analizer.utils.CandleOperation;
+import com.kostro.analizer.wallet.Candle;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
@@ -26,40 +26,40 @@ public class DashboardView extends DashboardDesign {
     private static final Logger log = LoggerFactory.getLogger(DashboardView.class);
 
     private CandleService candleService;
-    private CandelOperation candelOperation;
+    private CandleOperation CandleOperation;
 
     ComponentEventListener<ClickEvent<Button>> showDataClicked = e -> loadData();
 
     public DashboardView(CandleService candleService, ConfigurationService configurationService) {
         this.candleService = candleService;
-        candelOperation = new CandelOperation(candleService, configurationService, false);
+        CandleOperation = new CandleOperation(candleService, configurationService, false);
         showData.addClickListener(showDataClicked);
     }
 
     private void loadData() {
-        candelOperation.resetWallet();
+        CandleOperation.resetWallet();
         DataSeries btcSeries = new DataSeries("BTC-PLN");
         DataSeries bigFishSeries = new DataSeries("BigFish");
         DataSeries buySeries = new DataSeries("buy");
         DataSeries sellSeries = new DataSeries("sell");
-        for (Candel candel : candleService.find(LocalDateTime.of(fromDatePicker.getValue(), fromTimePicker.getValue()), LocalDateTime.of(toDatePicker.getValue(), toTimePicker.getValue()), resolutionBox.getValue().getSecs())) {
+        for (Candle Candle : candleService.find(LocalDateTime.of(fromDatePicker.getValue(), fromTimePicker.getValue()), LocalDateTime.of(toDatePicker.getValue(), toTimePicker.getValue()), resolutionBox.getValue().getSecs())) {
             boolean inserter = false;
-            DataSeriesItem data = new DataSeriesItem(candel.getTime().toInstant(ZoneOffset.UTC), (Number) candel.getLow(), (Number) candel.getHigh());
+            DataSeriesItem data = new DataSeriesItem(Candle.getTime().toInstant(ZoneOffset.UTC), (Number) Candle.getLow(), (Number) Candle.getHigh());
             if (dataSeriesList.getSelectedItems().contains("BigFish"))
-            if (candelOperation.checkHugeVolume(candel)) {
+            if (CandleOperation.checkHugeVolume(Candle)) {
                 bigFishSeries.add(data);
                 inserter = true;
             }
             if (dataSeriesList.getSelectedItems().contains("buy")) {
-                candelOperation.checkIfBuy(candel);
-                if (candelOperation.checkIfBought(candel)) {
+                CandleOperation.checkIfBuy(Candle);
+                if (CandleOperation.checkIfBought(Candle)) {
                     buySeries.add(data);
                     inserter = true;
                 }
             }
             if (dataSeriesList.getSelectedItems().contains("sell")) {
-                candelOperation.checkIfSell(candel);
-                if (candelOperation.checkIfSold(candel)) {
+                CandleOperation.checkIfSell(Candle);
+                if (CandleOperation.checkIfSold(Candle)) {
                     sellSeries.add(data);
                     inserter = true;
                 }
@@ -72,7 +72,7 @@ public class DashboardView extends DashboardDesign {
         conf.getTooltip().setShared(true);
         chart.drawChart();
 
-        log.info("\nmoney: {}\nbtc: {}", candelOperation.getWallet().getMoney(), candelOperation.getWallet().getBitcoin());
-        candelOperation.getWallet().getTransactionHistory().stream().forEach(t -> log.info(t.toString()));
+        log.info("\nmoney: {}\nbtc: {}", CandleOperation.getWallet().getMoney(), CandleOperation.getWallet().getBitcoin());
+        CandleOperation.getWallet().getTransactionHistory().stream().forEach(t -> log.info(t.toString()));
     }
 }

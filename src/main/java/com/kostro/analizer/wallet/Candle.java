@@ -2,7 +2,7 @@ package com.kostro.analizer.wallet;
 
 import java.time.LocalDateTime;
 
-public class Candel {
+public class Candle {
     private LocalDateTime time;
     private int resolution;
     private double open;
@@ -11,7 +11,7 @@ public class Candel {
     private double high;
     private double volume;
 
-    public Candel(LocalDateTime time, int resolution, double open, double close, double low, double high, double volume) {
+    public Candle(LocalDateTime time, int resolution, double open, double close, double low, double high, double volume) {
         this.time = time;
         this.resolution = resolution;
         this.open = open;

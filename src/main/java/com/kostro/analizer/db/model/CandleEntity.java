@@ -12,8 +12,8 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Candels")
-public class CandelEntity extends AbstractEntity implements Cloneable {
+@Table(name = "Candles")
+public class CandleEntity extends AbstractEntity implements Cloneable {
 
     @Column(name = "c_time")
     @NotNull

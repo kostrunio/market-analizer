@@ -1,12 +1,11 @@
 package com.kostro.analizer.json.interfaces;
 
-import com.kostro.analizer.wallet.Candel;
+import com.kostro.analizer.wallet.Candle;
+import com.kostro.analizer.wallet.Resolution;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public interface MarketService {
-    List<String> getMarkets();
-
-    List<Candel> getCandles(String market, Integer resolution, LocalDateTime from, LocalDateTime to);
+    List<Candle> getCandles(String market, Resolution resolution, LocalDateTime from, LocalDateTime to);
 }

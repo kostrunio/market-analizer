@@ -1,6 +1,6 @@
 package com.kostro.analizer.ui.verifier;
 
-import com.kostro.analizer.wallet.Candel;
+import com.kostro.analizer.wallet.Candle;
 import com.kostro.analizer.wallet.Resolution;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -23,8 +23,8 @@ public class VerifierDesign extends VerticalLayout {
     protected ComboBox<Resolution> resolutionBox = new ComboBox<>("resolution");
     protected Button jsonButton = new Button("get data from Market");
 
-    protected ComboBox<Resolution> candelResolutionBox = new ComboBox<>("candel resolution");
-    protected Grid<Candel> candelGrid = new Grid<>(Candel.class);
+    protected ComboBox<Resolution> CandleResolutionBox = new ComboBox<>("Candle resolution");
+    protected Grid<Candle> CandleGrid = new Grid<>(Candle.class);
 
     public VerifierDesign() {
         setSizeFull();
@@ -51,14 +51,14 @@ public class VerifierDesign extends VerticalLayout {
     private Component createGridLayout() {
         VerticalLayout layout = new VerticalLayout();
         layout.setSizeFull();
-        candelResolutionBox.setItems(Resolution.ONE_MIN, Resolution.THREE_MINS, Resolution.FIVE_MINS, Resolution.FIFTEEN_MINS, Resolution.THIRTY_MINS,
+        CandleResolutionBox.setItems(Resolution.ONE_MIN, Resolution.THREE_MINS, Resolution.FIVE_MINS, Resolution.FIFTEEN_MINS, Resolution.THIRTY_MINS,
                 Resolution.ONE_HOUR, Resolution.TWO_HOURS, Resolution.FOUR_HOURS, Resolution.SIX_HOURS, Resolution.TWELWE_HOURS,
                 Resolution.ONE_DAY, Resolution.THREE_DAYS, Resolution.ONE_WEEK);
-        candelResolutionBox.setValue(Resolution.ONE_MIN);
-        candelGrid.setSizeFull();
-        candelGrid.setColumns("time", "resolution", "open", "close", "low", "high", "volume");
-        candelGrid.addColumn(candel -> candel.getHigh()-candel.getLow()).setHeader("change");
-        layout.add(candelResolutionBox, candelGrid);
+        CandleResolutionBox.setValue(Resolution.ONE_MIN);
+        CandleGrid.setSizeFull();
+        CandleGrid.setColumns("time", "resolution", "open", "close", "low", "high", "volume");
+        CandleGrid.addColumn(Candle -> Candle.getHigh()-Candle.getLow()).setHeader("change");
+        layout.add(CandleResolutionBox, CandleGrid);
         return layout;
     }
 }

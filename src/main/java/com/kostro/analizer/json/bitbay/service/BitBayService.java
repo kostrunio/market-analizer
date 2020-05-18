@@ -1,9 +1,9 @@
 package com.kostro.analizer.json.bitbay.service;
 
-import com.kostro.analizer.json.bitbay.domain.ticker.TickerResponse;
 import com.kostro.analizer.json.bitbay.domain.candle.CandleResponse;
 import com.kostro.analizer.json.interfaces.MarketService;
-import com.kostro.analizer.wallet.Candel;
+import com.kostro.analizer.wallet.Candle;
+import com.kostro.analizer.wallet.Resolution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -16,7 +16,6 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class BitBayService implements MarketService {
@@ -31,8 +30,14 @@ public class BitBayService implements MarketService {
         restTemplate = builder.build();
     }
 
-    public static List<Candel> createCandels(CandleResponse response, int resolution) {
-        List<Candel> candels = new ArrayList<>();
+    public List<Candle> getCandles(String market, Resolution resolution, LocalDateTime from, LocalDateTime to) {
+        String url = "https://api.bitbay.net/rest/trading/candle/history/"+market+"/"+resolution.getSecs()+"?from="+ from.toEpochSecond(ZoneOffset.of("+2"))+"000&to="+to.toEpochSecond(ZoneOffset.of("+2"))+"000";
+        log.info("REQUEST: " + url);
+        return createCandles(restTemplate.getForObject(url, CandleResponse.class), resolution.getSecs());
+    }
+
+    public static List<Candle> createCandles(CandleResponse response, int resolution) {
+        List<Candle> Candles = new ArrayList<>();
         if (response.getItems() != null)
             for (List<Object> item : response.getItems()) {
                 String timestamp = item.get(0).toString();
@@ -41,18 +46,8 @@ public class BitBayService implements MarketService {
                 double low = Double.parseDouble(((Map<String, String>)item.get(1)).get("l"));
                 double high = Double.parseDouble(((Map<String, String>)item.get(1)).get("h"));
                 double volume = Double.parseDouble(((Map<String, String>)item.get(1)).get("v"));
-                candels.add(new Candel(LocalDateTime.ofEpochSecond(Long.parseLong(timestamp.substring(0, 10)), Integer.parseInt(timestamp.substring(11)), ZoneOffset.of("+2")), resolution, open, high, low, close, volume));
+                Candles.add(new Candle(LocalDateTime.ofEpochSecond(Long.parseLong(timestamp.substring(0, 10)), Integer.parseInt(timestamp.substring(11)), ZoneOffset.of("+2")), resolution, open, high, low, close, volume));
             }
-        return candels;
-    }
-
-    public List<String> getMarkets() {
-        return restTemplate.getForObject("https://api.bitbay.net/rest/trading/ticker", TickerResponse.class).getItems().keySet().stream().collect(Collectors.toList());
-    }
-
-    public List<Candel> getCandles(String market, Integer resolution, LocalDateTime from, LocalDateTime to) {
-        String url = "https://api.bitbay.net/rest/trading/candle/history/"+market+"/"+resolution+"?from="+ from.toEpochSecond(ZoneOffset.of("+2"))+"000&to="+to.toEpochSecond(ZoneOffset.of("+2"))+"000";
-        log.info("REQUEST: " + url);
-        return createCandels(restTemplate.getForObject(url, CandleResponse.class), resolution);
+        return Candles;
     }
 }

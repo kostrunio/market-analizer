@@ -1,11 +1,12 @@
 package com.kostro.analizer.ui.analizer;
 
 import com.kostro.analizer.db.service.CandleService;
+import com.kostro.analizer.json.binance.service.BinanceService;
 import com.kostro.analizer.json.bitbay.service.BitBayService;
 import com.kostro.analizer.json.interfaces.MarketService;
 import com.kostro.analizer.ui.MainLayout;
-import com.kostro.analizer.utils.CandelUtils;
-import com.kostro.analizer.wallet.Candel;
+import com.kostro.analizer.utils.CandleUtils;
+import com.kostro.analizer.wallet.Candle;
 import com.kostro.analizer.wallet.Configuration;
 import com.kostro.analizer.wallet.Transaction;
 import com.kostro.analizer.wallet.Wallet;
@@ -32,15 +33,15 @@ public class AnalizerView extends AnalizerDesign {
 
     double lastPrice = 0;
 
-    private MarketService bitBayService;
+    private MarketService marketService;
     private CandleService candleService;
 
     ComponentEventListener<ClickEvent<Button>> jsonButtonClicked = e -> {
         LocalDateTime fromDate = LocalDateTime.of(fromDatePicker.getValue(), LocalTime.of(0, 0, 0, 0));
         LocalDateTime toDate = LocalDateTime.of(toDatePicker.getValue(), LocalTime.of(23, 59, 59, 999));
-        List<Candel> candels =  bitBayService.getCandles("BTC-PLN", resolutionBox.getValue().getSecs(), fromDate, toDate);
-        for (Candel candel : candels) {
-            candleService.save(CandelUtils.from(candel));
+        List<Candle> Candles =  marketService.getCandles("BTCUSDT", resolutionBox.getValue(), fromDate, toDate);
+        for (Candle Candle : Candles) {
+            candleService.save(CandleUtils.from(Candle));
         }
     };
 
@@ -48,8 +49,8 @@ public class AnalizerView extends AnalizerDesign {
         List<Configuration> configurationList = new ArrayList<>();
         LocalDateTime startDate = LocalDateTime.of(fromDatePicker.getValue(), LocalTime.of(0, 0, 0, 0));
         LocalDateTime endDate = LocalDateTime.of(toDatePicker.getValue(), LocalTime.of(23, 59, 59, 999));
-        List<Candel> candelsList = candleService.find(startDate, endDate, resolutionBox.getValue().getSecs());
-        Map<LocalDateTime, Candel> candels = CandelUtils.createCandels(candelsList);
+        List<Candle> CandlesList = candleService.find(startDate, endDate, resolutionBox.getValue().getSecs());
+        Map<LocalDateTime, Candle> Candles = CandleUtils.createCandles(CandlesList);
 
         for (offerLong = hoursFromField.getValue().intValue(); offerLong <= hoursToField.getValue().intValue(); offerLong++) {
             for (startDay = startDayNumberFromField.getValue().intValue(); startDay <= startDayNumberToField.getValue().intValue(); startDay++) {
@@ -58,13 +59,13 @@ public class AnalizerView extends AnalizerDesign {
                     Wallet wallet = new Wallet(moneyField.getValue(), 0.9953);
                     endDate = LocalDateTime.of(toDatePicker.getValue(), LocalTime.of(23, 59, 59, 999)).isAfter(startDate.plusDays(periodLong).minusSeconds(1)) ? startDate.plusDays(periodLong).minusSeconds(1) : LocalDateTime.of(toDatePicker.getValue(), LocalTime.of(23, 59, 59, 999));
                     do {
-                        Configuration configuration = countConfiguration(startDate, endDate, candels);
+                        Configuration configuration = countConfiguration(startDate, endDate, Candles);
                         startDate = startDate.plusDays(periodLong);
                         endDate = LocalDateTime.of(toDatePicker.getValue(), LocalTime.of(23, 59, 59, 999)).isAfter(startDate.plusDays(periodLong).minusSeconds(1)) ? startDate.plusDays(periodLong).minusSeconds(1) : LocalDateTime.of(toDatePicker.getValue(), LocalTime.of(23, 59, 59, 999));
                         if (configuration.getResult() < 1010) continue;
 //                        System.out.println(configuration);
                         configurationList.add(configuration);
-                        count(wallet, startDate, endDate, candels, configuration.getBuy(), configuration.getSellFailure(), configuration.getSellSuccess(), false, wrongField.getValue().intValue());
+                        count(wallet, startDate, endDate, Candles, configuration.getBuy(), configuration.getSellFailure(), configuration.getSellSuccess(), false, wrongField.getValue().intValue());
                     } while (startDate.plusDays(periodLong).isBefore(LocalDateTime.of(toDatePicker.getValue(), LocalTime.of(23, 59, 59, 999))));
                     System.out.println("RESULT:" + (wallet.getMoney() + wallet.getBitcoin() * lastPrice) + " for " + offerLong + ";" + startDay + ";" + periodLong);
 //                    moneyField.setValue(wallet.getMoney() + wallet.getBitcoin() * lastPrice);
@@ -75,8 +76,8 @@ public class AnalizerView extends AnalizerDesign {
         configurationsGrid.setItems(configurationList);
     };
 
-    public AnalizerView(BitBayService bitBayService, CandleService candleService) {
-        this.bitBayService = bitBayService;
+    public AnalizerView(BinanceService marketService, CandleService candleService) {
+        this.marketService = marketService;
         this.candleService = candleService;
 
         jsonButton.addClickListener(jsonButtonClicked);
@@ -84,12 +85,12 @@ public class AnalizerView extends AnalizerDesign {
 
     }
 
-    private Configuration countConfiguration(LocalDateTime startDate, LocalDateTime endDate, Map<LocalDateTime, Candel> candels) {
+    private Configuration countConfiguration(LocalDateTime startDate, LocalDateTime endDate, Map<LocalDateTime, Candle> Candles) {
         List<Configuration> configurationList = new ArrayList<>();
         for (double buy = buyFromField.getValue(); buy >= buyToField.getValue(); buy -= stepField.getValue())
             for (double sellFailure = sellFailureFromField.getValue(); sellFailure >= sellFailureToField.getValue(); sellFailure -= stepField.getValue())
                 for (double sellSucess = sellSuccessFromField.getValue(); sellSucess <= sellSucessToField.getValue(); sellSucess += stepField.getValue())
-                    configurationList.add(count(new Wallet(1000, 0.9953), startDate, endDate, candels, buy, sellFailure, sellSucess, false, -1));
+                    configurationList.add(count(new Wallet(1000, 0.9953), startDate, endDate, Candles, buy, sellFailure, sellSucess, false, -1));
         return findConfiguration(configurationList);
     }
 
@@ -101,22 +102,22 @@ public class AnalizerView extends AnalizerDesign {
             return toReturn;
     }
 
-    private Configuration count(Wallet wallet, LocalDateTime startDate, LocalDateTime endDate, Map<LocalDateTime, Candel> candels, double buy, double sellFailure, double sellSucess, boolean withDetails, int wrongLimit) {
+    private Configuration count(Wallet wallet, LocalDateTime startDate, LocalDateTime endDate, Map<LocalDateTime, Candle> Candles, double buy, double sellFailure, double sellSucess, boolean withDetails, int wrongLimit) {
         lastPrice = 0;
         int wrong = 0;
         hour:for (LocalDateTime date = LocalDateTime.from(startDate); date.isBefore(endDate); date = date.plusHours(1)) {
-            if (candels.get(date) == null || candels.get(date.plusHours(offerLong)) == null) continue hour;
-            lastPrice = candels.get(date.plusHours(offerLong)).getLow();
+            if (Candles.get(date) == null || Candles.get(date.plusHours(offerLong)) == null) continue hour;
+            lastPrice = Candles.get(date.plusHours(offerLong)).getLow();
             if (wallet.hasMoney()) {
                 if (wrongLimit > 0 && wrong > wrongLimit) break;
-                if (candels.get(date.plusHours(offerLong)).getLow() < candels.get(date).getHigh() * buy) {
-                    wallet.buy(date.plusHours(offerLong), candels.get(date).getHigh() * buy);
+                if (Candles.get(date.plusHours(offerLong)).getLow() < Candles.get(date).getHigh() * buy) {
+                    wallet.buy(date.plusHours(offerLong), Candles.get(date).getHigh() * buy);
                 }
             } else {
-                if (candels.get(date.plusHours(offerLong)).getLow() < wallet.getPrice() * sellFailure) {
+                if (Candles.get(date.plusHours(offerLong)).getLow() < wallet.getPrice() * sellFailure) {
                     wallet.sell(date.plusHours(offerLong), wallet.getPrice() * sellFailure);
                     wrong++;
-                } else if (candels.get(date.plusHours(offerLong)).getHigh() > wallet.getPrice() * sellSucess) {
+                } else if (Candles.get(date.plusHours(offerLong)).getHigh() > wallet.getPrice() * sellSucess) {
                     wallet.sell(date.plusHours(offerLong), wallet.getPrice() * sellSucess);
 
                 }

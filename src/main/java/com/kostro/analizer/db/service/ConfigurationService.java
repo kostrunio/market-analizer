@@ -2,6 +2,7 @@ package com.kostro.analizer.db.service;
 
 import com.kostro.analizer.db.model.ConfigurationEntity;
 import com.kostro.analizer.db.repository.ConfigurationRepository;
+import com.kostro.analizer.wallet.Resolution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public class ConfigurationService {
     private static final Logger log = LoggerFactory.getLogger(ConfigurationService.class);
 
     //1st Jan 2020
-    private LocalDateTime lastCandel;
+    private LocalDateTime lastCandle;
 
     private ConfigurationRepository configurationRepository;
 
@@ -27,27 +28,28 @@ public class ConfigurationService {
         return configurationRepository.findAll();
     }
 
-    public LocalDateTime getLastCandel() {
-        return lastCandel;
+    public LocalDateTime getLastCandle() {
+        return lastCandle;
     }
 
     public long getMaxPeriod() {
         //2 days
-        return 60*60*24*2;
+//        return 60*60*24*2;
+        return 500*60;
     }
 
     public String getMarket() {
         //bitcoin
-        return "BTC-PLN";
+        return "BTCUSDT";
     }
 
-    public int getResolution() {
+    public Resolution getResolution() {
         //1 min
-        return 60;
+        return Resolution.ONE_MIN;
     }
 
-    public void setLastCandel(LocalDateTime lastCandel) {
-        this.lastCandel = lastCandel;
+    public void setLastCandle(LocalDateTime lastCandle) {
+        this.lastCandle = lastCandle;
     }
 
     public double getLimitFor(int secs) {

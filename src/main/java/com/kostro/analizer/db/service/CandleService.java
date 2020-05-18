@@ -1,9 +1,9 @@
 package com.kostro.analizer.db.service;
 
-import com.kostro.analizer.db.model.CandelEntity;
-import com.kostro.analizer.db.repository.CandelsRepository;
-import com.kostro.analizer.utils.CandelUtils;
-import com.kostro.analizer.wallet.Candel;
+import com.kostro.analizer.db.model.CandleEntity;
+import com.kostro.analizer.db.repository.CandlesRepository;
+import com.kostro.analizer.utils.CandleUtils;
+import com.kostro.analizer.wallet.Candle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,48 +17,48 @@ public class CandleService {
 
     private static final Logger log = LoggerFactory.getLogger(CandleService.class);
 
-    private CandelsRepository repository;
+    private CandlesRepository repository;
 
-    public CandleService(CandelsRepository repository) {
+    public CandleService(CandlesRepository repository) {
         this.repository = repository;
     }
 
-    public void save(CandelEntity entity) {
+    public void save(CandleEntity entity) {
         repository.save(entity);
     }
 
-    public CandelEntity find(Long id) {
+    public CandleEntity find(Long id) {
         return repository.findById(id).get();
     }
 
-    public List<CandelEntity> findAll() {
+    public List<CandleEntity> findAll() {
         return repository.findAll();
     }
 
-    public List<Candel> find(LocalDateTime startDate, LocalDateTime endDate, int resolution, double limit) {
-        List<Candel> candles = new ArrayList<>();
-        for(CandelEntity entity : repository.findWithLimit(startDate, endDate, resolution, limit)) {
-            candles.add(CandelUtils.from(entity));
+    public List<Candle> find(LocalDateTime startDate, LocalDateTime endDate, int resolution, double limit) {
+        List<Candle> candles = new ArrayList<>();
+        for(CandleEntity entity : repository.findWithLimit(startDate, endDate, resolution, limit)) {
+            candles.add(CandleUtils.from(entity));
         }
         return candles;
     }
-    public List<Candel> find(LocalDateTime startDate, LocalDateTime endDate, int resolution) {
-        List<Candel> candles = new ArrayList<>();
-        for(CandelEntity entity : repository.find(startDate, endDate, resolution)) {
-            candles.add(CandelUtils.from(entity));
+    public List<Candle> find(LocalDateTime startDate, LocalDateTime endDate, int resolution) {
+        List<Candle> candles = new ArrayList<>();
+        for(CandleEntity entity : repository.find(startDate, endDate, resolution)) {
+            candles.add(CandleUtils.from(entity));
         }
         return candles;
     }
 
-    public void refreshCandels(List<Candel> candels) {
-        for (Candel candel : candels) {
-            CandelEntity entity = repository.findByTimeAndResolution(candel.getTime(), candel.getResolution());
-            entity = CandelUtils.from(candel, entity != null ? entity.getId() : null);
+    public void refreshCandles(List<Candle> Candles) {
+        for (Candle Candle : Candles) {
+            CandleEntity entity = repository.findByTimeAndResolution(Candle.getTime(), Candle.getResolution());
+            entity = CandleUtils.from(Candle, entity != null ? entity.getId() : null);
             repository.save(entity);
         }
     }
 
     public LocalDateTime getLastDate() {
-        return repository.findLastCandel();
+        return repository.findLastCandle();
     }
 }
