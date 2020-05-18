@@ -5,7 +5,7 @@ import com.kostro.analizer.wallet.Candel;
 import java.time.LocalDateTime;
 import java.util.List;
 
-interface Market {
+public interface MarketService {
     List<String> getMarkets();
 
     List<Candel> getCandles(String market, Integer resolution, LocalDateTime from, LocalDateTime to);

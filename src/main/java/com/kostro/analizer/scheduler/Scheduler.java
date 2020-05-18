@@ -2,10 +2,9 @@ package com.kostro.analizer.scheduler;
 
 import com.kostro.analizer.db.service.CandleService;
 import com.kostro.analizer.db.service.ConfigurationService;
-import com.kostro.analizer.json.bitbay.domain.candle.CandleResponse;
 import com.kostro.analizer.json.bitbay.service.BitBayService;
+import com.kostro.analizer.json.interfaces.MarketService;
 import com.kostro.analizer.utils.CandelOperation;
-import com.kostro.analizer.utils.CandelUtils;
 import com.kostro.analizer.wallet.Candel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,7 @@ import java.util.List;
 public class Scheduler {
     private static final Logger log = LoggerFactory.getLogger(Scheduler.class);
 
-    private BitBayService bitBayService;
+    private MarketService bitBayService;
     private CandleService candleService;
     private ConfigurationService configurationService;
     private CandelOperation candelOperation;
@@ -42,8 +41,7 @@ public class Scheduler {
             dateTo = LocalDateTime.now().withSecond(0).withNano(0);
         }
         log.info("invoke getCandles for {} with resolution {} from {} to {}", configurationService.getMarket(), configurationService.getResolution(), dateFrom, dateTo);
-        CandleResponse candleResponse = bitBayService.getCandles(configurationService.getMarket(), configurationService.getResolution(), dateFrom, dateTo);
-        List<Candel> candels = CandelUtils.createCandels(candleResponse, configurationService.getResolution());
+        List<Candel> candels = bitBayService.getCandles(configurationService.getMarket(), configurationService.getResolution(), dateFrom, dateTo);
 
         candleService.refreshCandels(candels);
 

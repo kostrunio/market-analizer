@@ -18,21 +18,6 @@ import java.util.stream.Collectors;
 public class CandelUtils {
     private static final Logger log = LoggerFactory.getLogger(CandelUtils.class);
 
-    public static List<Candel> createCandels(CandleResponse response, int resolution) {
-        List<Candel> candels = new ArrayList<>();
-        if (response.getItems() != null)
-            for (List<Object> item : response.getItems()) {
-                String timestamp = item.get(0).toString();
-                double open = Double.parseDouble(((Map<String, String>)item.get(1)).get("o"));
-                double close = Double.parseDouble(((Map<String, String>)item.get(1)).get("c"));
-                double low = Double.parseDouble(((Map<String, String>)item.get(1)).get("l"));
-                double high = Double.parseDouble(((Map<String, String>)item.get(1)).get("h"));
-                double volume = Double.parseDouble(((Map<String, String>)item.get(1)).get("v"));
-                candels.add(new Candel(LocalDateTime.ofEpochSecond(Long.parseLong(timestamp.substring(0, 10)), Integer.parseInt(timestamp.substring(11)), ZoneOffset.of("+2")), resolution, open, high, low, close, volume));
-            }
-        return candels;
-    }
-
     public static  Map<LocalDateTime, Candel> createCandels(List<Candel> candels) {
         Map<LocalDateTime, Candel> map = new HashMap<>();
         for (Candel candel : candels) {

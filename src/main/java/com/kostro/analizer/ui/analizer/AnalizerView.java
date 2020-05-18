@@ -1,8 +1,8 @@
 package com.kostro.analizer.ui.analizer;
 
 import com.kostro.analizer.db.service.CandleService;
-import com.kostro.analizer.json.bitbay.domain.candle.CandleResponse;
 import com.kostro.analizer.json.bitbay.service.BitBayService;
+import com.kostro.analizer.json.interfaces.MarketService;
 import com.kostro.analizer.ui.MainLayout;
 import com.kostro.analizer.utils.CandelUtils;
 import com.kostro.analizer.wallet.Candel;
@@ -32,14 +32,13 @@ public class AnalizerView extends AnalizerDesign {
 
     double lastPrice = 0;
 
-    private BitBayService bitBayService;
+    private MarketService bitBayService;
     private CandleService candleService;
 
     ComponentEventListener<ClickEvent<Button>> jsonButtonClicked = e -> {
         LocalDateTime fromDate = LocalDateTime.of(fromDatePicker.getValue(), LocalTime.of(0, 0, 0, 0));
         LocalDateTime toDate = LocalDateTime.of(toDatePicker.getValue(), LocalTime.of(23, 59, 59, 999));
-        CandleResponse response = bitBayService.getCandles("BTC-PLN", resolutionBox.getValue().getSecs(), fromDate, toDate);
-        List<Candel> candels = CandelUtils.createCandels(response, resolutionBox.getValue().getSecs());
+        List<Candel> candels =  bitBayService.getCandles("BTC-PLN", resolutionBox.getValue().getSecs(), fromDate, toDate);
         for (Candel candel : candels) {
             candleService.save(CandelUtils.from(candel));
         }
