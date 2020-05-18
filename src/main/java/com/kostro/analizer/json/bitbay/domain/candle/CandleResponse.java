@@ -1,4 +1,4 @@
-package com.kostro.analizer.json.domain.candle;
+package com.kostro.analizer.json.bitbay.domain.candle;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;

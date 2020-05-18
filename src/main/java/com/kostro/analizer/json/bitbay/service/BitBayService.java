@@ -1,8 +1,7 @@
-package com.kostro.analizer.json.service;
+package com.kostro.analizer.json.bitbay.service;
 
-import com.kostro.analizer.json.domain.ticker.TickerResponse;
-import com.kostro.analizer.json.domain.candle.CandleResponse;
-import com.kostro.analizer.scheduler.Scheduler;
+import com.kostro.analizer.json.bitbay.domain.ticker.TickerResponse;
+import com.kostro.analizer.json.bitbay.domain.candle.CandleResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -14,14 +13,14 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 
 @Service
-public class JsonService {
-    private static final Logger log = LoggerFactory.getLogger(JsonService.class);
+public class BitBayService {
+    private static final Logger log = LoggerFactory.getLogger(BitBayService.class);
 
     private ZoneId zoneId = ZoneId.systemDefault();
     private RestTemplateBuilder builder;
     private RestTemplate restTemplate;
 
-    public JsonService(RestTemplateBuilder builder) {
+    public BitBayService(RestTemplateBuilder builder) {
         this.builder = builder;
         restTemplate = builder.build();
     }

@@ -1,7 +1,7 @@
 package com.kostro.analizer.utils;
 
 import com.kostro.analizer.db.model.CandelEntity;
-import com.kostro.analizer.json.domain.candle.CandleResponse;
+import com.kostro.analizer.json.bitbay.domain.candle.CandleResponse;
 import com.kostro.analizer.wallet.Candel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

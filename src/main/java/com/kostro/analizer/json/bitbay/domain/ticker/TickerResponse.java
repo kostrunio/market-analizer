@@ -1,4 +1,4 @@
-package com.kostro.analizer.json.domain.ticker;
+package com.kostro.analizer.json.bitbay.domain.ticker;
 
 import java.util.Map;
 

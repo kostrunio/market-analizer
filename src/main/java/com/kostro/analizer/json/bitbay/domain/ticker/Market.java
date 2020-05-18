@@ -1,27 +1,46 @@
-package com.kostro.analizer.json.domain.ticker;
+package com.kostro.analizer.json.bitbay.domain.ticker;
 
-public class Ticker {
+import java.time.LocalDateTime;
 
-    private Market market;
-    private String time;
+public class Market {
+    private String code;
+    private First first;
+    private Second second;
+    private LocalDateTime time;
     private Double highestBid;
     private Double lowestAsk;
     private Double rate;
     private Double previousRate;
 
-    public Market getMarket() {
-        return market;
+    public String getCode() {
+        return code;
     }
 
-    public void setMarket(Market market) {
-        this.market = market;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String getTime() {
+    public First getFirst() {
+        return first;
+    }
+
+    public void setFirst(First first) {
+        this.first = first;
+    }
+
+    public Second getSecond() {
+        return second;
+    }
+
+    public void setSecond(Second second) {
+        this.second = second;
+    }
+
+    public LocalDateTime getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(LocalDateTime time) {
         this.time = time;
     }
 
