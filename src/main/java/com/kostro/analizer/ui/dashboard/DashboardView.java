@@ -4,10 +4,7 @@ import com.kostro.analizer.db.service.CandleService;
 import com.kostro.analizer.db.service.ConfigurationService;
 import com.kostro.analizer.ui.MainLayout;
 import com.kostro.analizer.utils.CandelOperation;
-import com.kostro.analizer.utils.SendEmail;
 import com.kostro.analizer.wallet.Candel;
-import com.kostro.analizer.wallet.Resolution;
-import com.kostro.analizer.wallet.Wallet;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
@@ -21,8 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.List;
 
 @Route(value = "dashboard", layout = MainLayout.class)
 @PageTitle("Dashboard | Market Analizer")

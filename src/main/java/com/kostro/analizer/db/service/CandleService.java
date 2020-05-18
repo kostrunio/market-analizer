@@ -2,7 +2,6 @@ package com.kostro.analizer.db.service;
 
 import com.kostro.analizer.db.model.CandelEntity;
 import com.kostro.analizer.db.repository.CandelsRepository;
-import com.kostro.analizer.scheduler.Scheduler;
 import com.kostro.analizer.utils.CandelUtils;
 import com.kostro.analizer.wallet.Candel;
 import org.slf4j.Logger;

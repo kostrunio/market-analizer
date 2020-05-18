@@ -2,7 +2,6 @@ package com.kostro.analizer.ui.verifier;
 
 import com.kostro.analizer.wallet.Candel;
 import com.kostro.analizer.wallet.Resolution;
-import com.kostro.analizer.wallet.Transaction;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;

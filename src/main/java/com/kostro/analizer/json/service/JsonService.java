@@ -26,7 +26,7 @@ public class JsonService {
         restTemplate = builder.build();
     }
 
-    public TickerResponse getMarkets(String name) {
+    public TickerResponse getMarkets() {
         return restTemplate.getForObject("https://api.bitbay.net/rest/trading/ticker", TickerResponse.class);
     }
 
