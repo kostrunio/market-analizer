@@ -29,6 +29,7 @@ public class Scheduler {
         this.candleService = candleService;
         this.configurationService = configurationService;
         candelOperation = new CandelOperation(candleService, configurationService, true);
+//        candelOperation.bought(new Candel(LocalDateTime.of(2020, 5, 6, 12, 50, 00), 60, 38889.97, 38889.97, 38889.97, 38889.97, 0.025713570877015333));
     }
 
     @Scheduled(cron = "0 * * * * *")

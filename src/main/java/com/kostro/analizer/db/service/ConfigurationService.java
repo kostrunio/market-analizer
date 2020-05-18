@@ -59,10 +59,36 @@ public class ConfigurationService {
     }
 
     public double getBuyChange() {
-        return 0.99;
+        return 0.985;
     }
 
-    public double getSellChange() {
-        return 1.02;
+    public double getSellChangeRise() {
+        return 1.025;
     }
+
+    public double getSellChangeFall() {
+        return 0.985;
+    }
+
+    public boolean sendVolume() {
+        return false;
+    }
+
+    public int getHoursToWait() {
+        return 24;
+    }
+
+    public int getWaitAfterSold() {
+        return 2;
+    }
+
+    public int getHugeFor(int secs) {
+        switch (secs) {
+            case 300: return 3;
+            case 3600: return 7;
+            case 7200: return 12;
+        }
+        return 20;
+    }
+
 }

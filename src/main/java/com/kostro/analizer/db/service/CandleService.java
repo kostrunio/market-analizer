@@ -36,6 +36,13 @@ public class CandleService {
         return repository.findAll();
     }
 
+    public List<Candel> find(LocalDateTime startDate, LocalDateTime endDate, int resolution, double limit) {
+        List<Candel> candles = new ArrayList<>();
+        for(CandelEntity entity : repository.findWithLimit(startDate, endDate, resolution, limit)) {
+            candles.add(CandelUtils.from(entity));
+        }
+        return candles;
+    }
     public List<Candel> find(LocalDateTime startDate, LocalDateTime endDate, int resolution) {
         List<Candel> candles = new ArrayList<>();
         for(CandelEntity entity : repository.find(startDate, endDate, resolution)) {

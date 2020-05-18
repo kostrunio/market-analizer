@@ -23,7 +23,7 @@ public class SendEmail {
   public static void volume(Candel candel, Candel fiveMins, Candel oneHour, Candel twoHours, Candel oneDay) {
     try {
       Message message = new MimeMessage(prepareSession());
-      message.setFrom(new InternetAddress("Market Anilzer <expense_system@mailplus.pl>"));
+      message.setFrom(new InternetAddress("Market Analizer <expense_system@mailplus.pl>"));
       message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("miketo@o2.pl"));
       
       message.setSubject("HUGE VOLUME: " + candel.getVolume() + " on " + candel.getTime());
@@ -66,7 +66,7 @@ public class SendEmail {
   public static void buy(Candel candel) {
     try {
       Message message = new MimeMessage(prepareSession());
-      message.setFrom(new InternetAddress("Market Anilzer <expense_system@mailplus.pl>"));
+      message.setFrom(new InternetAddress("Market Analizer <expense_system@mailplus.pl>"));
       message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("miketo@o2.pl"));
 
       message.setSubject("TRYING TO BUY: for " + candel.getClose() + " from " + candel.getTime());
@@ -87,7 +87,7 @@ public class SendEmail {
   public static void bought(Candel candel) {
     try {
       Message message = new MimeMessage(prepareSession());
-      message.setFrom(new InternetAddress("Market Anilzer <expense_system@mailplus.pl>"));
+      message.setFrom(new InternetAddress("Market Analizer <expense_system@mailplus.pl>"));
       message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("miketo@o2.pl"));
 
       message.setSubject("BOUGHT: " + candel);
@@ -108,7 +108,7 @@ public class SendEmail {
   public static void sell(Candel candel) {
     try {
       Message message = new MimeMessage(prepareSession());
-      message.setFrom(new InternetAddress("Market Anilzer <expense_system@mailplus.pl>"));
+      message.setFrom(new InternetAddress("Market Analizer <expense_system@mailplus.pl>"));
       message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("miketo@o2.pl"));
 
       message.setSubject("TRYING TO SELL: for " + candel.getClose() + " from " + candel.getTime());
@@ -129,7 +129,7 @@ public class SendEmail {
   public static void sold(Candel candel) {
     try {
       Message message = new MimeMessage(prepareSession());
-      message.setFrom(new InternetAddress("Market Anilzer <expense_system@mailplus.pl>"));
+      message.setFrom(new InternetAddress("Market Analizer <expense_system@mailplus.pl>"));
       message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("miketo@o2.pl"));
 
       message.setSubject("SOLD: " + candel);
