@@ -31,18 +31,18 @@ public class VerifierView extends VerifierDesign {
     ComponentEventListener<ClickEvent<Button>> jsonButtonClicked = e -> {
         LocalDateTime fromDate = LocalDateTime.of(fromDatePicker.getValue(), fromTimePicker.getValue());
         LocalDateTime toDate = LocalDateTime.of(toDatePicker.getValue(), toTimePicker.getValue());
-        List<Candle> Candles = marketService.getCandles("BTCUSDT", resolutionBox.getValue(), fromDate, toDate);
-        for (Candle Candle : Candles) {
-            candleService.save(CandleUtils.from(Candle));
+        List<Candle> candles = marketService.getCandles("BTCUSDT", resolutionBox.getValue(), fromDate, toDate);
+        for (Candle candle : candles) {
+            candleService.save(CandleUtils.from(candle));
         }
     };
 
-    HasValue.ValueChangeListener<? super AbstractField.ComponentValueChangeEvent<ComboBox<Resolution>, Resolution>> CandleResolutionChanged = e -> {
+    HasValue.ValueChangeListener<? super AbstractField.ComponentValueChangeEvent<ComboBox<Resolution>, Resolution>> candleResolutionChanged = e -> {
         LocalDateTime fromDate = LocalDateTime.of(fromDatePicker.getValue(), fromTimePicker.getValue());
         LocalDateTime toDate = LocalDateTime.of(toDatePicker.getValue(), toTimePicker.getValue());
-        List<Candle> Candles = candleService.find(fromDate, toDate, resolutionBox.getValue().getSecs());
-        List<Candle> newResolutionList = CandleUtils.prepareCandles(Candles, CandleResolutionBox.getValue().getSecs(), fromDate, toDate);
-        CandleGrid.setItems(newResolutionList);
+        List<Candle> candles = candleService.find(fromDate, toDate, resolutionBox.getValue().getSecs());
+        List<Candle> newResolutionList = CandleUtils.prepareCandles(candles, candleResolutionBox.getValue().getSecs(), fromDate);
+        candleGrid.setItems(newResolutionList);
     };
 
     public VerifierView(BinanceService bitBayService, CandleService candleService) {
@@ -50,6 +50,6 @@ public class VerifierView extends VerifierDesign {
         this.candleService = candleService;
 
         jsonButton.addClickListener(jsonButtonClicked);
-        CandleResolutionBox.addValueChangeListener(CandleResolutionChanged);
+        candleResolutionBox.addValueChangeListener(candleResolutionChanged);
     }
 }

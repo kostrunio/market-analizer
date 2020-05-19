@@ -23,8 +23,8 @@ public class VerifierDesign extends VerticalLayout {
     protected ComboBox<Resolution> resolutionBox = new ComboBox<>("resolution");
     protected Button jsonButton = new Button("get data from Market");
 
-    protected ComboBox<Resolution> CandleResolutionBox = new ComboBox<>("Candle resolution");
-    protected Grid<Candle> CandleGrid = new Grid<>(Candle.class);
+    protected ComboBox<Resolution> candleResolutionBox = new ComboBox<>("Candle resolution");
+    protected Grid<Candle> candleGrid = new Grid<>(Candle.class);
 
     public VerifierDesign() {
         setSizeFull();
@@ -51,14 +51,14 @@ public class VerifierDesign extends VerticalLayout {
     private Component createGridLayout() {
         VerticalLayout layout = new VerticalLayout();
         layout.setSizeFull();
-        CandleResolutionBox.setItems(Resolution.ONE_MIN, Resolution.THREE_MINS, Resolution.FIVE_MINS, Resolution.FIFTEEN_MINS, Resolution.THIRTY_MINS,
+        candleResolutionBox.setItems(Resolution.ONE_MIN, Resolution.THREE_MINS, Resolution.FIVE_MINS, Resolution.FIFTEEN_MINS, Resolution.THIRTY_MINS,
                 Resolution.ONE_HOUR, Resolution.TWO_HOURS, Resolution.FOUR_HOURS, Resolution.SIX_HOURS, Resolution.TWELWE_HOURS,
                 Resolution.ONE_DAY, Resolution.THREE_DAYS, Resolution.ONE_WEEK);
-        CandleResolutionBox.setValue(Resolution.ONE_MIN);
-        CandleGrid.setSizeFull();
-        CandleGrid.setColumns("time", "resolution", "open", "close", "low", "high", "volume");
-        CandleGrid.addColumn(Candle -> Candle.getHigh()-Candle.getLow()).setHeader("change");
-        layout.add(CandleResolutionBox, CandleGrid);
+        candleResolutionBox.setValue(Resolution.ONE_MIN);
+        candleGrid.setSizeFull();
+        candleGrid.setColumns("time", "resolution", "open", "close", "low", "high", "volume");
+        candleGrid.addColumn(candle -> candle.getHigh()-candle.getLow()).setHeader("change");
+        layout.add(candleResolutionBox, candleGrid);
         return layout;
     }
 }

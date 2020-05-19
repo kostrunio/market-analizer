@@ -18,28 +18,28 @@ import java.util.stream.Collectors;
 public class CandleUtils {
     private static final Logger log = LoggerFactory.getLogger(CandleUtils.class);
 
-    public static  Map<LocalDateTime, Candle> createCandles(List<Candle> Candles) {
+    public static  Map<LocalDateTime, Candle> createCandles(List<Candle> candles) {
         Map<LocalDateTime, Candle> map = new HashMap<>();
-        for (Candle Candle : Candles) {
-            map.put(Candle.getTime(), Candle);
+        for (Candle candle : candles) {
+            map.put(candle.getTime(), candle);
         }
         return map;
     }
 
-    public static List<Candle> prepareCandles(List<Candle> Candles, int resolution, LocalDateTime fromDate, LocalDateTime toDate) {
+    public static List<Candle> prepareCandles(List<Candle> candles, int resolution, LocalDateTime fromDate) {
         List<Candle> list = new ArrayList<>();
-        List<Candle> sortedCandles = Candles.stream().sorted(Comparator.comparing(Candle::getTime)).collect(Collectors.toList());
+        List<Candle> sortedCandles = candles.stream().sorted(Comparator.comparing(Candle::getTime)).collect(Collectors.toList());
         Candle newCandle = null;
         LocalDateTime date = fromDate;
         for (int i = 0; i < sortedCandles.size();) {
-            Candle Candle = sortedCandles.get(i);
-            if (Candle.getTime().isBefore(date.plusSeconds(resolution))) {
+            Candle candle = sortedCandles.get(i);
+            if (candle.getTime().isBefore(date.plusSeconds(resolution))) {
                 if (newCandle == null) {
-                    newCandle = new Candle(date, resolution, Candle.getOpen(), Candle.getHigh(), Candle.getLow(), Candle.getClose(), Candle.getVolume());
+                    newCandle = new Candle(date, resolution, candle.getOpen(), candle.getHigh(), candle.getLow(), candle.getClose(), candle.getVolume());
                     i++;
                     continue;
                 }
-                updateCandle(newCandle, Candle);
+                updateCandle(newCandle, candle);
                 i++;
                 continue;
             } else if (newCandle != null) {
@@ -52,27 +52,27 @@ public class CandleUtils {
         return list;
     }
 
-    private static void updateCandle(Candle newCandle, Candle Candle) {
-        if (newCandle.getHigh() < Candle.getHigh()) newCandle.setHigh(Candle.getHigh());
-        if (newCandle.getLow() > Candle.getLow()) newCandle.setLow(Candle.getLow());
-        newCandle.setClose(Candle.getClose());
-        newCandle.setVolume(newCandle.getVolume()+Candle.getVolume());
+    private static void updateCandle(Candle newCandle, Candle candle) {
+        if (newCandle.getHigh() < candle.getHigh()) newCandle.setHigh(candle.getHigh());
+        if (newCandle.getLow() > candle.getLow()) newCandle.setLow(candle.getLow());
+        newCandle.setClose(candle.getClose());
+        newCandle.setVolume(newCandle.getVolume()+candle.getVolume());
     }
 
-    public static CandleEntity from (Candle Candle, Long id) {
-        CandleEntity entity = from(Candle);
+    public static CandleEntity from(Candle candle, Long id) {
+        CandleEntity entity = from(candle);
         entity.setId(id);
         return entity;
     }
-    public static CandleEntity from(Candle Candle) {
+    public static CandleEntity from(Candle candle) {
         CandleEntity entity = new CandleEntity();
-        entity.setTime(Candle.getTime());
-        entity.setResolution(Candle.getResolution());
-        entity.setOpen(Candle.getOpen());
-        entity.setHigh(Candle.getHigh());
-        entity.setLow(Candle.getLow());
-        entity.setClose(Candle.getClose());
-        entity.setVolume(Candle.getVolume());
+        entity.setTime(candle.getTime());
+        entity.setResolution(candle.getResolution());
+        entity.setOpen(candle.getOpen());
+        entity.setHigh(candle.getHigh());
+        entity.setLow(candle.getLow());
+        entity.setClose(candle.getClose());
+        entity.setVolume(candle.getVolume());
         return entity;
     }
 

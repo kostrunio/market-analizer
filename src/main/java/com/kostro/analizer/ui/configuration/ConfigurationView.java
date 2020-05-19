@@ -16,7 +16,7 @@ public class ConfigurationView extends ConfiguraionDesign {
     private ConfigurationService configurationService;
 
     ComponentEventListener<ClickEvent<Button>> saveClicked = e -> {
-        configurationService.setMaxPeriod(maxPeriodField.getValue());
+        configurationService.setMaxPeriod(Long.parseLong(maxPeriodField.getValue()));
         configurationService.setMarket(marketField.getValue());
         configurationService.setResolution(resolutionField.getValue());
     };

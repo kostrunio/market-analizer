@@ -21,7 +21,7 @@ public class CandleEntity extends AbstractEntity implements Cloneable {
 
     @Column(name = "c_resolution")
     @NotNull
-    private int resolution;
+    private long resolution;
 
     @Column(name = "c_open")
     @NotNull
@@ -55,11 +55,11 @@ public class CandleEntity extends AbstractEntity implements Cloneable {
         this.time = time;
     }
 
-    public int getResolution() {
+    public long getResolution() {
         return resolution;
     }
 
-    public void setResolution(int resolution) {
+    public void setResolution(long resolution) {
         this.resolution = resolution;
     }
 

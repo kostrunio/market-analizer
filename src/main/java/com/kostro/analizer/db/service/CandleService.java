@@ -50,12 +50,29 @@ public class CandleService {
         return candles;
     }
 
-    public void refreshCandles(List<Candle> Candles) {
-        for (Candle Candle : Candles) {
-            CandleEntity entity = repository.findByTimeAndResolution(Candle.getTime(), Candle.getResolution());
-            entity = CandleUtils.from(Candle, entity != null ? entity.getId() : null);
+    public void refreshCandles(List<Candle> candles) {
+        for (Candle candle : candles) {
+            CandleEntity entity = repository.findByTimeAndResolution(candle.getTime(), candle.getResolution());
+            entity = CandleUtils.from(candle, entity != null ? entity.getId() : null);
             repository.save(entity);
         }
+    }
+
+    private static LocalDateTime lastCandle;
+
+    public LocalDateTime getLastCandle() {
+        if (lastCandle == null) {
+            lastCandle = getLastDate();
+            if (lastCandle != null)
+                lastCandle = lastCandle.minusMinutes(5);
+        }
+        if (lastCandle == null)
+            lastCandle = LocalDateTime.of(2018, 01, 01, 00, 00, 00);
+        return lastCandle;
+    }
+
+    public void setLastCandle(LocalDateTime lastCandle) {
+        this.lastCandle = lastCandle;
     }
 
     public LocalDateTime getLastDate() {

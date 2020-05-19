@@ -26,40 +26,40 @@ public class DashboardView extends DashboardDesign {
     private static final Logger log = LoggerFactory.getLogger(DashboardView.class);
 
     private CandleService candleService;
-    private CandleOperation CandleOperation;
+    private CandleOperation candleOperation;
 
     ComponentEventListener<ClickEvent<Button>> showDataClicked = e -> loadData();
 
     public DashboardView(CandleService candleService, ConfigurationService configurationService) {
         this.candleService = candleService;
-        CandleOperation = new CandleOperation(candleService, configurationService, false);
+        candleOperation = new CandleOperation(candleService, configurationService, false);
         showData.addClickListener(showDataClicked);
     }
 
     private void loadData() {
-        CandleOperation.resetWallet();
+        candleOperation.resetWallet();
         DataSeries btcSeries = new DataSeries("BTC-PLN");
         DataSeries bigFishSeries = new DataSeries("BigFish");
         DataSeries buySeries = new DataSeries("buy");
         DataSeries sellSeries = new DataSeries("sell");
-        for (Candle Candle : candleService.find(LocalDateTime.of(fromDatePicker.getValue(), fromTimePicker.getValue()), LocalDateTime.of(toDatePicker.getValue(), toTimePicker.getValue()), resolutionBox.getValue().getSecs())) {
+        for (Candle candle : candleService.find(LocalDateTime.of(fromDatePicker.getValue(), fromTimePicker.getValue()), LocalDateTime.of(toDatePicker.getValue(), toTimePicker.getValue()), resolutionBox.getValue().getSecs())) {
             boolean inserter = false;
-            DataSeriesItem data = new DataSeriesItem(Candle.getTime().toInstant(ZoneOffset.UTC), (Number) Candle.getLow(), (Number) Candle.getHigh());
+            DataSeriesItem data = new DataSeriesItem(candle.getTime().toInstant(ZoneOffset.UTC), (Number) candle.getLow(), (Number) candle.getHigh());
             if (dataSeriesList.getSelectedItems().contains("BigFish"))
-            if (CandleOperation.checkHugeVolume(Candle)) {
+            if (candleOperation.checkHugeVolume(candle)) {
                 bigFishSeries.add(data);
                 inserter = true;
             }
             if (dataSeriesList.getSelectedItems().contains("buy")) {
-                CandleOperation.checkIfBuy(Candle);
-                if (CandleOperation.checkIfBought(Candle)) {
+                candleOperation.checkIfBuy(candle);
+                if (candleOperation.checkIfBought(candle)) {
                     buySeries.add(data);
                     inserter = true;
                 }
             }
             if (dataSeriesList.getSelectedItems().contains("sell")) {
-                CandleOperation.checkIfSell(Candle);
-                if (CandleOperation.checkIfSold(Candle)) {
+                candleOperation.checkIfSell(candle);
+                if (candleOperation.checkIfSold(candle)) {
                     sellSeries.add(data);
                     inserter = true;
                 }
@@ -72,7 +72,7 @@ public class DashboardView extends DashboardDesign {
         conf.getTooltip().setShared(true);
         chart.drawChart();
 
-        log.info("\nmoney: {}\nbtc: {}", CandleOperation.getWallet().getMoney(), CandleOperation.getWallet().getBitcoin());
-        CandleOperation.getWallet().getTransactionHistory().stream().forEach(t -> log.info(t.toString()));
+        log.info("\nmoney: {}\nbtc: {}", candleOperation.getWallet().getMoney(), candleOperation.getWallet().getBitcoin());
+        candleOperation.getWallet().getTransactionHistory().stream().forEach(t -> log.info(t.toString()));
     }
 }

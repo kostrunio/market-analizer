@@ -35,7 +35,7 @@ public class BinanceService implements MarketService {
     }
 
     public static List<Candle> createCandles(String[][] response, int resolution) {
-        List<Candle> Candles = new ArrayList<>();
+        List<Candle> candles = new ArrayList<>();
         if (response != null)
             for (String[] item : response) {
                 String timestamp = item[0];
@@ -44,8 +44,8 @@ public class BinanceService implements MarketService {
                 double low = Double.parseDouble(item[3]);
                 double close = Double.parseDouble(item[4]);
                 double volume = Double.parseDouble(item[5]);
-                Candles.add(new Candle(LocalDateTime.ofEpochSecond(Long.parseLong(timestamp.substring(0, 10)), Integer.parseInt(timestamp.substring(11)), ZoneOffset.of("+2")), resolution, open, high, low, close, volume));
+                candles.add(new Candle(LocalDateTime.ofEpochSecond(Long.parseLong(timestamp.substring(0, 10)), Integer.parseInt(timestamp.substring(11)), ZoneOffset.of("+2")), resolution, open, high, low, close, volume));
             }
-        return Candles;
+        return candles;
     }
 }
