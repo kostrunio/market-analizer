@@ -12,9 +12,9 @@ import java.util.List;
 public interface CandlesRepository extends JpaRepository<CandleEntity, Long> {
 
     @Query(value = "select * from Candles c where c.c_time between :startDate and :endDate and c.c_resolution = :resolution", nativeQuery = true)
-    public List<CandleEntity> find(@Param("startDate") LocalDateTime startDate,
-                                   @Param("endDate") LocalDateTime endDate,
-                                   @Param("resolution") int resolution);
+    List<CandleEntity> find(@Param("startDate") LocalDateTime startDate,
+                            @Param("endDate") LocalDateTime endDate,
+                            @Param("resolution") int resolution);
 
     CandleEntity findByTimeAndResolution(LocalDateTime time, int resolution);
 
@@ -22,8 +22,8 @@ public interface CandlesRepository extends JpaRepository<CandleEntity, Long> {
     LocalDateTime findLastCandle();
 
     @Query(value = "select * from Candles c where c.c_time between :startDate and :endDate and c.c_resolution = :resolution and c.c_volume > :limit", nativeQuery = true)
-    public List<CandleEntity> findWithLimit(@Param("startDate") LocalDateTime startDate,
-                                   @Param("endDate") LocalDateTime endDate,
-                                   @Param("resolution") int resolution,
-                                   @Param("limit") double limit);
+    List<CandleEntity> findWithLimit(@Param("startDate") LocalDateTime startDate,
+                                     @Param("endDate") LocalDateTime endDate,
+                                     @Param("resolution") int resolution,
+                                     @Param("limit") double limit);
 }

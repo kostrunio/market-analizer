@@ -29,7 +29,7 @@ public class BinanceService implements MarketService {
     }
 
     public List<Candle> getCandles(String market, Resolution resolution, LocalDateTime from, LocalDateTime to) {
-        String url = "https://fapi.binance.com/fapi/v1/klines?symbol="+market+"&interval="+resolution.getCode()+"&startTime="+ from.toEpochSecond(ZoneOffset.of("+2"))+"000&endTime="+to.toEpochSecond(ZoneOffset.of("+2"))+"000";
+        String url = "https://fapi.binance.com/fapi/v1/klines?symbol="+market+"&interval="+resolution.getCode()+"&startTime="+ from.toEpochSecond(ZoneOffset.of("+2"))+"000&endTime="+to.toEpochSecond(ZoneOffset.of("+2"))+"000&limit=1500";
         log.info("REQUEST: " + url);
         return createCandles(restTemplate.getForObject(url, String[][].class), resolution.getSecs());
     }
