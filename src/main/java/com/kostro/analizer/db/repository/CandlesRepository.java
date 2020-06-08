@@ -16,7 +16,7 @@ public interface CandlesRepository extends JpaRepository<CandleEntity, Long> {
                             @Param("endDate") LocalDateTime endDate,
                             @Param("resolution") int resolution);
 
-    CandleEntity findByTimeAndResolution(LocalDateTime time, long resolution);
+    CandleEntity findByTimeAndResolution(LocalDateTime time, int resolution);
 
     @Query(value = "select c.c_time from Candles c order by c.c_time desc limit 1", nativeQuery = true)
     LocalDateTime findLastCandle();

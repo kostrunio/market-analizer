@@ -8,10 +8,10 @@ public class Line {
     private double startValue;
     private LocalDateTime endDate;
     private double endValue;
-    private long resolution;
+    private int resolution;
     private double margin;
 
-    public Line(LocalDateTime startDate, double startValue, LocalDateTime endDate, double endValue, long resolution, double margin) {
+    public Line(LocalDateTime startDate, double startValue, LocalDateTime endDate, double endValue, int resolution, double margin) {
         this.startDate = startDate;
         this.startValue = startValue;
         this.endDate = endDate;
@@ -52,11 +52,11 @@ public class Line {
         this.endValue = endValue;
     }
 
-    public long getResolution() {
+    public int getResolution() {
         return resolution;
     }
 
-    public void setResolution(long resolution) {
+    public void setResolution(int resolution) {
         this.resolution = resolution;
     }
 

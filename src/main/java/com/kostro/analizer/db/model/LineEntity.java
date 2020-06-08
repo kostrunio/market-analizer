@@ -28,7 +28,7 @@ public class LineEntity extends AbstractEntity implements Cloneable {
 
     @Column(name = "l_resolution")
     @NotNull
-    private long resolution;
+    private int resolution;
 
     @Column(name = "l_margin")
     @NotNull
@@ -66,11 +66,11 @@ public class LineEntity extends AbstractEntity implements Cloneable {
         this.endValue = endValue;
     }
 
-    public long getResolution() {
+    public int getResolution() {
         return resolution;
     }
 
-    public void setResolution(long resolution) {
+    public void setResolution(int resolution) {
         this.resolution = resolution;
     }
 

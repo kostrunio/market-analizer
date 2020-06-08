@@ -29,12 +29,12 @@ public class LineUtils {
     public static void analize(Line line, Candle candle) {
         Duration duration = Duration.between(line.getStartDate(), line.getEndDate());
         // 21 + 9 = 30
-        long steps = duration.toHours()/(line.getResolution()/3600);
+        int steps = (int)duration.toHours()/(line.getResolution()/3600);
         //9450 - 9975 -> -525 / 30-> -17,5
         double step = (line.getEndValue() - line.getStartValue())/steps;
         duration = Duration.between(line.getStartDate(), candle.getTime());
-        if (candle.getClose() > line.getStartValue()- (step * duration.toHours())) {
-            log.info();
+        if (candle.getClose() > line.getStartValue() - (step * duration.toHours())) {
+//            log.info();
         }
     }
 }

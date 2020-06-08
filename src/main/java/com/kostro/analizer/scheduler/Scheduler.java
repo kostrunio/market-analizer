@@ -52,7 +52,7 @@ public class Scheduler {
 
         //push event
 //        candleOperation.checkCandles(candles);
-        candleOperation.analize(candles);
+//        candleOperation.analize(candles);
 
         candleService.setLastCandle(dateTo);
     }

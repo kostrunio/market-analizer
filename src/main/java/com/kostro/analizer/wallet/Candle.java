@@ -4,14 +4,14 @@ import java.time.LocalDateTime;
 
 public class Candle {
     private LocalDateTime time;
-    private long resolution;
+    private int resolution;
     private double open;
     private double close;
     private double low;
     private double high;
     private double volume;
 
-    public Candle(LocalDateTime time, long resolution, double open, double close, double low, double high, double volume) {
+    public Candle(LocalDateTime time, int resolution, double open, double close, double low, double high, double volume) {
         this.time = time;
         this.resolution = resolution;
         this.open = open;
@@ -25,7 +25,7 @@ public class Candle {
         return time;
     }
 
-    public long getResolution() {
+    public int getResolution() {
         return resolution;
     }
 
