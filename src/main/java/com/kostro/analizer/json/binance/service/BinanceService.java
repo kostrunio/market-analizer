@@ -5,7 +5,9 @@ import com.kostro.analizer.wallet.Candle;
 import com.kostro.analizer.wallet.Resolution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,15 +18,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Primary
 public class BinanceService implements MarketService {
     private static final Logger log = LoggerFactory.getLogger(BinanceService.class);
 
     private ZoneId zoneId = ZoneId.systemDefault();
-    private RestTemplateBuilder builder;
     private RestTemplate restTemplate;
 
+    @Autowired
     public BinanceService(RestTemplateBuilder builder) {
-        this.builder = builder;
         restTemplate = builder.build();
     }
 

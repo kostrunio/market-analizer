@@ -6,6 +6,7 @@ import com.kostro.analizer.utils.CandleUtils;
 import com.kostro.analizer.wallet.Candle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ public class CandleService {
 
     private CandlesRepository repository;
 
+    @Autowired
     public CandleService(CandlesRepository repository) {
         this.repository = repository;
     }

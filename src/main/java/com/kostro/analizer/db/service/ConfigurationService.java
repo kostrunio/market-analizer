@@ -31,7 +31,7 @@ public class ConfigurationService {
         if (getMaxPeriod() == null) {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setName("maxPeriod");
-            entity.setValue((1500*60)+"");
+            entity.setValue((1000*60)+"");
             configurationRepository.save(entity);
         }
         if (getMarket() == null) {
