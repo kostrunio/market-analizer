@@ -19,6 +19,7 @@ public class ConfigurationView extends ConfiguraionDesign {
         configurationService.setMaxPeriod(Long.parseLong(maxPeriodField.getValue()));
         configurationService.setMarket(marketField.getValue());
         configurationService.setResolution(resolutionField.getValue());
+        configurationService.setSendVolume(Boolean.getBoolean(sendVolume.getValue()));
     };
 
     public ConfigurationView(ConfigurationService configurationService) {
@@ -27,6 +28,7 @@ public class ConfigurationView extends ConfiguraionDesign {
         maxPeriodField.setValue(configurationService.getMaxPeriod()+"");
         marketField.setValue(configurationService.getMarket());
         resolutionField.setValue(configurationService.getResolution().name());
+        sendVolume.setValue(configurationService.getSendVolume().toString());
 
         saveButton.addClickListener(saveClicked);
     }

@@ -20,6 +20,7 @@ public class ConfigurationService {
     private Long maxPeriod;
     private String market;
     private Resolution resolution;
+    private Boolean sendVolume;
 
     public ConfigurationService(ConfigurationRepository configurationRepository) {
         this.configurationRepository = configurationRepository;
@@ -44,6 +45,13 @@ public class ConfigurationService {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setName("resolution");
             entity.setValue("1 min");
+            configurationRepository.save(entity);
+        }
+
+        if (getSendVolume() == null) {
+            ConfigurationEntity entity = new ConfigurationEntity();
+            entity.setName("sendVolume");
+            entity.setValue("true");
             configurationRepository.save(entity);
         }
     }
@@ -127,6 +135,22 @@ public class ConfigurationService {
         configurationRepository.save(entity);
     }
 
+    public Boolean getSendVolume() {
+        if (sendVolume != null) return sendVolume;
+        ConfigurationEntity entity = configurationRepository.findByName("sendVolume");
+        if (entity != null) {
+            sendVolume = Boolean.getBoolean(entity.getValue());
+        }
+        return sendVolume;
+    }
+
+    public void setSendVolume(boolean value) {
+        sendVolume = value;
+        ConfigurationEntity entity = configurationRepository.findByName("sendVolume");
+        entity.setValue(Boolean.toString(value));
+        configurationRepository.save(entity);
+    }
+
     public int getLimitFor(int secs) {
         switch (secs) {
             case 60:
@@ -145,10 +169,6 @@ public class ConfigurationService {
 
     public double getSellChangeFall() {
         return 0.985;
-    }
-
-    public boolean sendVolume() {
-        return false;
     }
 
     public int getHoursToWait() {
