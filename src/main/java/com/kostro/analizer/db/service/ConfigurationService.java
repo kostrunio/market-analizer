@@ -139,7 +139,7 @@ public class ConfigurationService {
         if (sendVolume != null) return sendVolume;
         ConfigurationEntity entity = configurationRepository.findByName("sendVolume");
         if (entity != null) {
-            sendVolume = Boolean.getBoolean(entity.getValue());
+            sendVolume = Boolean.parseBoolean(entity.getValue());
         }
         return sendVolume;
     }

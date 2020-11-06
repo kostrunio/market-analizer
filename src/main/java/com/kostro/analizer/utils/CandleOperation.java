@@ -62,7 +62,7 @@ public class CandleOperation {
     private void prepareLists(List<Candle> fiveMins60, List<Candle> fiveMins, Resolution resolution, Candle candle) {
         LocalDateTime dateFrom = candle.getTime().minusSeconds(resolution.getSecs());
         LocalDateTime dateTo = candle.getTime().minusMinutes(1);
-        fiveMins60.addAll(candleService.find(dateFrom, dateTo, Resolution.ONE_MIN.getSecs(), configurationService.getLimitFor(Resolution.ONE_MIN.getSecs())));
+        fiveMins60.addAll(candleService.find(dateFrom, dateTo, Resolution.ONE_MIN.getSecs()));
         fiveMins.addAll(CandleUtils.prepareCandles(fiveMins60, resolution.getSecs(), dateFrom));
         fiveMins.stream().forEach(c -> log.info(resolution.name() + ": {} -> change: {}", c.toString(), candle.getClose() - c.getHigh()));
     }
