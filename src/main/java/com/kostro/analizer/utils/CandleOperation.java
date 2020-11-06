@@ -32,16 +32,16 @@ public class CandleOperation {
         this.candleService = candleService;
         this.configurationService = configurationService;
         this.sendingEmails = sendingEmails;
-        this.wallet = new Wallet(1000, 0.9953);
+        this.wallet = new Wallet(1000, 0.999);
     }
 
     public void checkCandles(List<Candle> candles) {
         for (Candle candle : candles) {
             checkHugeVolume(candle);
-            checkIfBuy(candle);
-            checkIfBought(candle);
-            checkIfSell(candle);
-            checkIfSold(candle);
+//            checkIfBuy(candle);
+//            checkIfBought(candle);
+//            checkIfSell(candle);
+//            checkIfSold(candle);
         }
     }
 
@@ -50,7 +50,7 @@ public class CandleOperation {
     }
 
     public void resetWallet() {
-        this.wallet = new Wallet(1000, 0.9953);
+        this.wallet = new Wallet(1000, 0.999);
         lastHugeVolume = toBuy = bought = toSell = null;
         lastFail = lastSold = null;
     }
@@ -85,32 +85,46 @@ public class CandleOperation {
             List<Candle> oneDay = new ArrayList<>();
             prepareLists(oneDay60, oneDay, Resolution.ONE_DAY, candle);
 
-            if (isHugeAndWaitedEnough(candle)) {
-                if (configurationService.sendVolume())
-                    SendEmail.volume(candle, fiveMins.get(0), oneHour.get(0), twoHours.get(0), oneDay.get(0));
+            if (configurationService.sendVolume())
+                SendEmail.volume(candle, fiveMins.get(0), oneHour.get(0), twoHours.get(0), oneDay.get(0));
+
+                if (trendToUp(candle) && toBuy == null && bought == null && toSell == null) {
+                    buy(candle);
+                    return true;
+                }
+
+/*            if (isHugeAndWaitedEnough(candle)) {
 
                 if (isEnoughHugeTransactions(fiveMins60, oneHour60, twoHours60)) {
-                    toBuy = new Candle(candle.getTime().plusMinutes(1), Resolution.ONE_MIN.getSecs(), candle.getClose(), candle.getClose(), candle.getClose(), candle.getClose(), 1000 / candle.getClose());
-                    log.info("last HUGE {} for {}", lastHugeVolume.getTime(), lastHugeVolume.getLow());
-                    log.info("TRYING TO BUY: {} -> worth: {}", toBuy, (candle.getClose()) / lastHugeVolume.getLow() * 100);
-                    if (sendingEmails)
-                        SendEmail.buy(toBuy);
-                    lastHugeVolume = null;
+                    buy(candle);
                     return true;
                 }
             }
 
             if (candle.getClose() <= lastHugeVolume.getLow() * configurationService.getBuyChange()) {
-                toBuy = new Candle(candle.getTime().plusMinutes(1), Resolution.ONE_MIN.getSecs(), candle.getClose(), candle.getClose(), candle.getClose(), candle.getClose(), 1000/candle.getClose());
-                log.info("last HUGE {} for {}", lastHugeVolume.getTime(), lastHugeVolume.getLow());
-                log.info("TRYING TO BUY: {} -> worth: {}", toBuy, (candle.getClose())/lastHugeVolume.getLow()*100);
-                if (sendingEmails)
-                    SendEmail.buy(toBuy);
-                lastHugeVolume = null;
+                buy(candle);
                 return true;
-            }
+            }*/
         }
         return false;
+    }
+
+    private boolean trendToUp(Candle candle) {
+        List<Candle> list = candleService.findLastHuge(candle.getTime(), candle.getResolution(), configurationService.getLimitFor(candle.getResolution()), configurationService.getNumberOfTransactions(candle.getResolution()));
+        for (int i=1; i < list.size(); i++) {
+            if (list.get(i).getClose() - list.get(i-1).getClose() < 0)
+                return false;
+        }
+        return true;
+    }
+
+    private void buy(Candle candle) {
+        toBuy = new Candle(candle.getTime().plusMinutes(1), Resolution.ONE_MIN.getSecs(), candle.getClose(), candle.getClose(), candle.getClose(), candle.getClose(), 1000/candle.getClose());
+        log.info("last HUGE {} for {}", lastHugeVolume.getTime(), lastHugeVolume.getLow());
+        log.info("TRYING TO BUY: {} -> worth: {}", toBuy, (candle.getClose())/lastHugeVolume.getLow()*100);
+        if (sendingEmails)
+            SendEmail.buy(toBuy);
+        lastHugeVolume = null;
     }
 
     private boolean isHugeAndWaitedEnough(Candle candle) {
@@ -149,26 +163,40 @@ public class CandleOperation {
     }
 
     public boolean checkIfSell(Candle candle) {
-        if (lastHugeVolume != null && bought != null)
-            if (candle.getClose() >= bought.getOpen() * configurationService.getSellChangeRise()) {
-                toSell = new Candle(candle.getTime().plusMinutes(1), Resolution.ONE_MIN.getSecs(), candle.getClose(), candle.getClose(), candle.getClose(), candle.getClose(), 1000 / candle.getClose());
-                log.info("last HUGE {} for {}", lastHugeVolume.getTime(), lastHugeVolume.getOpen());
-                log.info("TRYING TO SELL: {} -> rise: {}", toSell, (candle.getClose()/ bought.getOpen() * 100));
-                if (sendingEmails)
-                    SendEmail.sell(toSell);
-                bought = null;
-                return true;
-            } else if (candle.getClose() <= bought.getOpen() * configurationService.getSellChangeFall() && lastHugeVolume != null && candle.getTime().minusHours(1).isBefore(lastHugeVolume.getTime()) && lastHugeVolume.getOpen() < candle.getLow()) {
-                toSell = new Candle(candle.getTime().plusMinutes(1), Resolution.ONE_MIN.getSecs(), candle.getClose(), candle.getClose(), candle.getClose(), candle.getClose(), 1000 / candle.getClose());
-                lastFail = candle.getTime();
-                log.info("last HUGE {} for {}", lastHugeVolume.getTime(), lastHugeVolume.getOpen());
-                log.info("TRYING TO SELL: {} -> fall: {}", toSell, (candle.getClose()/ bought.getOpen() * 100));
-                if (sendingEmails)
-                    SendEmail.sell(toSell);
-                bought = null;
+        if (candle.getVolume() > configurationService.getLimitFor(candle.getResolution()) && bought != null) {
+            if (trendToDown(candle)) {
+                sell(candle);
                 return true;
             }
+        }
+        /*if (lastHugeVolume != null && bought != null)
+            if (candle.getClose() >= bought.getOpen() * configurationService.getSellChangeRise()) {
+                sell(candle);
+                return true;
+            } else if (candle.getClose() <= bought.getOpen() * configurationService.getSellChangeFall() && lastHugeVolume != null && candle.getTime().minusHours(1).isBefore(lastHugeVolume.getTime()) && lastHugeVolume.getOpen() < candle.getLow()) {
+                lastFail = candle.getTime();
+                sell(candle);
+                return true;
+            }*/
         return false;
+    }
+
+    private void sell(Candle candle) {
+        toSell = new Candle(candle.getTime().plusMinutes(1), Resolution.ONE_MIN.getSecs(), candle.getClose(), candle.getClose(), candle.getClose(), candle.getClose(), 1000 / candle.getClose());
+        log.info("last HUGE {} for {}", lastHugeVolume.getTime(), lastHugeVolume.getOpen());
+        log.info("TRYING TO SELL: {} -> rise: {}", toSell, (candle.getClose()/ bought.getOpen() * 100));
+        if (sendingEmails)
+            SendEmail.sell(toSell);
+        bought = null;
+    }
+
+    private boolean trendToDown(Candle candle) {
+        List<Candle> list = candleService.findLastHuge(candle.getTime(), candle.getResolution(), configurationService.getLimitFor(candle.getResolution()), configurationService.getNumberOfTransactions(candle.getResolution()));
+        for (int i=1; i < list.size(); i++) {
+            if (list.get(i).getClose() - list.get(i-1).getClose() > 0)
+                return false;
+        }
+        return true;
     }
 
     public boolean checkIfSold(Candle candle) {

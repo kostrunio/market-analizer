@@ -26,4 +26,9 @@ public interface CandlesRepository extends JpaRepository<CandleEntity, Long> {
                                      @Param("endDate") LocalDateTime endDate,
                                      @Param("resolution") int resolution,
                                      @Param("limit") double limit);
+
+    @Query(value = "select * from Candles c where c.c_time <= :startDate and c.c_resolution = :resolution and c.c_volume > :limit order by id desc limit :numberOfTransactions", nativeQuery = true)
+    List<CandleEntity> findLast(@Param("startDate") LocalDateTime time, @Param("resolution") int resolution,
+                                @Param("limit") int limit,
+                                @Param("numberOfTransactions") int numberOfTransactions);
 }

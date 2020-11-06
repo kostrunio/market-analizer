@@ -51,10 +51,10 @@ public class Scheduler {
         candleService.refreshCandles(candles);
 
         //push event
-//        candleOperation.checkCandles(candles);
+        candleOperation.checkCandles(candles);
 //        candleOperation.analize(candles);
 
-        candleService.setLastCandle(dateTo);
+        candleService.setLastCandle(candles.get(candles.size()-1).getTime());
     }
 
 }

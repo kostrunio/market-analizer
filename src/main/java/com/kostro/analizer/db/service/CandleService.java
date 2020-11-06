@@ -67,7 +67,7 @@ public class CandleService {
                 lastCandle = lastCandle.minusMinutes(5);
         }
         if (lastCandle == null)
-            lastCandle = LocalDateTime.of(2018, 01, 01, 00, 00, 00);
+            lastCandle = LocalDateTime.of(2020, 11, 01, 00, 00, 00);
         return lastCandle;
     }
 
@@ -77,5 +77,13 @@ public class CandleService {
 
     public LocalDateTime getLastDate() {
         return repository.findLastCandle();
+    }
+
+    public List<Candle> findLastHuge(LocalDateTime time, int resolution, int limit, int numberOfTransactions) {
+        List<Candle> candles = new ArrayList<>();
+        for(CandleEntity entity : repository.findLast(time, resolution, limit, numberOfTransactions)) {
+            candles.add(CandleUtils.from(entity));
+        }
+        return candles;
     }
 }

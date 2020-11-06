@@ -127,12 +127,12 @@ public class ConfigurationService {
         configurationRepository.save(entity);
     }
 
-    public double getLimitFor(int secs) {
+    public int getLimitFor(int secs) {
         switch (secs) {
             case 60:
-                return 20;
+                return 500;
         }
-        return 100;
+        return 1000;
     }
 
     public double getBuyChange() {
@@ -166,5 +166,12 @@ public class ConfigurationService {
             case 7200: return 12;
         }
         return 20;
+    }
+
+    public int getNumberOfTransactions(int resolution) {
+        switch (resolution) {
+            case 60: return 3;
+        }
+        return 3;
     }
 }
