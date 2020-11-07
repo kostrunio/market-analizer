@@ -2,6 +2,7 @@ package com.kostro.analizer.ui.configuration;
 
 import com.kostro.analizer.db.service.ConfigurationService;
 import com.kostro.analizer.ui.MainLayout;
+import com.kostro.analizer.wallet.Resolution;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
@@ -18,8 +19,8 @@ public class ConfigurationView extends ConfiguraionDesign {
     ComponentEventListener<ClickEvent<Button>> saveClicked = e -> {
         configurationService.setMaxPeriod(Long.parseLong(maxPeriodField.getValue()));
         configurationService.setMarket(marketField.getValue());
-        configurationService.setResolution(resolutionField.getValue());
-        configurationService.setSendVolume(Boolean.getBoolean(sendVolume.getValue()));
+        configurationService.setResolution(resolutionField.getValue().toString());
+        configurationService.setSendVolume(sendVolume.getValue());
     };
 
     public ConfigurationView(ConfigurationService configurationService) {
@@ -27,8 +28,9 @@ public class ConfigurationView extends ConfiguraionDesign {
 
         maxPeriodField.setValue(configurationService.getMaxPeriod()+"");
         marketField.setValue(configurationService.getMarket());
-        resolutionField.setValue(configurationService.getResolution().name());
-        sendVolume.setValue(configurationService.getSendVolume().toString());
+        resolutionField.setItems(Resolution.getResolutions());
+        resolutionField.setValue(configurationService.getResolution());
+        sendVolume.setValue(configurationService.getSendVolume());
 
         saveButton.addClickListener(saveClicked);
     }

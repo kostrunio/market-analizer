@@ -1,5 +1,8 @@
 package com.kostro.analizer.wallet;
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum Resolution {
 
     ONE_MIN("1 min", 60, "1m"),
@@ -32,6 +35,12 @@ public enum Resolution {
 
     public String getCode() {
         return code;
+    }
+
+    public static List<Resolution> getResolutions() {
+        return Arrays.asList(ONE_MIN, THREE_MINS, FIVE_MINS, FIFTEEN_MINS, THREE_MINS,
+                ONE_HOUR, TWO_HOURS, FOUR_HOURS, SIX_HOURS, TWELWE_HOURS,
+                ONE_DAY, THREE_DAYS, ONE_WEEK);
     }
 
     @Override
