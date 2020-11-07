@@ -22,6 +22,7 @@ public class ConfigurationView extends ConfiguraionDesign {
         configurationService.setResolution(resolutionField.getValue().toString());
         configurationService.setSendVolume(sendVolume.getValue());
         configurationService.setRunScheduler(runSheduler.getValue());
+        configurationService.setStopbuying(stopBuying.getValue());
     };
 
     public ConfigurationView(ConfigurationService configurationService) {
@@ -31,8 +32,9 @@ public class ConfigurationView extends ConfiguraionDesign {
         marketField.setValue(configurationService.getMarket());
         resolutionField.setItems(Resolution.getResolutions());
         resolutionField.setValue(configurationService.getResolution());
-        sendVolume.setValue(configurationService.getSendVolume());
-        runSheduler.setValue(configurationService.getRunScheduler());
+        sendVolume.setValue(configurationService.isSendVolume());
+        runSheduler.setValue(configurationService.isRunScheduler());
+        stopBuying.setValue(configurationService.isStopBuying());
 
         saveButton.addClickListener(saveClicked);
     }

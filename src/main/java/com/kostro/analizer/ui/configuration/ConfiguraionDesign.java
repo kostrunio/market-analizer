@@ -14,6 +14,7 @@ public class ConfiguraionDesign extends VerticalLayout {
     protected ComboBox<Resolution> resolutionField = new ComboBox("resolution");
     protected Checkbox sendVolume = new Checkbox("sendVolume");
     protected Checkbox runSheduler = new Checkbox("runSheduler");
+    protected Checkbox stopBuying = new Checkbox("stopBuying");
 
     protected Button saveButton = new Button("Save");
 

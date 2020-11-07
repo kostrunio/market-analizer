@@ -33,7 +33,7 @@ public class Scheduler {
 
     @Scheduled(cron = "0 * * * * *")
     public void getData() {
-        if (!configurationService.getRunScheduler()) {
+        if (!configurationService.isRunScheduler()) {
             log.info("Scheduler stopped");
             return;
         }

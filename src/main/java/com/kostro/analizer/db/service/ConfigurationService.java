@@ -22,6 +22,7 @@ public class ConfigurationService {
     private Resolution resolution;
     private Boolean sendVolume;
     private Boolean runScheduler;
+    private Boolean stopBuying;
 
     public ConfigurationService(ConfigurationRepository configurationRepository) {
         this.configurationRepository = configurationRepository;
@@ -49,17 +50,24 @@ public class ConfigurationService {
             configurationRepository.save(entity);
         }
 
-        if (getSendVolume() == null) {
+        if (isSendVolume() == null) {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setName("sendVolume");
             entity.setValue("true");
             configurationRepository.save(entity);
         }
 
-        if (getRunScheduler() == null) {
+        if (isRunScheduler() == null) {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setName("runScheduler");
             entity.setValue("true");
+            configurationRepository.save(entity);
+        }
+
+        if (isStopBuying() == null) {
+            ConfigurationEntity entity = new ConfigurationEntity();
+            entity.setName("stopbuying");
+            entity.setValue("false");
             configurationRepository.save(entity);
         }
     }
@@ -143,7 +151,7 @@ public class ConfigurationService {
         configurationRepository.save(entity);
     }
 
-    public Boolean getSendVolume() {
+    public Boolean isSendVolume() {
         if (sendVolume != null) return sendVolume;
         ConfigurationEntity entity = configurationRepository.findByName("sendVolume");
         if (entity != null) {
@@ -159,7 +167,7 @@ public class ConfigurationService {
         configurationRepository.save(entity);
     }
 
-    public Boolean getRunScheduler() {
+    public Boolean isRunScheduler() {
         if (runScheduler != null) return runScheduler;
         ConfigurationEntity entity = configurationRepository.findByName("runScheduler");
         if (entity != null) {
@@ -171,6 +179,22 @@ public class ConfigurationService {
     public void setRunScheduler(boolean value) {
         runScheduler = value;
         ConfigurationEntity entity = configurationRepository.findByName("runScheduler");
+        entity.setValue(Boolean.toString(value));
+        configurationRepository.save(entity);
+    }
+
+    public Boolean isStopBuying() {
+        if (stopBuying != null) return stopBuying;
+        ConfigurationEntity entity = configurationRepository.findByName("stopBuying");
+        if (entity != null) {
+            stopBuying = Boolean.parseBoolean(entity.getValue());
+        }
+        return stopBuying;
+    }
+
+    public void setStopbuying(boolean value) {
+        stopBuying = value;
+        ConfigurationEntity entity = configurationRepository.findByName("stopBuying");
         entity.setValue(Boolean.toString(value));
         configurationRepository.save(entity);
     }
