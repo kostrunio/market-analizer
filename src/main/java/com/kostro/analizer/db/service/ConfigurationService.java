@@ -21,6 +21,7 @@ public class ConfigurationService {
     private String market;
     private Resolution resolution;
     private Boolean sendVolume;
+    private Boolean runScheduler;
 
     public ConfigurationService(ConfigurationRepository configurationRepository) {
         this.configurationRepository = configurationRepository;
@@ -51,6 +52,13 @@ public class ConfigurationService {
         if (getSendVolume() == null) {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setName("sendVolume");
+            entity.setValue("true");
+            configurationRepository.save(entity);
+        }
+
+        if (getRunScheduler() == null) {
+            ConfigurationEntity entity = new ConfigurationEntity();
+            entity.setName("runScheduler");
             entity.setValue("true");
             configurationRepository.save(entity);
         }
@@ -147,6 +155,22 @@ public class ConfigurationService {
     public void setSendVolume(boolean value) {
         sendVolume = value;
         ConfigurationEntity entity = configurationRepository.findByName("sendVolume");
+        entity.setValue(Boolean.toString(value));
+        configurationRepository.save(entity);
+    }
+
+    public Boolean getRunScheduler() {
+        if (runScheduler != null) return runScheduler;
+        ConfigurationEntity entity = configurationRepository.findByName("runScheduler");
+        if (entity != null) {
+            runScheduler = Boolean.parseBoolean(entity.getValue());
+        }
+        return runScheduler;
+    }
+
+    public void setRunScheduler(boolean value) {
+        runScheduler = value;
+        ConfigurationEntity entity = configurationRepository.findByName("runScheduler");
         entity.setValue(Boolean.toString(value));
         configurationRepository.save(entity);
     }

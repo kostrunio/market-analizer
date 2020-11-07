@@ -13,12 +13,13 @@ public class ConfiguraionDesign extends VerticalLayout {
     protected TextField marketField = new TextField("market");
     protected ComboBox<Resolution> resolutionField = new ComboBox("resolution");
     protected Checkbox sendVolume = new Checkbox("sendVolume");
+    protected Checkbox runSheduler = new Checkbox("runSheduler");
 
     protected Button saveButton = new Button("Save");
 
     public ConfiguraionDesign() {
         FormLayout layout = new FormLayout();
-        layout.add(maxPeriodField, marketField, resolutionField, sendVolume, saveButton);
+        layout.add(maxPeriodField, marketField, resolutionField, sendVolume, runSheduler, saveButton);
 
         add(layout);
     }

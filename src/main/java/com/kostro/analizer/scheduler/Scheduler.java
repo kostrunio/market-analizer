@@ -33,6 +33,10 @@ public class Scheduler {
 
     @Scheduled(cron = "0 * * * * *")
     public void getData() {
+        if (!configurationService.getRunScheduler()) {
+            log.info("Scheduler stopped");
+            return;
+        }
         LocalDateTime dateFrom = candleService.getLastCandle();
         LocalDateTime dateTo = dateFrom.plusSeconds(configurationService.getMaxPeriod());
         if (dateTo.isAfter(LocalDateTime.now())) {
