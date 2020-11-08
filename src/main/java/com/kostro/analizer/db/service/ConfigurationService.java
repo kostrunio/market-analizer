@@ -17,12 +17,13 @@ public class ConfigurationService {
 
     private ConfigurationRepository configurationRepository;
 
-    private Long maxPeriod;
+    private Integer maxPeriod;
     private String market;
     private Resolution resolution;
     private Boolean sendVolume;
     private Boolean runScheduler;
     private Boolean stopBuying;
+    private Integer limit60;
 
     public ConfigurationService(ConfigurationRepository configurationRepository) {
         this.configurationRepository = configurationRepository;
@@ -66,8 +67,15 @@ public class ConfigurationService {
 
         if (isStopBuying() == null) {
             ConfigurationEntity entity = new ConfigurationEntity();
-            entity.setName("stopbuying");
+            entity.setName("stopBuying");
             entity.setValue("false");
+            configurationRepository.save(entity);
+        }
+
+        if (getLimit60() == null) {
+            ConfigurationEntity entity = new ConfigurationEntity();
+            entity.setName("limit60");
+            entity.setValue("300");
             configurationRepository.save(entity);
         }
     }
@@ -76,16 +84,16 @@ public class ConfigurationService {
         return configurationRepository.findAll();
     }
 
-    public Long getMaxPeriod() {
+    public Integer getMaxPeriod() {
         if (maxPeriod != null) return maxPeriod;
         ConfigurationEntity entity = configurationRepository.findByName("maxPeriod");
         if (entity != null) {
-            maxPeriod = Long.parseLong(entity.getValue());
+            maxPeriod = Integer.parseInt(entity.getValue());
         }
         return maxPeriod;
     }
 
-    public void setMaxPeriod(Long value) {
+    public void setMaxPeriod(Integer value) {
         maxPeriod = value;
         ConfigurationEntity entity = configurationRepository.findByName("maxPeriod");
         entity.setValue(value+"");
@@ -192,54 +200,35 @@ public class ConfigurationService {
         return stopBuying;
     }
 
-    public void setStopbuying(boolean value) {
+    public void setStopBuying(boolean value) {
         stopBuying = value;
         ConfigurationEntity entity = configurationRepository.findByName("stopBuying");
         entity.setValue(Boolean.toString(value));
         configurationRepository.save(entity);
     }
 
+    public Integer getLimit60() {
+        if (limit60 != null) return limit60;
+        ConfigurationEntity entity = configurationRepository.findByName("limit60");
+        if (entity != null) {
+            limit60 = Integer.parseInt(entity.getValue());
+        }
+        return limit60;
+    }
+
+    public void setLimit60(Integer value) {
+        limit60 = value;
+        ConfigurationEntity entity = configurationRepository.findByName("limit60");
+        entity.setValue(value+"");
+        configurationRepository.save(entity);
+    }
+
     public int getLimitFor(int secs) {
         switch (secs) {
             case 60:
-                return 500;
+                return getLimit60();
         }
         return 1000;
     }
 
-    public double getBuyChange() {
-        return 0.985;
-    }
-
-    public double getSellChangeRise() {
-        return 1.025;
-    }
-
-    public double getSellChangeFall() {
-        return 0.985;
-    }
-
-    public int getHoursToWait() {
-        return 24;
-    }
-
-    public int getWaitAfterSold() {
-        return 2;
-    }
-
-    public int getHugeFor(int secs) {
-        switch (secs) {
-            case 300: return 3;
-            case 3600: return 7;
-            case 7200: return 12;
-        }
-        return 20;
-    }
-
-    public int getNumberOfTransactions(int resolution) {
-        switch (resolution) {
-            case 60: return 3;
-        }
-        return 3;
-    }
 }

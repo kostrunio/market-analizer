@@ -52,7 +52,7 @@ public class CandleOperation {
             List<Candle> oneDay = new ArrayList<>();
             prepareLists(oneDay60, oneDay, Resolution.ONE_DAY, candle);
 
-            if (configurationService.getSendVolume())
+            if (configurationService.isSendVolume())
                 SendEmail.volume(candle, fiveMins.get(0), oneHour.get(0), twoHours.get(0), oneDay.get(0));
 
         }

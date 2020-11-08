@@ -17,24 +17,26 @@ public class ConfigurationView extends ConfiguraionDesign {
     private ConfigurationService configurationService;
 
     ComponentEventListener<ClickEvent<Button>> saveClicked = e -> {
-        configurationService.setMaxPeriod(Long.parseLong(maxPeriodField.getValue()));
+        configurationService.setMaxPeriod(maxPeriodField.getValue().intValue());
         configurationService.setMarket(marketField.getValue());
         configurationService.setResolution(resolutionField.getValue().toString());
         configurationService.setSendVolume(sendVolume.getValue());
         configurationService.setRunScheduler(runSheduler.getValue());
-        configurationService.setStopbuying(stopBuying.getValue());
+        configurationService.setStopBuying(stopBuying.getValue());
+        configurationService.setLimit60(limit60.getValue().intValue());
     };
 
     public ConfigurationView(ConfigurationService configurationService) {
         this.configurationService = configurationService;
 
-        maxPeriodField.setValue(configurationService.getMaxPeriod()+"");
+        maxPeriodField.setValue(configurationService.getMaxPeriod().doubleValue());
         marketField.setValue(configurationService.getMarket());
         resolutionField.setItems(Resolution.getResolutions());
         resolutionField.setValue(configurationService.getResolution());
         sendVolume.setValue(configurationService.isSendVolume());
         runSheduler.setValue(configurationService.isRunScheduler());
         stopBuying.setValue(configurationService.isStopBuying());
+        limit60.setValue(configurationService.getLimit60().doubleValue());
 
         saveButton.addClickListener(saveClicked);
     }
