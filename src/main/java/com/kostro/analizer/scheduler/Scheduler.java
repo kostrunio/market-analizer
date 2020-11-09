@@ -32,6 +32,7 @@ public class Scheduler {
     }
 
     @Scheduled(cron = "0 * * * * *")
+//    @Scheduled(fixedDelay = 1000, initialDelay = 3000)
     public void getData() {
         if (!configurationService.isRunScheduler()) {
             log.info("Scheduler stopped");

@@ -27,13 +27,13 @@ public class SendEmail {
       
       message.setSubject((candle.getClose() > candle.getOpen() ? "RISING" : " FALLING") + ": " + candle.getVolume() + " on " + candle.getTime());
       message.setContent(
-          MessageFormat.format("HUGE VOLUME: {0} on {1}<br> {2}  -> change: {7}<br>5 mins candle: {3} -> change: {8}<br>1 hour candle: {4} -> change: {9}<br>2 hours candle: {5} -> change: {10}<br>1 day candle: {6} -> change: {11}",
+          MessageFormat.format("HUGE VOLUME: {0} at {1}<br> {2}  -> change: {7}<br>5 mins candle: {3} -> change: {8}<br>1 hour candle: {4} -> change: {9}<br>2 hours candle: {5} -> change: {10}<br>1 day candle: {6} -> change: {11}",
               new Object[] {candle.getVolume(), candle.getTime(), candle, fiveMins, oneHour, twoHours, oneDay,
-                      candle.getClose() > candle.getOpen() ? candle.getHigh()-candle.getLow() : candle.getLow() - candle.getHigh(),
-                      candle.getClose() - fiveMins.getHigh(),
-                      candle.getClose() - oneHour.getHigh(),
-                      candle.getClose() - twoHours.getHigh(),
-                      candle.getClose() - oneDay.getHigh(),
+                      candle.getClose() > candle.getOpen(),//7
+                      candle.getClose() - fiveMins.getOpen(),//8
+                      candle.getClose() - oneHour.getOpen(),//9
+                      candle.getClose() - twoHours.getOpen(),//10
+                      candle.getClose() - oneDay.getOpen(),//11
               }),
           "text/html; charset=UTF-8");
 
