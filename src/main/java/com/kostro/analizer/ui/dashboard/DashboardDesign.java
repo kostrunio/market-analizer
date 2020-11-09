@@ -40,17 +40,15 @@ public class DashboardDesign extends VerticalLayout {
 
     private Component createFormLayout() {
         FormLayout layout = new FormLayout();
-        LocalDate startDate = LocalDate.of(2020, 3, 18);
+        LocalDate startDate = LocalDate.of(2020, 10, 20);
         LocalTime startTime = LocalTime.of(0, 0, 0);
         fromDatePicker.setValue(startDate);
         fromTimePicker.setValue(startTime);
         toDatePicker.setValue(LocalDate.now());
         toTimePicker.setValue(LocalTime.now());
-        dataSeriesList.setItems("BTC", "BigFish", "buy", "sell");
-        dataSeriesList.select("BTC", "BigFish", "buy", "sell");
-        resolutionBox.setItems(Resolution.ONE_MIN, Resolution.THREE_MINS, Resolution.FIVE_MINS, Resolution.FIFTEEN_MINS, Resolution.THIRTY_MINS,
-                Resolution.ONE_HOUR, Resolution.TWO_HOURS, Resolution.FOUR_HOURS, Resolution.SIX_HOURS, Resolution.TWELWE_HOURS,
-                Resolution.ONE_DAY, Resolution.THREE_DAYS, Resolution.ONE_WEEK);
+        dataSeriesList.setItems("BTC", "HugeVolume");
+        dataSeriesList.select("BTC", "HugeVolume");
+        resolutionBox.setItems(Resolution.getResolutions());
         resolutionBox.setValue(Resolution.ONE_MIN);
         layout.add(fromDatePicker, fromTimePicker, toDatePicker, toTimePicker, dataSeriesList, resolutionBox, showData);
         return layout;
@@ -59,11 +57,11 @@ public class DashboardDesign extends VerticalLayout {
     private Chart getChart() {
         chart.setSizeFull();
         Configuration conf = chart.getConfiguration();
-        conf.setTitle(new Title("BigFishes prices"));
+        conf.setTitle(new Title("HugeVolume prices"));
 
         Tooltip tooltip = conf.getTooltip();
         tooltip.setShared(true);
-        tooltip.setValueSuffix("zł");
+        tooltip.setValueSuffix("USDT");
 
         chart.setTimeline(true);
         return chart;

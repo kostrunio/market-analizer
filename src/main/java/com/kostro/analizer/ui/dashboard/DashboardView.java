@@ -37,42 +37,23 @@ public class DashboardView extends DashboardDesign {
     }
 
     private void loadData() {
-        candleOperation.resetWallet();
         DataSeries btcSeries = new DataSeries("BTC-PLN");
-        DataSeries bigFishSeries = new DataSeries("BigFish");
-        DataSeries buySeries = new DataSeries("buy");
-        DataSeries sellSeries = new DataSeries("sell");
+        DataSeries bigFishSeries = new DataSeries("HugeVolume");
         for (Candle candle : candleService.find(LocalDateTime.of(fromDatePicker.getValue(), fromTimePicker.getValue()), LocalDateTime.of(toDatePicker.getValue(), toTimePicker.getValue()), resolutionBox.getValue().getSecs())) {
             boolean inserter = false;
-            DataSeriesItem data = new DataSeriesItem(candle.getTime().toInstant(ZoneOffset.UTC), (Number) candle.getLow(), (Number) candle.getHigh());
-            if (dataSeriesList.getSelectedItems().contains("BigFish"))
-            if (candleOperation.checkHugeVolume(candle)) {
-                bigFishSeries.add(data);
-                inserter = true;
-            }
-            if (dataSeriesList.getSelectedItems().contains("buy")) {
-                candleOperation.checkIfBuy(candle);
-                if (candleOperation.checkIfBought(candle)) {
-                    buySeries.add(data);
+            DataSeriesItem data = new DataSeriesItem(candle.getTime().toInstant(ZoneOffset.UTC), candle.getLow(), candle.getHigh());
+            if (dataSeriesList.getSelectedItems().contains("HugeVolume"))
+                if (candleOperation.checkHugeVolume(candle, false)) {
+                    bigFishSeries.add(data);
                     inserter = true;
                 }
-            }
-            if (dataSeriesList.getSelectedItems().contains("sell")) {
-                candleOperation.checkIfSell(candle);
-                if (candleOperation.checkIfSold(candle)) {
-                    sellSeries.add(data);
-                    inserter = true;
-                }
-            }
             if (dataSeriesList.getSelectedItems().contains("BTC"))
-            if (!inserter) btcSeries.add(data);
+                if (!inserter) btcSeries.add(data);
         }
         Configuration conf = chart.getConfiguration();
-        conf.setSeries(btcSeries, bigFishSeries, buySeries, sellSeries);
+        conf.setSeries(btcSeries, bigFishSeries);
         conf.getTooltip().setShared(true);
         chart.drawChart();
 
-        log.info("\nmoney: {}\nbtc: {}", candleOperation.getWallet().getMoney(), candleOperation.getWallet().getBitcoin());
-        candleOperation.getWallet().getTransactionHistory().stream().forEach(t -> log.info(t.toString()));
     }
 }
