@@ -33,7 +33,7 @@ public class CandleOperation {
 
     public boolean checkHugeVolume(Candle candle, boolean checkSending) {
         if (candle.getVolume() > configurationService.getLimitFor(candle.getResolution())) {
-            log.info("HUGE VOLUME: {} -> change: {}", candle, candle.getClose() > candle.getOpen() ? candle.getHigh() - candle.getLow() : candle.getLow() - candle.getHigh());
+            log.info("VOLUME: {} -> change: {}", candle, candle.getClose() > candle.getOpen() ? candle.getHigh() - candle.getLow() : candle.getLow() - candle.getHigh());
 
             List<Candle> fiveMins60 = new ArrayList<>();
             List<Candle> fiveMins = new ArrayList<>();

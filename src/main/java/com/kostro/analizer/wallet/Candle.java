@@ -1,5 +1,6 @@
 package com.kostro.analizer.wallet;
 
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 
 public class Candle {
@@ -71,12 +72,7 @@ public class Candle {
 
     @Override
     public String toString() {
-        return time + "[" +
-                "o=" + open +
-                ", c=" + close +
-                ", l=" + low +
-                ", h=" + high +
-                ", v=" + volume +
-                "]";
+        return MessageFormat.format("{0} [o={1}, h={2}, l={3}, c={4}, v={5, number, #.##}]",
+        time, open, high, low, close, volume);
     }
 }

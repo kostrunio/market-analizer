@@ -24,12 +24,18 @@ public class SendEmail {
       Message message = new MimeMessage(prepareSession());
       message.setFrom(new InternetAddress("Market Analizer <expense_system@mailplus.pl>"));
       message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("miketo@o2.pl"));
-      
-      message.setSubject((candle.getClose() > candle.getOpen() ? "RISING" : " FALLING") + ": " + candle.getVolume() + " on " + candle.getTime());
+
+      String subject = MessageFormat.format("{0} {1, number, #.##} to {2, number, #.##} with v:{3, number, #.##}",
+              candle.getClose() > candle.getOpen() ? "RISING" : "FALLING",
+              candle.getClose() - candle.getOpen(),
+              candle.getClose(),
+              candle.getVolume());
+
+      message.setSubject(subject);
       message.setContent(
-          MessageFormat.format("HUGE VOLUME: {0} at {1}<br> {2}  -> change: {7}<br>5 mins candle: {3} -> change: {8}<br>1 hour candle: {4} -> change: {9}<br>2 hours candle: {5} -> change: {10}<br>1 day candle: {6} -> change: {11}",
+          MessageFormat.format("VOLUME: {0, number, #.##} at {1}<br> {2}  -> change: {7, number, #.##}<br>5 mins candle: {3} -> change: {8, number, #.##}<br>1 hour candle: {4} -> change: {9, number, #.##}<br>2 hours candle: {5} -> change: {10, number, #.##}<br>1 day candle: {6} -> change: {11, number, #.##}",
               new Object[] {candle.getVolume(), candle.getTime(), candle, fiveMins, oneHour, twoHours, oneDay,
-                      candle.getClose() > candle.getOpen(),//7
+                      candle.getClose() - candle.getOpen(),//7
                       candle.getClose() - fiveMins.getOpen(),//8
                       candle.getClose() - oneHour.getOpen(),//9
                       candle.getClose() - twoHours.getOpen(),//10
