@@ -42,9 +42,9 @@ public class BinanceService implements MarketService {
             for (String[] item : response) {
                 String timestamp = item[0];
                 double open = Double.parseDouble(item[1]);
-                double close = Double.parseDouble(item[2]);
+                double high = Double.parseDouble(item[2]);
                 double low = Double.parseDouble(item[3]);
-                double high = Double.parseDouble(item[4]);
+                double close = Double.parseDouble(item[4]);
                 double volume = Double.parseDouble(item[5]);
                 candles.add(new Candle(LocalDateTime.ofEpochSecond(Long.parseLong(timestamp.substring(0, 10)), Integer.parseInt(timestamp.substring(11)), ZoneOffset.of("+1")), resolution, open, high, low, close, volume));
             }

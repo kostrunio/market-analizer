@@ -11,13 +11,13 @@ public class Candle {
     private double high;
     private double volume;
 
-    public Candle(LocalDateTime time, int resolution, double open, double close, double low, double high, double volume) {
+    public Candle(LocalDateTime time, int resolution, double open, double high, double low, double close, double volume) {
         this.time = time;
         this.resolution = resolution;
         this.open = open;
-        this.close = close;
-        this.low = low;
         this.high = high;
+        this.low = low;
+        this.close = close;
         this.volume = volume;
     }
 

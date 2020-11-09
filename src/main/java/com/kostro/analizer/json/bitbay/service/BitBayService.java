@@ -42,9 +42,9 @@ public class BitBayService implements MarketService {
             for (List<Object> item : response.getItems()) {
                 String timestamp = item.get(0).toString();
                 double open = Double.parseDouble(((Map<String, String>)item.get(1)).get("o"));
-                double close = Double.parseDouble(((Map<String, String>)item.get(1)).get("c"));
-                double low = Double.parseDouble(((Map<String, String>)item.get(1)).get("l"));
                 double high = Double.parseDouble(((Map<String, String>)item.get(1)).get("h"));
+                double low = Double.parseDouble(((Map<String, String>)item.get(1)).get("l"));
+                double close = Double.parseDouble(((Map<String, String>)item.get(1)).get("c"));
                 double volume = Double.parseDouble(((Map<String, String>)item.get(1)).get("v"));
                 candles.add(new Candle(LocalDateTime.ofEpochSecond(Long.parseLong(timestamp.substring(0, 10)), Integer.parseInt(timestamp.substring(11)), ZoneOffset.of("+2")), resolution, open, high, low, close, volume));
             }

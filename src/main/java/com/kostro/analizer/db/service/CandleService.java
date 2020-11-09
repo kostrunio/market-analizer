@@ -69,7 +69,7 @@ public class CandleService {
                 lastCandle = lastCandle.minusMinutes(5);
         }
         if (lastCandle == null)
-            lastCandle = LocalDateTime.of(2020, 11, 01, 00, 00, 00);
+            lastCandle = LocalDateTime.of(2020, 10, 01, 00, 00, 00);
         return lastCandle;
     }
 
