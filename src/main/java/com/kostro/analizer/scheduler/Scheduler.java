@@ -33,7 +33,7 @@ public class Scheduler {
         this.candleOperation = new CandleOperation(candleService, configurationService, true);
     }
 
-    @Scheduled(cron = "5 * * * * *")
+    @Scheduled(cron = "6 * * * * *")
 //    @Scheduled(fixedDelay = 1000, initialDelay = 3000)
     public void getData() {
         if (!configurationService.isRunScheduler()) {
@@ -43,7 +43,7 @@ public class Scheduler {
         LocalDateTime dateFrom = candleService.getLastCandle();
         LocalDateTime dateTo = dateFrom.plusSeconds(configurationService.getMaxPeriod());
         if (dateTo.isAfter(LocalDateTime.now())) {
-            dateTo = LocalDateTime.now().withNano(0);
+            dateTo = LocalDateTime.now().withSecond(59).withNano(999);
         }
         log.info("invoke getCandles for {} with resolution {} from {} to {}", configurationService.getMarket(), configurationService.getResolution(), formatter.format(dateFrom), formatter.format(dateTo));
         List<Candle> candles = marketService.getCandles(configurationService.getMarket(), configurationService.getResolution(), dateFrom, dateTo);
@@ -53,7 +53,6 @@ public class Scheduler {
         //push event
         candleOperation.checkCandles(candles);
 
-        log.info("setLastCandle to {}", formatter.format(candles.get(candles.size()-1).getTime()));
         candleService.setLastCandle(candles.get(candles.size()-1).getTime());
     }
 
