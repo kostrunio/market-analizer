@@ -12,11 +12,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Component
 public class Scheduler {
     private static final Logger log = LoggerFactory.getLogger(Scheduler.class);
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private MarketService marketService;
     private CandleService candleService;
@@ -31,7 +33,7 @@ public class Scheduler {
         this.candleOperation = new CandleOperation(candleService, configurationService, true);
     }
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "5 * * * * *")
 //    @Scheduled(fixedDelay = 1000, initialDelay = 3000)
     public void getData() {
         if (!configurationService.isRunScheduler()) {
@@ -41,9 +43,9 @@ public class Scheduler {
         LocalDateTime dateFrom = candleService.getLastCandle();
         LocalDateTime dateTo = dateFrom.plusSeconds(configurationService.getMaxPeriod());
         if (dateTo.isAfter(LocalDateTime.now())) {
-            dateTo = LocalDateTime.now().withSecond(0).withNano(0);
+            dateTo = LocalDateTime.now().withNano(0);
         }
-        log.info("invoke getCandles for {} with resolution {} from {} to {}", configurationService.getMarket(), configurationService.getResolution(), dateFrom, dateTo);
+        log.info("invoke getCandles for {} with resolution {} from {} to {}", configurationService.getMarket(), configurationService.getResolution(), formatter.format(dateFrom), formatter.format(dateTo));
         List<Candle> candles = marketService.getCandles(configurationService.getMarket(), configurationService.getResolution(), dateFrom, dateTo);
 
         candleService.refreshCandles(candles);
@@ -51,6 +53,7 @@ public class Scheduler {
         //push event
         candleOperation.checkCandles(candles);
 
+        log.info("setLastCandle to {}", formatter.format(candles.get(candles.size()-1).getTime()));
         candleService.setLastCandle(candles.get(candles.size()-1).getTime());
     }
 
