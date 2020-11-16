@@ -33,7 +33,7 @@ public class CandleOperation {
 
     public boolean checkHugeVolume(Candle candle, boolean checkSending) {
         if (candle.getVolume() > configurationService.getLimitFor(candle.getResolution())) {
-            log.info("VOLUME: {} -> change: {}", candle, candle.getClose() > candle.getOpen() ? candle.getHigh() - candle.getLow() : candle.getLow() - candle.getHigh());
+            log.info("MIN: {} -> change: {}", candle, candle.getClose() - candle.getOpen());
 
             List<Candle> fiveMins60 = new ArrayList<>();
             List<Candle> fiveMins = new ArrayList<>();
@@ -64,7 +64,7 @@ public class CandleOperation {
         LocalDateTime dateTo = candle.getTime().minusMinutes(1);
         fiveMins60.addAll(candleService.find(dateFrom, dateTo, Resolution.ONE_MIN.getSecs()));
         fiveMins.addAll(CandleUtils.prepareCandles(fiveMins60, resolution.getSecs(), dateFrom));
-        fiveMins.stream().forEach(c -> log.info(resolution.name() + ": {} -> change: {}", c.toString(), candle.getClose() - c.getHigh()));
+        fiveMins.stream().forEach(c -> log.info(resolution.name() + ": {} -> change: {}", c.toString(), candle.getClose() - c.getOpen()));
     }
 
 }
