@@ -29,6 +29,7 @@ public class CandleOperation {
         for (Candle candle : candles) {
             checkHugeVolume(candle, true);
             checkLevelStep(candle, true);
+            checkMaxLevel(candle);
         }
     }
 
@@ -62,19 +63,26 @@ public class CandleOperation {
 
     public boolean checkLevelStep(Candle candle, boolean checkSending) {
         if (candle.getClose() > configurationService.getLastLevel() + configurationService.getLevelStep()) {
-            log.info("LEVEL: {}", configurationService.getLastLevel() + configurationService.getLevelStep());
             configurationService.setLastLevel(configurationService.getLastLevel() + configurationService.getLevelStep());
-            if (checkSending && configurationService.isSendLevel())
-                SendEmail.level(candle, configurationService.getLastLevel(), true);
+            sendLevel(checkSending, candle, true);
             return true;
         } else if (candle.getClose() < configurationService.getLastLevel() - configurationService.getLevelStep()) {
-            log.info("LEVEL: {}", configurationService.getLastLevel() - configurationService.getLevelStep());
             configurationService.setLastLevel(configurationService.getLastLevel() - configurationService.getLevelStep());
-            if (checkSending && configurationService.isSendLevel())
-                SendEmail.level(candle, configurationService.getLastLevel(), false);
+            sendLevel(checkSending, candle, false);
             return true;
         }
         return false;
+    }
+
+    private void sendLevel(boolean checkSending, Candle candle, boolean rised) {
+        log.info("LEVEL: {}, {} from max: {}", configurationService.getLastLevel(), (int)(configurationService.getMaxLevel() - configurationService.getLastLevel()), configurationService.getMaxLevel());
+        if (checkSending && configurationService.isSendLevel())
+            SendEmail.level(candle, configurationService.getLastLevel(), configurationService.getMaxLevel(), rised);
+    }
+
+    private void checkMaxLevel(Candle candle) {
+        if (candle.getHigh() > configurationService.getMaxLevel())
+            configurationService.setMaxLevel(candle.getHigh());
     }
 
     private void prepareLists(List<Candle> fiveMins60, List<Candle> fiveMins, Resolution resolution, Candle candle) {

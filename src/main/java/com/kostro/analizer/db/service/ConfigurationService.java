@@ -27,6 +27,7 @@ public class ConfigurationService {
     private Integer lastLevel;
     private Integer levelStep;
     private Boolean sendLevel;
+    private Double maxLevel;
 
     public ConfigurationService(ConfigurationRepository configurationRepository) {
         this.configurationRepository = configurationRepository;
@@ -100,6 +101,13 @@ public class ConfigurationService {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setName("sendLevel");
             entity.setValue("true");
+            configurationRepository.save(entity);
+        }
+
+        if (getMaxLevel() == null) {
+            ConfigurationEntity entity = new ConfigurationEntity();
+            entity.setName("maxLevel");
+            entity.setValue("18965.90");
             configurationRepository.save(entity);
         }
     }
@@ -291,6 +299,22 @@ public class ConfigurationService {
     public void setSendLevel(Boolean value) {
         sendLevel = value;
         ConfigurationEntity entity = configurationRepository.findByName("sendLevel");
+        entity.setValue(value+"");
+        configurationRepository.save(entity);
+    }
+
+    public Double getMaxLevel() {
+        if (maxLevel != null) return maxLevel;
+        ConfigurationEntity entity = configurationRepository.findByName("maxLevel");
+        if (entity != null) {
+            maxLevel = Double.parseDouble(entity.getValue());
+        }
+        return maxLevel;
+    }
+
+    public void setMaxLevel(Double value) {
+        maxLevel = value;
+        ConfigurationEntity entity = configurationRepository.findByName("maxLevel");
         entity.setValue(value+"");
         configurationRepository.save(entity);
     }

@@ -20,6 +20,7 @@ public class ConfiguraionDesign extends VerticalLayout {
     protected NumberField lastLevel = new NumberField("lastLevel");
     protected NumberField levelStep = new NumberField("levelStep");
     protected Checkbox sendLevel = new Checkbox("sendLevel");
+    protected NumberField maxLevel = new NumberField("maxLevel");
 
     protected Button saveButton = new Button("Save");
 
@@ -27,9 +28,17 @@ public class ConfiguraionDesign extends VerticalLayout {
         maxPeriodField.setStep(1);
         limit60.setStep(1);
         lastLevel.setStep(1);
+        maxLevel.setStep(0.01);
 
         FormLayout layout = new FormLayout();
-        layout.add(maxPeriodField, marketField, resolutionField, sendVolume, runSheduler, stopBuying, limit60, lastLevel, levelStep, sendLevel, saveButton);
+        layout.add(
+                maxPeriodField, marketField,
+                resolutionField, sendVolume,
+                runSheduler, stopBuying,
+                limit60, lastLevel,
+                levelStep, sendLevel,
+                maxLevel,
+                saveButton);
 
         add(layout);
     }

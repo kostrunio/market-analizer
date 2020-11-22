@@ -27,6 +27,7 @@ public class ConfigurationView extends ConfiguraionDesign {
         configurationService.setLastLevel(lastLevel.getValue().intValue());
         configurationService.setLevelStep(levelStep.getValue().intValue());
         configurationService.setSendLevel(sendLevel.getValue());
+        configurationService.setMaxLevel(maxLevel.getValue());
     };
 
     public ConfigurationView(ConfigurationService configurationService) {
@@ -43,6 +44,7 @@ public class ConfigurationView extends ConfiguraionDesign {
         lastLevel.setValue(configurationService.getLastLevel().doubleValue());
         levelStep.setValue(configurationService.getLevelStep().doubleValue());
         sendLevel.setValue(configurationService.isSendLevel());
+        maxLevel.setValue(configurationService.getMaxLevel().doubleValue());
 
         saveButton.addClickListener(saveClicked);
     }

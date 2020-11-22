@@ -152,7 +152,7 @@ public class SendEmail {
     }
   }
 
-  public static void level(Candle candle, int level, boolean rised) {
+  public static void level(Candle candle, int level, double max, boolean rised) {
     try {
       Message message = new MimeMessage(prepareSession());
       message.setFrom(new InternetAddress("Market Analizer <expense_system@mailplus.pl>"));
@@ -165,10 +165,12 @@ public class SendEmail {
 
       message.setSubject(subject);
       message.setContent(
-              MessageFormat.format("{0} to {1, number, #.##} at {2}",
-                      candle.getClose() > candle.getOpen() ? "RISING" : "FALLING",
-                      candle.getClose(),
-                      candle.getTime()),
+              MessageFormat.format("{0, number, #.} from max: {1}<br>{2} to {3, number, #.##} at {4}",
+                      max - level,//0
+                      max,//1
+                      candle.getClose() > candle.getOpen() ? "RISING" : "FALLING",//2
+                      candle.getClose(),//3
+                      candle.getTime()),//4
               "text/html; charset=UTF-8");
 
       log.info("SendEmail: Sending");
