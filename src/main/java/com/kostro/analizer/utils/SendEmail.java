@@ -34,13 +34,13 @@ public class SendEmail {
       message.setSubject(subject);
       message.setContent(
           MessageFormat.format("VOLUME: {0, number, #.##} at {1}<br> {2}  -> change: {7, number, #.##}<br>5 mins candle: {3} -> change: {8, number, #.##}<br>1 hour candle: {4} -> change: {9, number, #.##}<br>2 hours candle: {5} -> change: {10, number, #.##}<br>1 day candle: {6} -> change: {11, number, #.##}",
-              new Object[] {candle.getVolume(), candle.getTime(), candle, fiveMins, oneHour, twoHours, oneDay,
-                      candle.getClose() - candle.getOpen(),//7
-                      candle.getClose() - fiveMins.getOpen(),//8
-                      candle.getClose() - oneHour.getOpen(),//9
-                      candle.getClose() - twoHours.getOpen(),//10
-                      candle.getClose() - oneDay.getOpen(),//11
-              }),
+                  candle.getVolume(), candle.getTime(), candle, fiveMins, oneHour, twoHours, oneDay,
+                  candle.getClose() - candle.getOpen(),//7
+                  candle.getClose() - fiveMins.getOpen(),//8
+                  candle.getClose() - oneHour.getOpen(),//9
+                  candle.getClose() - twoHours.getOpen(),//10
+                  candle.getClose() - oneDay.getOpen()//11
+              ),
           "text/html; charset=UTF-8");
 
       log.info("SendEmail: Sending");
@@ -141,6 +141,34 @@ public class SendEmail {
       message.setContent(
               MessageFormat.format("SOLD: {0}",
                       new Object[] {candle}),
+              "text/html; charset=UTF-8");
+
+      log.info("SendEmail: Sending");
+      Transport.send(message);
+      log.info("SendEmail: Done");
+
+    } catch (MessagingException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public static void level(Candle candle, int level, boolean rised) {
+    try {
+      Message message = new MimeMessage(prepareSession());
+      message.setFrom(new InternetAddress("Market Analizer <expense_system@mailplus.pl>"));
+      message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("miketo@o2.pl"));
+
+      String subject = MessageFormat.format("{0} {1, number, #} at {2}",
+              rised ? "ABOVE" : "BELOW",
+              level,
+              candle.getTime());
+
+      message.setSubject(subject);
+      message.setContent(
+              MessageFormat.format("{0} to {1, number, #.##} at {2}",
+                      candle.getClose() > candle.getOpen() ? "RISING" : "FALLING",
+                      candle.getClose(),
+                      candle.getTime()),
               "text/html; charset=UTF-8");
 
       log.info("SendEmail: Sending");

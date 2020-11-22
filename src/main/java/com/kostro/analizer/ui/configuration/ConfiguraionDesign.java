@@ -17,15 +17,19 @@ public class ConfiguraionDesign extends VerticalLayout {
     protected Checkbox runSheduler = new Checkbox("runSheduler");
     protected Checkbox stopBuying = new Checkbox("stopBuying");
     protected NumberField limit60 = new NumberField("limit60");
+    protected NumberField lastLevel = new NumberField("lastLevel");
+    protected NumberField levelStep = new NumberField("levelStep");
+    protected Checkbox sendLevel = new Checkbox("sendLevel");
 
     protected Button saveButton = new Button("Save");
 
     public ConfiguraionDesign() {
         maxPeriodField.setStep(1);
         limit60.setStep(1);
+        lastLevel.setStep(1);
 
         FormLayout layout = new FormLayout();
-        layout.add(maxPeriodField, marketField, resolutionField, sendVolume, runSheduler, stopBuying, limit60, saveButton);
+        layout.add(maxPeriodField, marketField, resolutionField, sendVolume, runSheduler, stopBuying, limit60, lastLevel, levelStep, sendLevel, saveButton);
 
         add(layout);
     }

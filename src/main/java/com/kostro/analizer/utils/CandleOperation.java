@@ -28,6 +28,7 @@ public class CandleOperation {
     public void checkCandles(List<Candle> candles) {
         for (Candle candle : candles) {
             checkHugeVolume(candle, true);
+            checkLevelStep(candle, true);
         }
     }
 
@@ -54,6 +55,23 @@ public class CandleOperation {
 
             if (checkSending && configurationService.isSendVolume())
                 SendEmail.volume(candle, fiveMins.get(0), oneHour.get(0), twoHours.get(0), oneDay.get(0));
+            return true;
+        }
+        return false;
+    }
+
+    public boolean checkLevelStep(Candle candle, boolean checkSending) {
+        if (candle.getClose() > configurationService.getLastLevel() + configurationService.getLevelStep()) {
+            log.info("LEVEL: {}", configurationService.getLastLevel() + configurationService.getLevelStep());
+            configurationService.setLastLevel(configurationService.getLastLevel() + configurationService.getLevelStep());
+            if (checkSending && configurationService.isSendLevel())
+                SendEmail.level(candle, configurationService.getLastLevel(), true);
+            return true;
+        } else if (candle.getClose() < configurationService.getLastLevel() - configurationService.getLevelStep()) {
+            log.info("LEVEL: {}", configurationService.getLastLevel() - configurationService.getLevelStep());
+            configurationService.setLastLevel(configurationService.getLastLevel() - configurationService.getLevelStep());
+            if (checkSending && configurationService.isSendLevel())
+                SendEmail.level(candle, configurationService.getLastLevel(), false);
             return true;
         }
         return false;

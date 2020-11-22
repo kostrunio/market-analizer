@@ -24,6 +24,9 @@ public class ConfigurationService {
     private Boolean runScheduler;
     private Boolean stopBuying;
     private Integer limit60;
+    private Integer lastLevel;
+    private Integer levelStep;
+    private Boolean sendLevel;
 
     public ConfigurationService(ConfigurationRepository configurationRepository) {
         this.configurationRepository = configurationRepository;
@@ -76,6 +79,27 @@ public class ConfigurationService {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setName("limit60");
             entity.setValue("300");
+            configurationRepository.save(entity);
+        }
+
+        if (getLastLevel() == null) {
+            ConfigurationEntity entity = new ConfigurationEntity();
+            entity.setName("lastLevel");
+            entity.setValue("17700");
+            configurationRepository.save(entity);
+        }
+
+        if (getLevelStep() == null) {
+            ConfigurationEntity entity = new ConfigurationEntity();
+            entity.setName("levelStep");
+            entity.setValue("100");
+            configurationRepository.save(entity);
+        }
+
+        if (isSendLevel() == null) {
+            ConfigurationEntity entity = new ConfigurationEntity();
+            entity.setName("sendLevel");
+            entity.setValue("true");
             configurationRepository.save(entity);
         }
     }
@@ -219,6 +243,54 @@ public class ConfigurationService {
     public void setLimit60(Integer value) {
         limit60 = value;
         ConfigurationEntity entity = configurationRepository.findByName("limit60");
+        entity.setValue(value+"");
+        configurationRepository.save(entity);
+    }
+
+    public Integer getLastLevel() {
+        if (lastLevel != null) return lastLevel;
+        ConfigurationEntity entity = configurationRepository.findByName("lastLevel");
+        if (entity != null) {
+            lastLevel = Integer.parseInt(entity.getValue());
+        }
+        return lastLevel;
+    }
+
+    public void setLastLevel(Integer value) {
+        lastLevel = value;
+        ConfigurationEntity entity = configurationRepository.findByName("lastLevel");
+        entity.setValue(value+"");
+        configurationRepository.save(entity);
+    }
+
+    public Integer getLevelStep() {
+        if (levelStep != null) return levelStep;
+        ConfigurationEntity entity = configurationRepository.findByName("levelStep");
+        if (entity != null) {
+            levelStep = Integer.parseInt(entity.getValue());
+        }
+        return levelStep;
+    }
+
+    public void setLevelStep(Integer value) {
+        levelStep = value;
+        ConfigurationEntity entity = configurationRepository.findByName("levelStep");
+        entity.setValue(value+"");
+        configurationRepository.save(entity);
+    }
+
+    public Boolean isSendLevel() {
+        if (sendLevel != null) return sendLevel;
+        ConfigurationEntity entity = configurationRepository.findByName("sendLevel");
+        if (entity != null) {
+            sendLevel = Boolean.parseBoolean(entity.getValue());
+        }
+        return sendLevel;
+    }
+
+    public void setSendLevel(Boolean value) {
+        sendLevel = value;
+        ConfigurationEntity entity = configurationRepository.findByName("sendLevel");
         entity.setValue(value+"");
         configurationRepository.save(entity);
     }

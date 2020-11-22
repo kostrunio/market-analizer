@@ -24,6 +24,9 @@ public class ConfigurationView extends ConfiguraionDesign {
         configurationService.setRunScheduler(runSheduler.getValue());
         configurationService.setStopBuying(stopBuying.getValue());
         configurationService.setLimit60(limit60.getValue().intValue());
+        configurationService.setLastLevel(lastLevel.getValue().intValue());
+        configurationService.setLevelStep(levelStep.getValue().intValue());
+        configurationService.setSendLevel(sendLevel.getValue());
     };
 
     public ConfigurationView(ConfigurationService configurationService) {
@@ -37,6 +40,9 @@ public class ConfigurationView extends ConfiguraionDesign {
         runSheduler.setValue(configurationService.isRunScheduler());
         stopBuying.setValue(configurationService.isStopBuying());
         limit60.setValue(configurationService.getLimit60().doubleValue());
+        lastLevel.setValue(configurationService.getLastLevel().doubleValue());
+        levelStep.setValue(configurationService.getLevelStep().doubleValue());
+        sendLevel.setValue(configurationService.isSendLevel());
 
         saveButton.addClickListener(saveClicked);
     }
