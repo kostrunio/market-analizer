@@ -165,12 +165,13 @@ public class SendEmail {
 
       message.setSubject(subject);
       message.setContent(
-              MessageFormat.format("{0, number, #.} from max: {1}<br>{2} to {3, number, #.##} at {4}",
+              MessageFormat.format("{0, number, #.} {1} max: {2}<br>{3} to {4, number, #.##} at {5}",
                       max - level,//0
-                      max,//1
-                      candle.getClose() > candle.getOpen() ? "RISING" : "FALLING",//2
-                      candle.getClose(),//3
-                      candle.getTime()),//4
+                      rised ? "to" : "from",//1
+                      max,//2
+                      candle.getClose() > candle.getOpen() ? "RISING" : "FALLING",//3
+                      candle.getClose(),//4
+                      candle.getTime()),//5
               "text/html; charset=UTF-8");
 
       log.info("SendEmail: Sending");

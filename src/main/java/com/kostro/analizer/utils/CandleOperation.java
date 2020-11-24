@@ -75,7 +75,7 @@ public class CandleOperation {
     }
 
     private void sendLevel(boolean checkSending, Candle candle, boolean rised) {
-        log.info("LEVEL: {}, {} from max: {}", configurationService.getLastLevel(), (int)(configurationService.getMaxLevel() - configurationService.getLastLevel()), configurationService.getMaxLevel());
+        log.info("LEVEL: {}, {} {} max: {}", configurationService.getLastLevel(), (int)(configurationService.getMaxLevel() - configurationService.getLastLevel()), rised ? "to" : "from", configurationService.getMaxLevel());
         if (checkSending && configurationService.isSendLevel())
             SendEmail.level(candle, configurationService.getLastLevel(), configurationService.getMaxLevel(), rised);
     }
