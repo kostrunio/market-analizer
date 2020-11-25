@@ -4,8 +4,7 @@ import com.kostro.analizer.db.model.CandleEntity;
 import com.kostro.analizer.db.repository.CandlesRepository;
 import com.kostro.analizer.utils.CandleUtils;
 import com.kostro.analizer.wallet.Candle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +12,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 public class CandleService {
-
-    private static final Logger log = LoggerFactory.getLogger(CandleService.class);
 
     private CandlesRepository repository;
 

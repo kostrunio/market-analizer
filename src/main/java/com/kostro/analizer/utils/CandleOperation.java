@@ -4,15 +4,14 @@ import com.kostro.analizer.db.service.CandleService;
 import com.kostro.analizer.db.service.ConfigurationService;
 import com.kostro.analizer.wallet.Candle;
 import com.kostro.analizer.wallet.Resolution;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class CandleOperation {
-    private static final Logger log = LoggerFactory.getLogger(CandleOperation.class);
 
     private CandleService candleService;
     private ConfigurationService configurationService;

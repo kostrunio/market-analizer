@@ -3,17 +3,14 @@ package com.kostro.analizer.db.service;
 import com.kostro.analizer.db.model.ConfigurationEntity;
 import com.kostro.analizer.db.repository.ConfigurationRepository;
 import com.kostro.analizer.wallet.Resolution;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 public class ConfigurationService {
-
-    private static final Logger log = LoggerFactory.getLogger(ConfigurationService.class);
 
     private ConfigurationRepository configurationRepository;
 

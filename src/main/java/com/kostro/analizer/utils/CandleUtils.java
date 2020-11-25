@@ -1,13 +1,10 @@
 package com.kostro.analizer.utils;
 
 import com.kostro.analizer.db.model.CandleEntity;
-import com.kostro.analizer.json.bitbay.domain.candle.CandleResponse;
 import com.kostro.analizer.wallet.Candle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -15,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class CandleUtils {
-    private static final Logger log = LoggerFactory.getLogger(CandleUtils.class);
 
     public static  Map<LocalDateTime, Candle> createCandles(List<Candle> candles) {
         Map<LocalDateTime, Candle> map = new HashMap<>();

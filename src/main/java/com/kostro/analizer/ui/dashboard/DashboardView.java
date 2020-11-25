@@ -13,17 +13,16 @@ import com.vaadin.flow.component.charts.model.DataSeries;
 import com.vaadin.flow.component.charts.model.DataSeriesItem;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
+@Slf4j
 @Route(value = "dashboard", layout = MainLayout.class)
 @PageTitle("Dashboard | Market Analizer")
 public class DashboardView extends DashboardDesign {
     public static final String VIEW_NAME = "Dashboard";
-    private static final Logger log = LoggerFactory.getLogger(DashboardView.class);
 
     private CandleService candleService;
     private CandleOperation candleOperation;

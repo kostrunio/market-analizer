@@ -3,8 +3,7 @@ package com.kostro.analizer.json.binance.service;
 import com.kostro.analizer.json.interfaces.MarketService;
 import com.kostro.analizer.wallet.Candle;
 import com.kostro.analizer.wallet.Resolution;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Primary;
@@ -17,10 +16,10 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @Primary
 public class BinanceService implements MarketService {
-    private static final Logger log = LoggerFactory.getLogger(BinanceService.class);
 
     private ZoneId zoneId = ZoneId.systemDefault();
     private RestTemplate restTemplate;

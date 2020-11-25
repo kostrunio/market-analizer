@@ -2,8 +2,7 @@ package com.kostro.analizer.utils;
 
 import com.kostro.analizer.scheduler.Scheduler;
 import com.kostro.analizer.wallet.Candle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -15,10 +14,10 @@ import javax.mail.internet.MimeMessage;
 import java.text.MessageFormat;
 import java.util.Properties;
 
+@Slf4j
 public class SendEmail {
 
-  private static final Logger log = LoggerFactory.getLogger(Scheduler.class);
-  
+
   public static void volume(Candle candle, Candle fiveMins, Candle oneHour, Candle twoHours, Candle oneDay) {
     try {
       Message message = new MimeMessage(prepareSession());

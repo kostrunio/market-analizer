@@ -4,8 +4,7 @@ import com.kostro.analizer.json.bitbay.domain.candle.CandleResponse;
 import com.kostro.analizer.json.interfaces.MarketService;
 import com.kostro.analizer.wallet.Candle;
 import com.kostro.analizer.wallet.Resolution;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -17,9 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class BitBayService implements MarketService {
-    private static final Logger log = LoggerFactory.getLogger(BitBayService.class);
 
     private ZoneId zoneId = ZoneId.systemDefault();
     private RestTemplateBuilder builder;
