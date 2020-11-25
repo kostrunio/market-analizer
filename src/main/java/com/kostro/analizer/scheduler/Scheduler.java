@@ -25,11 +25,11 @@ public class Scheduler {
     private CandleOperation candleOperation;
 
     @Autowired
-    public Scheduler(MarketService marketService, CandleService candleService, ConfigurationService configurationService) {
+    public Scheduler(MarketService marketService, CandleService candleService, ConfigurationService configurationService, CandleOperation candleOperation) {
         this.marketService = marketService;
         this.candleService = candleService;
         this.configurationService = configurationService;
-        this.candleOperation = new CandleOperation(candleService, configurationService, true);
+        this.candleOperation = candleOperation;
     }
 
     @Scheduled(cron = "6 * * * * *")

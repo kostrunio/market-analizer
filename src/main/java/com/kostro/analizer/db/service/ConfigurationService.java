@@ -4,6 +4,7 @@ import com.kostro.analizer.db.model.ConfigurationEntity;
 import com.kostro.analizer.db.repository.ConfigurationRepository;
 import com.kostro.analizer.wallet.Resolution;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class ConfigurationService {
     private Boolean sendLevel;
     private Double maxLevel;
 
+    @Autowired
     public ConfigurationService(ConfigurationRepository configurationRepository) {
         this.configurationRepository = configurationRepository;
 

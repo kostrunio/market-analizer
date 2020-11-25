@@ -14,6 +14,7 @@ import com.vaadin.flow.component.charts.model.DataSeriesItem;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -25,17 +26,23 @@ public class DashboardView extends DashboardDesign {
     public static final String VIEW_NAME = "Dashboard";
 
     private CandleService candleService;
+    private ConfigurationService configurationService;
     private CandleOperation candleOperation;
 
     ComponentEventListener<ClickEvent<Button>> showDataClicked = e -> loadData();
 
-    public DashboardView(CandleService candleService, ConfigurationService configurationService) {
+    @Autowired
+    public DashboardView(CandleService candleService, ConfigurationService configurationService, CandleOperation candleOperation) {
         this.candleService = candleService;
-        candleOperation = new CandleOperation(candleService, configurationService, false);
+        this.configurationService = configurationService;
+        this.candleOperation = candleOperation;
         showData.addClickListener(showDataClicked);
     }
 
     private void loadData() {
+        configurationService.setSendLevel(false);
+        configurationService.setSendVolume(false);
+
         DataSeries btcSeries = new DataSeries("BTC-PLN");
         DataSeries bigFishSeries = new DataSeries("HugeVolume");
         for (Candle candle : candleService.find(LocalDateTime.of(fromDatePicker.getValue(), fromTimePicker.getValue()), LocalDateTime.of(toDatePicker.getValue(), toTimePicker.getValue()), resolutionBox.getValue().getSecs())) {
@@ -54,5 +61,7 @@ public class DashboardView extends DashboardDesign {
         conf.getTooltip().setShared(true);
         chart.drawChart();
 
+        configurationService.setSendLevel(true);
+        configurationService.setSendVolume(true);
     }
 }

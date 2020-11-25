@@ -2,26 +2,28 @@ package com.kostro.analizer.utils;
 
 import com.kostro.analizer.db.service.CandleService;
 import com.kostro.analizer.db.service.ConfigurationService;
+import com.kostro.analizer.utils.notification.Notification;
 import com.kostro.analizer.wallet.Candle;
 import com.kostro.analizer.wallet.Resolution;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
+@Service
 public class CandleOperation {
 
     private CandleService candleService;
     private ConfigurationService configurationService;
+    private Notification notification;
 
-    private boolean sendingEmails;
-
-    public CandleOperation(CandleService candleService, ConfigurationService configurationService, boolean sendingEmails) {
+    public CandleOperation(CandleService candleService, ConfigurationService configurationService, Notification notification) {
         this.candleService = candleService;
         this.configurationService = configurationService;
-        this.sendingEmails = sendingEmails;
+        this.notification = notification;
     }
 
     public void checkCandles(List<Candle> candles) {
@@ -54,7 +56,7 @@ public class CandleOperation {
             prepareLists(oneDay60, oneDay, Resolution.ONE_DAY, candle);
 
             if (checkSending && configurationService.isSendVolume())
-                SendEmail.volume(candle, fiveMins.get(0), oneHour.get(0), twoHours.get(0), oneDay.get(0));
+                notification.volume(candle, fiveMins.get(0), oneHour.get(0), twoHours.get(0), oneDay.get(0));
             return true;
         }
         return false;
@@ -76,7 +78,7 @@ public class CandleOperation {
     private void sendLevel(boolean checkSending, Candle candle, boolean rised) {
         log.info("LEVEL: {}, {} {} max: {}", configurationService.getLastLevel(), (int)(configurationService.getMaxLevel() - configurationService.getLastLevel()), rised ? "to" : "from", configurationService.getMaxLevel());
         if (checkSending && configurationService.isSendLevel())
-            SendEmail.level(candle, configurationService.getLastLevel(), configurationService.getMaxLevel(), rised);
+            notification.level(candle, configurationService.getLastLevel(), configurationService.getMaxLevel(), rised);
     }
 
     private void checkMaxLevel(Candle candle) {

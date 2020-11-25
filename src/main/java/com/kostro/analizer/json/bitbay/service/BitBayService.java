@@ -5,7 +5,7 @@ import com.kostro.analizer.json.interfaces.MarketService;
 import com.kostro.analizer.wallet.Candle;
 import com.kostro.analizer.wallet.Resolution;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,19 +20,17 @@ import java.util.Map;
 @Service
 public class BitBayService implements MarketService {
 
-    private ZoneId zoneId = ZoneId.systemDefault();
-    private RestTemplateBuilder builder;
-    private RestTemplate restTemplate;
+    private RestTemplate rest;
 
-    public BitBayService(RestTemplateBuilder builder) {
-        this.builder = builder;
-        restTemplate = builder.build();
+    @Autowired
+    public BitBayService() {
+        this.rest = new RestTemplate();
     }
 
     public List<Candle> getCandles(String market, Resolution resolution, LocalDateTime from, LocalDateTime to) {
         String url = "https://api.bitbay.net/rest/trading/candle/history/"+market+"/"+resolution.getSecs()+"?from="+ from.toEpochSecond(ZoneOffset.of("+2"))+"000&to="+to.toEpochSecond(ZoneOffset.of("+2"))+"000";
         log.info("REQUEST: " + url);
-        return createCandles(restTemplate.getForObject(url, CandleResponse.class), resolution.getSecs());
+        return createCandles(rest.getForObject(url, CandleResponse.class), resolution.getSecs());
     }
 
     public static List<Candle> createCandles(CandleResponse response, int resolution) {

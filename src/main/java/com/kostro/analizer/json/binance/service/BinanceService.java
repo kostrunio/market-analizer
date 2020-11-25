@@ -5,7 +5,6 @@ import com.kostro.analizer.wallet.Candle;
 import com.kostro.analizer.wallet.Resolution;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -22,17 +21,17 @@ import java.util.List;
 public class BinanceService implements MarketService {
 
     private ZoneId zoneId = ZoneId.systemDefault();
-    private RestTemplate restTemplate;
 
-    @Autowired
-    public BinanceService(RestTemplateBuilder builder) {
-        restTemplate = builder.build();
+    private RestTemplate rest;
+
+    public BinanceService() {
+        this.rest = new RestTemplate();
     }
 
     public List<Candle> getCandles(String market, Resolution resolution, LocalDateTime from, LocalDateTime to) {
         String url = "https://api.binance.com/api/v3/klines?symbol="+market+"&interval="+resolution.getCode()+"&startTime="+ from.toEpochSecond(ZoneOffset.of("+1"))+"000&endTime="+to.toEpochSecond(ZoneOffset.of("+1"))+"000&limit=1000";
         log.info("REQUEST: " + url);
-        return createCandles(restTemplate.getForObject(url, String[][].class), resolution.getSecs());
+        return createCandles(rest.getForObject(url, String[][].class), resolution.getSecs());
     }
 
     public static List<Candle> createCandles(String[][] response, int resolution) {
