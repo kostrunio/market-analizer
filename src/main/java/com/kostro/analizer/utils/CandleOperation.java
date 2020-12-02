@@ -28,8 +28,8 @@ public class CandleOperation {
 
     public void checkCandles(List<Candle> candles) {
         for (Candle candle : candles) {
-            checkHugeVolume(candle, true);
             checkLevelStep(candle, true);
+            checkHugeVolume(candle, true);
             checkMaxLevel(candle);
         }
     }
