@@ -30,14 +30,15 @@ public class BinanceService implements MarketService {
 
     public List<Candle> getCandles(String market, Resolution resolution, LocalDateTime from, LocalDateTime to) {
         String url = "https://api.binance.com/api/v3/klines?symbol="+market+"&interval="+resolution.getCode()+"&startTime="+ from.toEpochSecond(ZoneOffset.of("+1"))+"000&endTime="+to.toEpochSecond(ZoneOffset.of("+1"))+"000&limit=1000";
-        log.info("REQUEST: " + url);
+        log.debug("REQUEST: " + url);
         return createCandles(rest.getForObject(url, String[][].class), resolution.getSecs());
     }
 
     public static List<Candle> createCandles(String[][] response, int resolution) {
         List<Candle> candles = new ArrayList<>();
         if (response != null)
-            for (String[] item : response) {
+            for (int i=0; i < response.length-1; i++) { //without last one
+                String[] item = response[i];
                 String timestamp = item[0];
                 double open = Double.parseDouble(item[1]);
                 double high = Double.parseDouble(item[2]);

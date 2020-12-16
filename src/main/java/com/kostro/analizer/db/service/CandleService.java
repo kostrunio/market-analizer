@@ -72,10 +72,11 @@ public class CandleService {
     }
 
     public void setLastCandle(LocalDateTime lastCandle) {
+        log.debug("lastCandle: " + lastCandle);
         this.lastCandle = lastCandle;
     }
 
-    public LocalDateTime getLastDate() {
+    private LocalDateTime getLastDate() {
         return repository.findLastCandle();
     }
 
