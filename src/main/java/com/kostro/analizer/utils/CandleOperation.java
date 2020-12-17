@@ -28,9 +28,9 @@ public class CandleOperation {
 
     public void checkCandles(List<Candle> candles) {
         for (Candle candle : candles) {
+            checkMaxLevel(candle);
             checkLevelStep(candle, true);
             checkHugeVolume(candle, true);
-            checkMaxLevel(candle);
         }
     }
 
@@ -64,11 +64,11 @@ public class CandleOperation {
 
     public boolean checkLevelStep(Candle candle, boolean checkSending) {
         if (candle.getClose() > configurationService.getLastLevel() + configurationService.getLevelStep()) {
-            configurationService.setLastLevel(configurationService.getLastLevel() + configurationService.getLevelStep());
+            configurationService.setLastLevel(((int)candle.getClose()/configurationService.getLevelStep())*configurationService.getLevelStep());
             sendLevel(checkSending, candle, true);
             return true;
         } else if (candle.getClose() < configurationService.getLastLevel() - configurationService.getLevelStep()) {
-            configurationService.setLastLevel(configurationService.getLastLevel() - configurationService.getLevelStep());
+            configurationService.setLastLevel((((int)candle.getClose()/configurationService.getLevelStep())+1)*configurationService.getLevelStep());
             sendLevel(checkSending, candle, false);
             return true;
         }
