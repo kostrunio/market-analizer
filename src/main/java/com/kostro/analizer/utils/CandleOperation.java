@@ -36,7 +36,7 @@ public class CandleOperation {
 
     public boolean checkHugeVolume(Candle candle, boolean checkSending) {
         if (candle.getVolume() > configurationService.getLimitFor(candle.getResolution())) {
-            log.info("MIN: {} -> change: {}", candle, candle.getClose() - candle.getOpen());
+            log.info(String.format("%9s: %s -> change: %5.0f", Resolution.ONE_MIN.name(), candle, candle.getClose() - candle.getOpen()));
 
             List<Candle> fiveMins60 = new ArrayList<>();
             List<Candle> fiveMins = new ArrayList<>();
@@ -54,6 +54,7 @@ public class CandleOperation {
             List<Candle> oneDay60 = new ArrayList<>();
             List<Candle> oneDay = new ArrayList<>();
             prepareLists(oneDay60, oneDay, Resolution.ONE_DAY, candle);
+            log.info("");
 
             if (checkSending && configurationService.isSendVolume())
                 notification.volume(candle, fiveMins.get(0), oneHour.get(0), twoHours.get(0), oneDay.get(0));
@@ -76,7 +77,7 @@ public class CandleOperation {
     }
 
     private void sendLevel(boolean checkSending, Candle candle, boolean rised) {
-        log.info("LEVEL: {}, {} {} max: {}", configurationService.getLastLevel(), (int)(configurationService.getMaxLevel() - configurationService.getLastLevel()), rised ? "to" : "from", configurationService.getMaxLevel());
+        log.info(String.format("%9s: %5d, %4.0f %4s max: %5.0f", "LEVEL", configurationService.getLastLevel(), configurationService.getMaxLevel() - configurationService.getLastLevel(), rised ? "to" : "from", configurationService.getMaxLevel()));
         if (checkSending && configurationService.isSendLevel())
             notification.level(candle, configurationService.getLastLevel(), configurationService.getMaxLevel(), rised);
     }
@@ -91,7 +92,7 @@ public class CandleOperation {
         LocalDateTime dateTo = candle.getTime().minusMinutes(1);
         fiveMins60.addAll(candleService.find(dateFrom, dateTo, Resolution.ONE_MIN.getSecs()));
         fiveMins.addAll(CandleUtils.prepareCandles(fiveMins60, resolution.getSecs(), dateFrom));
-        fiveMins.stream().forEach(c -> log.info(resolution.name() + ": {} -> change: {}", c.toString(), candle.getClose() - c.getOpen()));
+        fiveMins.stream().forEach(c -> log.info(String.format("%9s: %s -> change: %5.0f", resolution.name(), c, candle.getClose() - c.getOpen())));
     }
 
 }

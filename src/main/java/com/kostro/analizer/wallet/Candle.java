@@ -72,7 +72,6 @@ public class Candle {
 
     @Override
     public String toString() {
-        return MessageFormat.format("{0} [o={1}, h={2}, l={3}, c={4}, v={5, number, #.##}]",
-        time, open, high, low, close, volume);
+        return String.format("%s [o=%5.0f, h=%5.0f, l=%5.0f, c=%5.0f, v=%6.0f", time.toString().replace("T", " "), open, high, low, close, volume);
     }
 }
