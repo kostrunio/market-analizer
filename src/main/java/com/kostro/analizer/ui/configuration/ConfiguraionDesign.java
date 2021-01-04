@@ -7,11 +7,11 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
-import com.vaadin.flow.component.textfield.TextField;
 
 public class ConfiguraionDesign extends VerticalLayout {
+    public static final String VIEW_NAME = "Configuration";
+    protected String market;
     protected NumberField maxPeriodField = new NumberField("maxPeriod");
-    protected TextField marketField = new TextField("market");
     protected ComboBox<Resolution> resolutionField = new ComboBox("resolution");
     protected Checkbox sendVolume = new Checkbox("sendVolume");
     protected Checkbox runSheduler = new Checkbox("runSheduler");
@@ -24,7 +24,8 @@ public class ConfiguraionDesign extends VerticalLayout {
 
     protected Button saveButton = new Button("Save");
 
-    public ConfiguraionDesign() {
+    public ConfiguraionDesign(String market) {
+        this.market = market;
         maxPeriodField.setStep(1);
         limit60.setStep(1);
         lastLevel.setStep(1);
@@ -32,8 +33,7 @@ public class ConfiguraionDesign extends VerticalLayout {
 
         FormLayout layout = new FormLayout();
         layout.add(
-                maxPeriodField, marketField,
-                resolutionField, sendVolume,
+                maxPeriodField, resolutionField, sendVolume,
                 runSheduler, stopBuying,
                 limit60, lastLevel,
                 levelStep, sendLevel,

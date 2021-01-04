@@ -13,6 +13,9 @@ import java.time.LocalDateTime;
 @Table(name = "Candles")
 public class CandleEntity extends AbstractEntity implements Cloneable {
 
+    @Column(name = "c_market")
+    @NotNull String market;
+
     @Column(name = "c_time")
     @NotNull
     private LocalDateTime time;

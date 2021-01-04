@@ -2,12 +2,17 @@ package com.kostro.analizer.db.service;
 
 import com.kostro.analizer.db.model.ConfigurationEntity;
 import com.kostro.analizer.db.repository.ConfigurationRepository;
+import com.kostro.analizer.ui.configuration.btcusdt.BTCUSDTConfigurationView;
+import com.kostro.analizer.ui.configuration.btcusdt.XRPUSDTConfigurationView;
 import com.kostro.analizer.wallet.Resolution;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -15,98 +20,109 @@ public class ConfigurationService {
 
     private ConfigurationRepository configurationRepository;
 
-    private Integer maxPeriod;
-    private String market;
-    private Resolution resolution;
-    private Boolean sendVolume;
-    private Boolean runScheduler;
-    private Boolean stopBuying;
-    private Integer limit60;
-    private Integer lastLevel;
-    private Integer levelStep;
-    private Boolean sendLevel;
-    private Double maxLevel;
+    private Map<String, Integer> maxPeriod = new HashMap<>();
+    private List<String> markets;
+    private Map<String, Resolution> resolution = new HashMap<>();
+    private Map<String, Boolean> sendVolume = new HashMap<>();
+    private Map<String, Boolean> runScheduler = new HashMap<>();
+    private Map<String, Boolean> stopBuying = new HashMap<>();
+    private Map<String, Integer> limit60 = new HashMap<>();
+    private Map<String, Double> lastLevel = new HashMap<>();
+    private Map<String, Double> levelStep = new HashMap<>();
+    private Map<String, Boolean> sendLevel = new HashMap<>();
+    private Map<String, Double> maxLevel = new HashMap<>();
 
     @Autowired
     public ConfigurationService(ConfigurationRepository configurationRepository) {
         this.configurationRepository = configurationRepository;
 
-        setInitConfiguration();
+        setInitConfiguration(XRPUSDTConfigurationView.MARKET);
     }
 
-    private void setInitConfiguration() {
-        if (getMaxPeriod() == null) {
+    private void setInitConfiguration(String market) {
+        if (getMaxPeriod(market) == null) {
             ConfigurationEntity entity = new ConfigurationEntity();
+            entity.setMarket(market);
             entity.setName("maxPeriod");
             entity.setValue((1000*60)+"");
             configurationRepository.save(entity);
         }
-        if (getMarket() == null) {
+        if (getMarkets() == null || getMarkets().size() == 0) {
             ConfigurationEntity entity = new ConfigurationEntity();
-            entity.setName("market");
-            entity.setValue("BTCUSDT");
+            entity.setMarket("ALL");
+            entity.setName("markets");
+            entity.setValue(BTCUSDTConfigurationView.MARKET);
             configurationRepository.save(entity);
         }
-        if (getResolution() == null) {
+        if (getResolution(market) == null) {
             ConfigurationEntity entity = new ConfigurationEntity();
+            entity.setMarket(market);
             entity.setName("resolution");
             entity.setValue("1 min");
             configurationRepository.save(entity);
         }
 
-        if (isSendVolume() == null) {
+        if (isSendVolume(market) == null) {
             ConfigurationEntity entity = new ConfigurationEntity();
+            entity.setMarket(market);
             entity.setName("sendVolume");
             entity.setValue("true");
             configurationRepository.save(entity);
         }
 
-        if (isRunScheduler() == null) {
+        if (isRunScheduler(market) == null) {
             ConfigurationEntity entity = new ConfigurationEntity();
+            entity.setMarket(market);
             entity.setName("runScheduler");
             entity.setValue("true");
             configurationRepository.save(entity);
         }
 
-        if (isStopBuying() == null) {
+        if (isStopBuying(market) == null) {
             ConfigurationEntity entity = new ConfigurationEntity();
+            entity.setMarket(market);
             entity.setName("stopBuying");
             entity.setValue("false");
             configurationRepository.save(entity);
         }
 
-        if (getLimit60() == null) {
+        if (getLimit60(market) == null) {
             ConfigurationEntity entity = new ConfigurationEntity();
+            entity.setMarket(market);
             entity.setName("limit60");
-            entity.setValue("300");
+            entity.setValue("2000000");
             configurationRepository.save(entity);
         }
 
-        if (getLastLevel() == null) {
+        if (getLastLevel(market) == null) {
             ConfigurationEntity entity = new ConfigurationEntity();
+            entity.setMarket(market);
             entity.setName("lastLevel");
-            entity.setValue("17700");
+            entity.setValue("0.245");
             configurationRepository.save(entity);
         }
 
-        if (getLevelStep() == null) {
+        if (getLevelStep(market) == null) {
             ConfigurationEntity entity = new ConfigurationEntity();
+            entity.setMarket(market);
             entity.setName("levelStep");
-            entity.setValue("100");
+            entity.setValue("0.001");
             configurationRepository.save(entity);
         }
 
-        if (isSendLevel() == null) {
+        if (isSendLevel(market) == null) {
             ConfigurationEntity entity = new ConfigurationEntity();
+            entity.setMarket(market);
             entity.setName("sendLevel");
             entity.setValue("true");
             configurationRepository.save(entity);
         }
 
-        if (getMaxLevel() == null) {
+        if (getMaxLevel(market) == null) {
             ConfigurationEntity entity = new ConfigurationEntity();
+            entity.setMarket(market);
             entity.setName("maxLevel");
-            entity.setValue("18965.90");
+            entity.setValue("0.25394");
             configurationRepository.save(entity);
         }
     }
@@ -115,213 +131,213 @@ public class ConfigurationService {
         return configurationRepository.findAll();
     }
 
-    public Integer getMaxPeriod() {
-        if (maxPeriod != null) return maxPeriod;
-        ConfigurationEntity entity = configurationRepository.findByName("maxPeriod");
+    public Integer getMaxPeriod(String market) {
+        if (maxPeriod.containsKey(market)) return maxPeriod.get(market);
+        ConfigurationEntity entity = configurationRepository.findByMarketAndName(market, "maxPeriod");
         if (entity != null) {
-            maxPeriod = Integer.parseInt(entity.getValue());
+            maxPeriod.put(market, Integer.parseInt(entity.getValue()));
         }
-        return maxPeriod;
+        return maxPeriod.get(market);
     }
 
-    public void setMaxPeriod(Integer value) {
-        maxPeriod = value;
-        ConfigurationEntity entity = configurationRepository.findByName("maxPeriod");
+    public void setMaxPeriod(String market, Integer value) {
+        maxPeriod.put(market, value);
+        ConfigurationEntity entity = configurationRepository.findByMarketAndName(market, "maxPeriod");
         entity.setValue(value+"");
         configurationRepository.save(entity);
     }
 
-    public String getMarket() {
-        if (market != null) return market;
-        ConfigurationEntity entity = configurationRepository.findByName("market");
+    public List<String> getMarkets() {
+        if (markets != null) return markets;
+        ConfigurationEntity entity = configurationRepository.findByMarketAndName("ALL", "markets");
         if (entity != null) {
-            market = entity.getValue();
+            markets = Arrays.asList(entity.getValue().split(","));
         }
-        return market;
+        return markets;
     }
 
-    public void setMarket(String value) {
-        market = value;
-        ConfigurationEntity entity = configurationRepository.findByName("market");
-        entity.setValue(value);
+    public void setMarkets(String market, List<String> value) {
+        markets = value;
+        ConfigurationEntity entity = configurationRepository.findByMarketAndName(market, "markets");
+        entity.setValue(String.join(",", markets));
         configurationRepository.save(entity);
     }
 
-    public Resolution getResolution() {
-        if (resolution != null) return resolution;
-        ConfigurationEntity entity = configurationRepository.findByName("resolution");
+    public Resolution getResolution(String market) {
+        if (resolution.containsKey(market)) return resolution.get(market);
+        ConfigurationEntity entity = configurationRepository.findByMarketAndName(market, "resolution");
         if (entity != null)
             switch (entity.getValue()) {
                 case "1 min":
-                    resolution = Resolution.ONE_MIN;
+                    resolution.put(market, Resolution.ONE_MIN);
                 case "3 min":
-                    resolution = Resolution.THREE_MINS;
+                    resolution.put(market, Resolution.THREE_MINS);
                 case "5 min":
-                    resolution = Resolution.FIVE_MINS;
+                    resolution.put(market, Resolution.FIVE_MINS);
                 case "15 min":
-                    resolution = Resolution.FIFTEEN_MINS;
+                    resolution.put(market, Resolution.FIFTEEN_MINS);
                 case "30 min":
-                    resolution = Resolution.THIRTY_MINS;
+                    resolution.put(market, Resolution.THIRTY_MINS);
                 case "1 hour":
-                    resolution = Resolution.ONE_HOUR;
+                    resolution.put(market, Resolution.ONE_HOUR);
                 case "2 hours":
-                    resolution = Resolution.TWO_HOURS;
+                    resolution.put(market, Resolution.TWO_HOURS);
                 case "4 hours":
-                    resolution = Resolution.FOUR_HOURS;
+                    resolution.put(market, Resolution.FOUR_HOURS);
                 case "6 hours":
-                    resolution = Resolution.SIX_HOURS;
+                    resolution.put(market, Resolution.SIX_HOURS);
                 case "12 hours":
-                    resolution = Resolution.TWELWE_HOURS;
+                    resolution.put(market, Resolution.TWELWE_HOURS);
                 case "1 day":
-                    resolution = Resolution.ONE_DAY;
+                    resolution.put(market, Resolution.ONE_DAY);
                 case "3 days":
-                    resolution = Resolution.THREE_DAYS;
+                    resolution.put(market, Resolution.THREE_DAYS);
                 case "1 week":
-                    resolution = Resolution.ONE_WEEK;
+                    resolution.put(market, Resolution.ONE_WEEK);
                 default:
-                    resolution = Resolution.ONE_MIN;
+                    resolution.put(market, Resolution.ONE_MIN);
             }
-        return resolution;
+        return resolution.get(market);
     }
 
-    public void setResolution(String value) {
-        ConfigurationEntity entity = configurationRepository.findByName("resolution");
+    public void setResolution(String market, String value) {
+        ConfigurationEntity entity = configurationRepository.findByMarketAndName(market, "resolution");
         entity.setValue(value);
         configurationRepository.save(entity);
     }
 
-    public Boolean isSendVolume() {
-        if (sendVolume != null) return sendVolume;
-        ConfigurationEntity entity = configurationRepository.findByName("sendVolume");
+    public Boolean isSendVolume(String market) {
+        if (sendVolume.containsKey(market)) return sendVolume.get(market);
+        ConfigurationEntity entity = configurationRepository.findByMarketAndName(market, "sendVolume");
         if (entity != null) {
-            sendVolume = Boolean.parseBoolean(entity.getValue());
+            sendVolume.put(market, Boolean.parseBoolean(entity.getValue()));
         }
-        return sendVolume;
+        return sendVolume.get(market);
     }
 
-    public void setSendVolume(boolean value) {
-        sendVolume = value;
-        ConfigurationEntity entity = configurationRepository.findByName("sendVolume");
+    public void setSendVolume(String market, boolean value) {
+        sendVolume.put(market, value);
+        ConfigurationEntity entity = configurationRepository.findByMarketAndName(market, "sendVolume");
         entity.setValue(Boolean.toString(value));
         configurationRepository.save(entity);
     }
 
-    public Boolean isRunScheduler() {
-        if (runScheduler != null) return runScheduler;
-        ConfigurationEntity entity = configurationRepository.findByName("runScheduler");
+    public Boolean isRunScheduler(String market) {
+        if (runScheduler.containsKey(market)) return runScheduler.get(market);
+        ConfigurationEntity entity = configurationRepository.findByMarketAndName(market, "runScheduler");
         if (entity != null) {
-            runScheduler = Boolean.parseBoolean(entity.getValue());
+            runScheduler.put(market, Boolean.parseBoolean(entity.getValue()));
         }
-        return runScheduler;
+        return runScheduler.get(market);
     }
 
-    public void setRunScheduler(boolean value) {
-        runScheduler = value;
-        ConfigurationEntity entity = configurationRepository.findByName("runScheduler");
+    public void setRunScheduler(String market, boolean value) {
+        runScheduler.put(market, value);
+        ConfigurationEntity entity = configurationRepository.findByMarketAndName(market, "runScheduler");
         entity.setValue(Boolean.toString(value));
         configurationRepository.save(entity);
     }
 
-    public Boolean isStopBuying() {
-        if (stopBuying != null) return stopBuying;
-        ConfigurationEntity entity = configurationRepository.findByName("stopBuying");
+    public Boolean isStopBuying(String market) {
+        if (stopBuying.containsKey(market)) return stopBuying.get(market);
+        ConfigurationEntity entity = configurationRepository.findByMarketAndName(market, "stopBuying");
         if (entity != null) {
-            stopBuying = Boolean.parseBoolean(entity.getValue());
+            stopBuying.put(market, Boolean.parseBoolean(entity.getValue()));
         }
-        return stopBuying;
+        return stopBuying.get(market);
     }
 
-    public void setStopBuying(boolean value) {
-        stopBuying = value;
-        ConfigurationEntity entity = configurationRepository.findByName("stopBuying");
+    public void setStopBuying(String market, boolean value) {
+        stopBuying.put(market, value);
+        ConfigurationEntity entity = configurationRepository.findByMarketAndName(market, "stopBuying");
         entity.setValue(Boolean.toString(value));
         configurationRepository.save(entity);
     }
 
-    public Integer getLimit60() {
-        if (limit60 != null) return limit60;
-        ConfigurationEntity entity = configurationRepository.findByName("limit60");
+    public Integer getLimit60(String market) {
+        if (limit60.containsKey(market)) return limit60.get(market);
+        ConfigurationEntity entity = configurationRepository.findByMarketAndName(market, "limit60");
         if (entity != null) {
-            limit60 = Integer.parseInt(entity.getValue());
+            limit60.put(market, Integer.parseInt(entity.getValue()));
         }
-        return limit60;
+        return limit60.get(market);
     }
 
-    public void setLimit60(Integer value) {
-        limit60 = value;
-        ConfigurationEntity entity = configurationRepository.findByName("limit60");
+    public void setLimit60(String market, Integer value) {
+        limit60.put(market, value);
+        ConfigurationEntity entity = configurationRepository.findByMarketAndName(market, "limit60");
         entity.setValue(value+"");
         configurationRepository.save(entity);
     }
 
-    public Integer getLastLevel() {
-        if (lastLevel != null) return lastLevel;
-        ConfigurationEntity entity = configurationRepository.findByName("lastLevel");
+    public Double getLastLevel(String market) {
+        if (lastLevel.containsKey(market)) return lastLevel.get(market);
+        ConfigurationEntity entity = configurationRepository.findByMarketAndName(market, "lastLevel");
         if (entity != null) {
-            lastLevel = Integer.parseInt(entity.getValue());
+            lastLevel.put(market, Double.parseDouble(entity.getValue()));
         }
-        return lastLevel;
+        return lastLevel.get(market);
     }
 
-    public void setLastLevel(Integer value) {
-        lastLevel = value;
-        ConfigurationEntity entity = configurationRepository.findByName("lastLevel");
+    public void setLastLevel(String market, Double value) {
+        lastLevel.put(market, value);
+        ConfigurationEntity entity = configurationRepository.findByMarketAndName(market, "lastLevel");
         entity.setValue(value+"");
         configurationRepository.save(entity);
     }
 
-    public Integer getLevelStep() {
-        if (levelStep != null) return levelStep;
-        ConfigurationEntity entity = configurationRepository.findByName("levelStep");
+    public Double getLevelStep(String market) {
+        if (levelStep.containsKey(market)) return levelStep.get(market);
+        ConfigurationEntity entity = configurationRepository.findByMarketAndName(market, "levelStep");
         if (entity != null) {
-            levelStep = Integer.parseInt(entity.getValue());
+            levelStep.put(market, Double.parseDouble(entity.getValue()));
         }
-        return levelStep;
+        return levelStep.get(market);
     }
 
-    public void setLevelStep(Integer value) {
-        levelStep = value;
-        ConfigurationEntity entity = configurationRepository.findByName("levelStep");
+    public void setLevelStep(String market, Double value) {
+        levelStep.put(market, value);
+        ConfigurationEntity entity = configurationRepository.findByMarketAndName(market, "levelStep");
         entity.setValue(value+"");
         configurationRepository.save(entity);
     }
 
-    public Boolean isSendLevel() {
-        if (sendLevel != null) return sendLevel;
-        ConfigurationEntity entity = configurationRepository.findByName("sendLevel");
+    public Boolean isSendLevel(String market) {
+        if (sendLevel.containsKey(market)) return sendLevel.get(market);
+        ConfigurationEntity entity = configurationRepository.findByMarketAndName(market, "sendLevel");
         if (entity != null) {
-            sendLevel = Boolean.parseBoolean(entity.getValue());
+            sendLevel.put(market, Boolean.parseBoolean(entity.getValue()));
         }
-        return sendLevel;
+        return sendLevel.get(market);
     }
 
-    public void setSendLevel(Boolean value) {
-        sendLevel = value;
-        ConfigurationEntity entity = configurationRepository.findByName("sendLevel");
+    public void setSendLevel(String market, Boolean value) {
+        sendLevel.put(market, value);
+        ConfigurationEntity entity = configurationRepository.findByMarketAndName(market, "sendLevel");
         entity.setValue(value+"");
         configurationRepository.save(entity);
     }
 
-    public Double getMaxLevel() {
-        if (maxLevel != null) return maxLevel;
-        ConfigurationEntity entity = configurationRepository.findByName("maxLevel");
+    public Double getMaxLevel(String market) {
+        if (maxLevel.containsKey(market)) return maxLevel.get(market);
+        ConfigurationEntity entity = configurationRepository.findByMarketAndName(market, "maxLevel");
         if (entity != null) {
-            maxLevel = Double.parseDouble(entity.getValue());
+            maxLevel.put(market, Double.parseDouble(entity.getValue()));
         }
-        return maxLevel;
+        return maxLevel.get(market);
     }
 
-    public void setMaxLevel(Double value) {
-        maxLevel = value;
-        ConfigurationEntity entity = configurationRepository.findByName("maxLevel");
+    public void setMaxLevel(String market, Double value) {
+        maxLevel.put(market, value);
+        ConfigurationEntity entity = configurationRepository.findByMarketAndName(market, "maxLevel");
         entity.setValue(value+"");
         configurationRepository.save(entity);
     }
 
-    public int getLimitFor(int secs) {
+    public int getLimitFor(String market, int secs) {
         switch (secs) {
             case 60:
-                return getLimit60();
+                return getLimit60(market);
         }
         return 1000;
     }

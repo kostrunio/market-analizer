@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ConfigurationRepository extends JpaRepository<ConfigurationEntity, Long> {
 
-    ConfigurationEntity findByName(String name);
+    ConfigurationEntity findByMarketAndName(String market, String name);
 }

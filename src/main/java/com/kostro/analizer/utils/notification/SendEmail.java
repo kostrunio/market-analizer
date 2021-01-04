@@ -18,13 +18,14 @@ import java.util.Properties;
 @Service
 public class SendEmail implements Notification {
 
-  public void volume(Candle candle, Candle fiveMins, Candle oneHour, Candle twoHours, Candle oneDay) {
+  public void volume(String market, Candle candle, Candle fiveMins, Candle oneHour, Candle twoHours, Candle oneDay) {
     try {
       Message message = new MimeMessage(prepareSession());
       message.setFrom(new InternetAddress("Market Analizer <expense_system@mailplus.pl>"));
       message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("miketo@o2.pl"));
 
-      String subject = MessageFormat.format("{0} {1, number, #.##} to {2, number, #.##} with v:{3, number, #.##}",
+      String subject = MessageFormat.format("{0} - {1} {2, number, #.##} to {3, number, #.##} with v:{4, number, #.##}",
+              market,
               candle.getClose() > candle.getOpen() ? "RISING" : "FALLING",
               candle.getClose() - candle.getOpen(),
               candle.getClose(),
@@ -51,13 +52,14 @@ public class SendEmail implements Notification {
     }
   }
 
-  public void level(Candle candle, int level, double max, boolean rised) {
+  public void level(String market, Candle candle, double level, double max, boolean rised) {
     try {
       Message message = new MimeMessage(prepareSession());
       message.setFrom(new InternetAddress("Market Analizer <expense_system@mailplus.pl>"));
       message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("miketo@o2.pl"));
 
-      String subject = MessageFormat.format("{0} {1, number, #} at {2}",
+      String subject = MessageFormat.format("{0} - {1} {2, number, #} at {3}",
+              market,
               rised ? "ABOVE" : "BELOW",
               level,
               candle.getTime());

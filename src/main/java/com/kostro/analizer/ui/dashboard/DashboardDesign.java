@@ -19,7 +19,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class DashboardDesign extends VerticalLayout {
-
+    public static final String VIEW_NAME = "Dashboard";
+    protected String market;
     protected DatePicker fromDatePicker = new DatePicker("from date");
     protected TimePicker fromTimePicker = new TimePicker("from time");
     protected DatePicker toDatePicker = new DatePicker("to date");
@@ -30,7 +31,8 @@ public class DashboardDesign extends VerticalLayout {
 
     protected Chart chart = new Chart(ChartType.COLUMNRANGE);
 
-    public DashboardDesign() {
+    public DashboardDesign(String market) {
+        this.market = market;
         setSizeFull();
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
 

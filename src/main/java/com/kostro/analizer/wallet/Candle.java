@@ -1,6 +1,5 @@
 package com.kostro.analizer.wallet;
 
-import java.text.MessageFormat;
 import java.time.LocalDateTime;
 
 public class Candle {
@@ -26,7 +25,7 @@ public class Candle {
         return time;
     }
 
-    public int getResolution() {
+    public int getResolution(String market) {
         return resolution;
     }
 
@@ -72,6 +71,9 @@ public class Candle {
 
     @Override
     public String toString() {
-        return String.format("%s [o=%5.0f, h=%5.0f, l=%5.0f, c=%5.0f, v=%6.0f", time.toString().replace("T", " "), open, high, low, close, volume);
+        if (open > 100)
+            return String.format("%s [o=%5.0f, h=%5.0f, l=%5.0f, c=%5.0f, v=%6.0f", time.toString().replace("T", " "), open, high, low, close, volume);
+        else
+            return String.format("%s [o=%5.5f, h=%5.5f, l=%5.5f, c=%5.5f, v=%10.0f", time.toString().replace("T", " "), open, high, low, close, volume);
     }
 }

@@ -30,8 +30,9 @@ public class ShowNotification implements Notification {
     }
 
     @Override
-    public void volume(Candle candle, Candle fiveMins, Candle oneHour, Candle twoHours, Candle oneDay) {
-        String caption = MessageFormat.format("{0} {1, number, #.##}",
+    public void volume(String market, Candle candle, Candle fiveMins, Candle oneHour, Candle twoHours, Candle oneDay) {
+        String caption = MessageFormat.format("{0} - {1} {2, number, #.##}",
+                market,
                 candle.getClose() > candle.getOpen() ? "RISING" : "FALLING",
                 candle.getClose() - candle.getOpen());
         String text = MessageFormat.format("to {0, number, #.##} with v:{1, number, #.##}",
@@ -41,8 +42,9 @@ public class ShowNotification implements Notification {
     }
 
     @Override
-    public void level(Candle candle, int level, double max, boolean rised) {
-        String caption = MessageFormat.format("{0} {1, number, #}",
+    public void level(String market, Candle candle, double level, double max, boolean rised) {
+        String caption = MessageFormat.format("{0} - {1} {2, number, #}",
+                market,
                 rised ? "ABOVE" : "BELOW",
                 level);
         String text = MessageFormat.format("{0, number, #.} {1} max: {2}",

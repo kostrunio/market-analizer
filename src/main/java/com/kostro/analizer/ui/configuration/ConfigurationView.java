@@ -9,43 +9,41 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-@Route(value="configuration", layout = MainLayout.class)
 @PageTitle("Configuration | Market Analizer")
 public class ConfigurationView extends ConfiguraionDesign {
-    public static String VIEW_NAME = "Configuration";
 
     private ConfigurationService configurationService;
 
     ComponentEventListener<ClickEvent<Button>> saveClicked = e -> {
-        configurationService.setMaxPeriod(maxPeriodField.getValue().intValue());
-        configurationService.setMarket(marketField.getValue());
-        configurationService.setResolution(resolutionField.getValue().toString());
-        configurationService.setSendVolume(sendVolume.getValue());
-        configurationService.setRunScheduler(runSheduler.getValue());
-        configurationService.setStopBuying(stopBuying.getValue());
-        configurationService.setLimit60(limit60.getValue().intValue());
-        configurationService.setLastLevel(lastLevel.getValue().intValue());
-        configurationService.setLevelStep(levelStep.getValue().intValue());
-        configurationService.setSendLevel(sendLevel.getValue());
-        configurationService.setMaxLevel(maxLevel.getValue());
+        configurationService.setMaxPeriod(market, maxPeriodField.getValue().intValue());
+        configurationService.setResolution(market, resolutionField.getValue().toString());
+        configurationService.setSendVolume(market, sendVolume.getValue());
+        configurationService.setRunScheduler(market, runSheduler.getValue());
+        configurationService.setStopBuying(market, stopBuying.getValue());
+        configurationService.setLimit60(market, limit60.getValue().intValue());
+        configurationService.setLastLevel(market, lastLevel.getValue().doubleValue());
+        configurationService.setLevelStep(market, levelStep.getValue().doubleValue());
+        configurationService.setSendLevel(market, sendLevel.getValue());
+        configurationService.setMaxLevel(market, maxLevel.getValue());
     };
 
-    public ConfigurationView(ConfigurationService configurationService) {
+    public ConfigurationView(String market, ConfigurationService configurationService) {
+        super(market);
         this.configurationService = configurationService;
 
-        maxPeriodField.setValue(configurationService.getMaxPeriod().doubleValue());
-        marketField.setValue(configurationService.getMarket());
+        maxPeriodField.setValue(configurationService.getMaxPeriod(market).doubleValue());
         resolutionField.setItems(Resolution.getResolutions());
-        resolutionField.setValue(configurationService.getResolution());
-        sendVolume.setValue(configurationService.isSendVolume());
-        runSheduler.setValue(configurationService.isRunScheduler());
-        stopBuying.setValue(configurationService.isStopBuying());
-        limit60.setValue(configurationService.getLimit60().doubleValue());
-        lastLevel.setValue(configurationService.getLastLevel().doubleValue());
-        levelStep.setValue(configurationService.getLevelStep().doubleValue());
-        sendLevel.setValue(configurationService.isSendLevel());
-        maxLevel.setValue(configurationService.getMaxLevel().doubleValue());
+        resolutionField.setValue(configurationService.getResolution(market));
+        sendVolume.setValue(configurationService.isSendVolume(market));
+        runSheduler.setValue(configurationService.isRunScheduler(market));
+        stopBuying.setValue(configurationService.isStopBuying(market));
+        limit60.setValue(configurationService.getLimit60(market).doubleValue());
+        lastLevel.setValue(configurationService.getLastLevel(market).doubleValue());
+        levelStep.setValue(configurationService.getLevelStep(market).doubleValue());
+        sendLevel.setValue(configurationService.isSendLevel(market));
+        maxLevel.setValue(configurationService.getMaxLevel(market).doubleValue());
 
         saveButton.addClickListener(saveClicked);
     }
+
 }

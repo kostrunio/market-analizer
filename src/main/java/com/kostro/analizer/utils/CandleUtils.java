@@ -56,15 +56,16 @@ public class CandleUtils {
         newCandle.setVolume(newCandle.getVolume()+candle.getVolume());
     }
 
-    public static CandleEntity from(Candle candle, Long id) {
-        CandleEntity entity = from(candle);
+    public static CandleEntity from(String market, Candle candle, Long id) {
+        CandleEntity entity = from(market, candle);
         entity.setId(id);
         return entity;
     }
-    public static CandleEntity from(Candle candle) {
+    public static CandleEntity from(String market, Candle candle) {
         CandleEntity entity = new CandleEntity();
+        entity.setMarket(market);
         entity.setTime(candle.getTime());
-        entity.setResolution(candle.getResolution());
+        entity.setResolution(candle.getResolution(market));
         entity.setOpen(candle.getOpen());
         entity.setHigh(candle.getHigh());
         entity.setLow(candle.getLow());

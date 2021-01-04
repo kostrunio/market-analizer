@@ -3,6 +3,7 @@ package com.kostro.analizer.ui.dashboard;
 import com.kostro.analizer.db.service.CandleService;
 import com.kostro.analizer.db.service.ConfigurationService;
 import com.kostro.analizer.ui.MainLayout;
+import com.kostro.analizer.ui.configuration.btcusdt.BTCUSDTConfigurationView;
 import com.kostro.analizer.utils.CandleOperation;
 import com.kostro.analizer.wallet.Candle;
 import com.vaadin.flow.component.ClickEvent;
@@ -20,36 +21,35 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 @Slf4j
-@Route(value = "dashboard", layout = MainLayout.class)
 @PageTitle("Dashboard | Market Analizer")
 public class DashboardView extends DashboardDesign {
-    public static final String VIEW_NAME = "Dashboard";
 
     private CandleService candleService;
     private ConfigurationService configurationService;
     private CandleOperation candleOperation;
 
-    ComponentEventListener<ClickEvent<Button>> showDataClicked = e -> loadData();
+    ComponentEventListener<ClickEvent<Button>> showDataClicked = e -> loadData(BTCUSDTConfigurationView.MARKET);
 
     @Autowired
-    public DashboardView(CandleService candleService, ConfigurationService configurationService, CandleOperation candleOperation) {
+    public DashboardView(String market, CandleService candleService, ConfigurationService configurationService, CandleOperation candleOperation) {
+        super(market);
         this.candleService = candleService;
         this.configurationService = configurationService;
         this.candleOperation = candleOperation;
         showData.addClickListener(showDataClicked);
     }
 
-    private void loadData() {
-        configurationService.setSendLevel(false);
-        configurationService.setSendVolume(false);
+    private void loadData(String market) {
+        configurationService.setSendLevel(market, false);
+        configurationService.setSendVolume(market, false);
 
         DataSeries btcSeries = new DataSeries("BTC-PLN");
         DataSeries bigFishSeries = new DataSeries("HugeVolume");
-        for (Candle candle : candleService.find(LocalDateTime.of(fromDatePicker.getValue(), fromTimePicker.getValue()), LocalDateTime.of(toDatePicker.getValue(), toTimePicker.getValue()), resolutionBox.getValue().getSecs())) {
+        for (Candle candle : candleService.find(market, LocalDateTime.of(fromDatePicker.getValue(), fromTimePicker.getValue()), LocalDateTime.of(toDatePicker.getValue(), toTimePicker.getValue()), resolutionBox.getValue().getSecs())) {
             boolean inserter = false;
             DataSeriesItem data = new DataSeriesItem(candle.getTime().toInstant(ZoneOffset.UTC), candle.getLow(), candle.getHigh());
             if (dataSeriesList.getSelectedItems().contains("HugeVolume"))
-                if (candleOperation.checkHugeVolume(candle, false)) {
+                if (candleOperation.checkHugeVolume(market, candle, false)) {
                     bigFishSeries.add(data);
                     inserter = true;
                 }
@@ -61,7 +61,7 @@ public class DashboardView extends DashboardDesign {
         conf.getTooltip().setShared(true);
         chart.drawChart();
 
-        configurationService.setSendLevel(true);
-        configurationService.setSendVolume(true);
+        configurationService.setSendLevel(market, true);
+        configurationService.setSendVolume(market, true);
     }
 }

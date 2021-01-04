@@ -1,7 +1,9 @@
 package com.kostro.analizer.ui;
 
-import com.kostro.analizer.ui.configuration.ConfigurationView;
-import com.kostro.analizer.ui.dashboard.DashboardView;
+import com.kostro.analizer.db.service.ConfigurationService;
+import com.kostro.analizer.ui.configuration.btcusdt.BTCUSDTConfigurationView;
+import com.kostro.analizer.ui.configuration.btcusdt.XRPUSDTConfigurationView;
+import com.kostro.analizer.ui.dashboard.btcusdt.BTCUSDTDashboardView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.H1;
@@ -17,7 +19,10 @@ import com.vaadin.flow.router.RouterLink;
 @PageTitle("Market Analizer")
 public class MainLayout extends AppLayout {
 
-    public MainLayout() {
+    ConfigurationService configurationService;
+
+    public MainLayout(ConfigurationService configurationService) {
+        this.configurationService = configurationService;
         createHeader();
         createDrawer();
     }
@@ -36,11 +41,13 @@ public class MainLayout extends AppLayout {
     }
 
     private void createDrawer() {
-        RouterLink dashboardLink = new RouterLink(DashboardView.VIEW_NAME, DashboardView.class);
-        RouterLink configurationLink = new RouterLink(ConfigurationView.VIEW_NAME, ConfigurationView.class);
+//        RouterLink dashboardLink = new RouterLink(BTCUSDTDashboardView.getViewName(), BTCUSDTDashboardView.class);
+        RouterLink btcusdt = new RouterLink(BTCUSDTConfigurationView.getViewName() , BTCUSDTConfigurationView.class);
+        btcusdt.setHighlightCondition(HighlightConditions.sameLocation());
 
-        configurationLink.setHighlightCondition(HighlightConditions.sameLocation());
+        RouterLink xrpusdt = new RouterLink(XRPUSDTConfigurationView.getViewName() , XRPUSDTConfigurationView.class);
+        xrpusdt.setHighlightCondition(HighlightConditions.sameLocation());
 
-        addToDrawer(new VerticalLayout(dashboardLink, configurationLink));
+        addToDrawer(new VerticalLayout(btcusdt, xrpusdt));
     }
 }

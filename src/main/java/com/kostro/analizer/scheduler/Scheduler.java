@@ -3,6 +3,8 @@ package com.kostro.analizer.scheduler;
 import com.kostro.analizer.db.service.CandleService;
 import com.kostro.analizer.db.service.ConfigurationService;
 import com.kostro.analizer.json.interfaces.MarketService;
+import com.kostro.analizer.ui.configuration.btcusdt.BTCUSDTConfigurationView;
+import com.kostro.analizer.ui.configuration.btcusdt.XRPUSDTConfigurationView;
 import com.kostro.analizer.utils.CandleOperation;
 import com.kostro.analizer.wallet.Candle;
 import lombok.extern.slf4j.Slf4j;
@@ -35,28 +37,56 @@ public class Scheduler {
 
     @Scheduled(cron = "*/10 * * * * *")
 //    @Scheduled(fixedDelay = 1000, initialDelay = 3000)
-    public void getData() {
-        if (!configurationService.isRunScheduler()) {
-            log.info("Scheduler stopped");
+    public void getBTCData() {
+        String market = BTCUSDTConfigurationView.MARKET;
+        if (!configurationService.isRunScheduler(market)) {
+            log.info(market + " - Scheduler stopped");
             return;
         }
-        LocalDateTime dateFrom = candleService.getLastCandle();
-        LocalDateTime dateTo = dateFrom.plusSeconds(configurationService.getMaxPeriod());
+        LocalDateTime dateFrom = candleService.getLastCandle(market);
+        LocalDateTime dateTo = dateFrom.plusSeconds(configurationService.getMaxPeriod(market));
         if (dateTo.isAfter(LocalDateTime.now())) {
             dateTo = LocalDateTime.now();
         }
-        log.debug("invoke getCandles for {} with resolution {} from {} to {}", configurationService.getMarket(), configurationService.getResolution(), formatter.format(dateFrom), formatter.format(dateTo));
-        List<Candle> candles = marketService.getCandles(configurationService.getMarket(), configurationService.getResolution(), dateFrom, dateTo);
+        log.debug("invoke getCandles for {} with resolution {} from {} to {}", market, configurationService.getResolution(market), formatter.format(dateFrom), formatter.format(dateTo));
+        List<Candle> candles = marketService.getCandles(market, configurationService.getResolution(market), dateFrom, dateTo);
 
-        List<Candle> newCandles = candles.stream().filter(c -> c.getTime().isAfter(candleService.getLastCandle())).collect(Collectors.toList());
+        List<Candle> newCandles = candles.stream().filter(c -> c.getTime().isAfter(candleService.getLastCandle(market))).collect(Collectors.toList());
         if (newCandles.size() == 0) return;
 
-        candleService.refreshCandles(newCandles);
+        candleService.refreshCandles(market, newCandles);
 
         //push event
-        candleOperation.checkCandles(newCandles);
+        candleOperation.checkCandles(market, newCandles);
 
-        candleService.setLastCandle(newCandles.get(newCandles.size()-1).getTime());
+        candleService.setLastCandle(market, newCandles.get(newCandles.size()-1).getTime());
+    }
+
+    @Scheduled(cron = "0 * * * * *")
+//    @Scheduled(fixedDelay = 1000, initialDelay = 3000)
+    public void getXRPData() {
+        String market = XRPUSDTConfigurationView.MARKET;
+        if (!configurationService.isRunScheduler(market)) {
+            log.info(market + "- Scheduler stopped");
+            return;
+        }
+        LocalDateTime dateFrom = candleService.getLastCandle(market);
+        LocalDateTime dateTo = dateFrom.plusSeconds(configurationService.getMaxPeriod(market));
+        if (dateTo.isAfter(LocalDateTime.now())) {
+            dateTo = LocalDateTime.now();
+        }
+        log.debug("invoke getCandles for {} with resolution {} from {} to {}", market, configurationService.getResolution(market), formatter.format(dateFrom), formatter.format(dateTo));
+        List<Candle> candles = marketService.getCandles(market, configurationService.getResolution(market), dateFrom, dateTo);
+
+        List<Candle> newCandles = candles.stream().filter(c -> c.getTime().isAfter(candleService.getLastCandle(market))).collect(Collectors.toList());
+        if (newCandles.size() == 0) return;
+
+        candleService.refreshCandles(market, newCandles);
+
+        //push event
+        candleOperation.checkCandles(market, newCandles);
+
+        candleService.setLastCandle(market, newCandles.get(newCandles.size()-1).getTime());
     }
 
 }

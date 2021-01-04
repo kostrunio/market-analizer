@@ -10,13 +10,17 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
 public class CandleService {
 
     private CandlesRepository repository;
+
+    private static Map<String, LocalDateTime> lastCandle = new HashMap<>();
 
     @Autowired
     public CandleService(CandlesRepository repository) {
@@ -35,54 +39,52 @@ public class CandleService {
         return repository.findAll();
     }
 
-    public List<Candle> find(LocalDateTime startDate, LocalDateTime endDate, int resolution, double limit) {
+    public List<Candle> find(String market, LocalDateTime startDate, LocalDateTime endDate, int resolution, double limit) {
         List<Candle> candles = new ArrayList<>();
-        for(CandleEntity entity : repository.findWithLimit(startDate, endDate, resolution, limit)) {
+        for(CandleEntity entity : repository.findWithLimit(market, startDate, endDate, resolution, limit)) {
             candles.add(CandleUtils.from(entity));
         }
         return candles;
     }
-    public List<Candle> find(LocalDateTime startDate, LocalDateTime endDate, int resolution) {
+    public List<Candle> find(String market, LocalDateTime startDate, LocalDateTime endDate, int resolution) {
         List<Candle> candles = new ArrayList<>();
-        for(CandleEntity entity : repository.find(startDate, endDate, resolution)) {
+        for(CandleEntity entity : repository.find(market, startDate, endDate, resolution)) {
             candles.add(CandleUtils.from(entity));
         }
         return candles;
     }
 
-    public void refreshCandles(List<Candle> candles) {
+    public void refreshCandles(String market, List<Candle> candles) {
         for (Candle candle : candles) {
-            CandleEntity entity = repository.findByTimeAndResolution(candle.getTime(), candle.getResolution());
-            entity = CandleUtils.from(candle, entity != null ? entity.getId() : null);
+            CandleEntity entity = repository.findByMarketAndTimeAndResolution(market, candle.getTime(), candle.getResolution(market));
+            entity = CandleUtils.from(market, candle, entity != null ? entity.getId() : null);
             repository.save(entity);
         }
     }
 
-    private static LocalDateTime lastCandle;
-
-    public LocalDateTime getLastCandle() {
-        if (lastCandle == null) {
-            lastCandle = getLastDate();
-            if (lastCandle != null)
-                lastCandle = lastCandle.minusMinutes(5);
+    public LocalDateTime getLastCandle(String market) {
+        if (!lastCandle.containsKey(market)) {
+            lastCandle.put(market, getLastDate(market));
+            if (lastCandle.get(market) != null)
+                return lastCandle.get(market).minusMinutes(5);
+            else
+                lastCandle.put(market, LocalDateTime.of(2018, 05, 04, 00, 00, 00));
         }
-        if (lastCandle == null)
-            lastCandle = LocalDateTime.of(2017, 12, 01, 00, 00, 00);
-        return lastCandle;
+        return lastCandle.get(market);
     }
 
-    public void setLastCandle(LocalDateTime lastCandle) {
+    public void setLastCandle(String market, LocalDateTime lastCandle) {
         log.debug("lastCandle: " + lastCandle);
-        this.lastCandle = lastCandle;
+        CandleService.lastCandle.put(market, lastCandle);
     }
 
-    private LocalDateTime getLastDate() {
-        return repository.findLastCandle();
+    private LocalDateTime getLastDate(String market) {
+        return repository.findLastCandle(market);
     }
 
-    public List<Candle> findLastHuge(LocalDateTime time, int resolution, int limit, int numberOfTransactions) {
+    public List<Candle> findLastHuge(String market, LocalDateTime time, int resolution, int limit, int numberOfTransactions) {
         List<Candle> candles = new ArrayList<>();
-        for(CandleEntity entity : repository.findLast(time, resolution, limit, numberOfTransactions)) {
+        for(CandleEntity entity : repository.findLast(market, time, resolution, limit, numberOfTransactions)) {
             candles.add(CandleUtils.from(entity));
         }
         return candles;
