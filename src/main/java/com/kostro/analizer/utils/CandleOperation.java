@@ -102,8 +102,8 @@ public class CandleOperation {
     }
 
     private void prepareLists(String market, List<Candle> fiveMins60, List<Candle> fiveMins, Resolution resolution, Candle candle) {
-        LocalDateTime dateFrom = candle.getTime().minusSeconds(resolution.getSecs());
-        LocalDateTime dateTo = candle.getTime().minusMinutes(1);
+        LocalDateTime dateFrom = candle.getTime().minusSeconds(resolution.getSecs()).plusMinutes(1);
+        LocalDateTime dateTo = candle.getTime();
         fiveMins60.addAll(candleService.find(market, dateFrom, dateTo, Resolution.ONE_MIN.getSecs()));
         fiveMins.addAll(CandleUtils.prepareCandles(fiveMins60, resolution.getSecs(), dateFrom));
         fiveMins.stream().forEach(c -> {
