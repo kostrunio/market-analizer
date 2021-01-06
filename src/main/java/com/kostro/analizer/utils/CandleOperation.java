@@ -59,7 +59,7 @@ public class CandleOperation {
             prepareLists(market, oneDay60, oneDay, Resolution.ONE_DAY, candle);
             log.info("");
 
-            if (checkSending && configurationService.isSendVolume(market))
+            if (checkSending && configurationService.isSendVolume(market) && candle.getTime().plusMinutes(10).isAfter(LocalDateTime.now()))
                 notification.volume(market, candle, fiveMins.get(0), oneHour.get(0), twoHours.get(0), oneDay.get(0));
             return true;
         }
@@ -92,7 +92,7 @@ public class CandleOperation {
             log.info(String.format("%7s - %9s: %5.0f, %4.0f %4s max: %5.0f", market, "LEVEL", configurationService.getLastLevel(market), configurationService.getMaxLevel(market) - configurationService.getLastLevel(market), rised ? "to" : "from", configurationService.getMaxLevel(market)));
         else
             log.info(String.format("%7s - %9s: %5.3f, %4.3f %4s max: %5.3f", market, "LEVEL", configurationService.getLastLevel(market), configurationService.getMaxLevel(market) - configurationService.getLastLevel(market), rised ? "to" : "from", configurationService.getMaxLevel(market)));
-        if (checkSending && configurationService.isSendLevel(market))
+        if (checkSending && configurationService.isSendLevel(market) && candle.getTime().plusMinutes(10).isAfter(LocalDateTime.now()))
             notification.level(market, candle, configurationService.getLastLevel(market), configurationService.getMaxLevel(market), rised);
     }
 
