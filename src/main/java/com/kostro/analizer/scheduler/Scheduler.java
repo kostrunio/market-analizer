@@ -62,7 +62,7 @@ public class Scheduler {
         candleService.setLastCandle(market, newCandles.get(newCandles.size()-1).getTime());
     }
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "*/10 * * * * *")
 //    @Scheduled(fixedDelay = 1000, initialDelay = 3000)
     public void getXRPData() {
         String market = XRPUSDTConfigurationView.MARKET;
