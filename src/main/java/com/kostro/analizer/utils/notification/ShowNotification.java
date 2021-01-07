@@ -31,26 +31,51 @@ public class ShowNotification implements Notification {
 
     @Override
     public void volume(String market, Candle candle, Candle fiveMins, Candle oneHour, Candle twoHours, Candle oneDay) {
-        String caption = MessageFormat.format("{0} - {1} {2, number, #.##}",
-                market,
-                candle.getClose() > candle.getOpen() ? "RISING" : "FALLING",
-                candle.getClose() - candle.getOpen());
-        String text = MessageFormat.format("to {0, number, #.##} with v:{1, number, #.##}",
-                candle.getClose(),
-                candle.getVolume());
+        String caption;
+        String text;
+        if (candle.getClose() > 1000) {
+            caption = MessageFormat.format("{0} - {1} {2, number, #.##}",
+                    market,
+                    candle.getClose() > candle.getOpen() ? "RISING" : "FALLING",
+                    candle.getClose() - candle.getOpen());
+            text = MessageFormat.format("to {0, number, #.##} with v:{1, number, #.##}",
+                    candle.getClose(),
+                    candle.getVolume());
+        } else {
+            caption = MessageFormat.format("{0} - {1} {2, number, #.#####}",
+                    market,
+                    candle.getClose() > candle.getOpen() ? "RISING" : "FALLING",
+                    candle.getClose() - candle.getOpen());
+            text = MessageFormat.format("to {0, number, #.#####} with v:{1, number, #.#####}",
+                    candle.getClose(),
+                    candle.getVolume());
+        }
         displayTray(caption, text);
     }
 
     @Override
     public void level(String market, Candle candle, double level, double max, boolean rised) {
-        String caption = MessageFormat.format("{0} - {1} {2, number, #}",
-                market,
-                rised ? "ABOVE" : "BELOW",
-                level);
-        String text = MessageFormat.format("{0, number, #.} {1} max: {2}",
-                max - level,//0
-                rised ? "to" : "from",//1
-                max);//2
+        String caption;
+        String text;
+        if (candle.getClose() > 1000) {
+            caption = MessageFormat.format("{0} - {1} {2, number, #}",
+                    market,
+                    rised ? "ABOVE" : "BELOW",
+                    level);
+            text = MessageFormat.format("{0, number, #.} {1} max: {2}",
+                    max - level,//0
+                    rised ? "to" : "from",//1
+                    max);//2
+        } else {
+            caption = MessageFormat.format("{0} - {1} {2, number, #.###}",
+                    market,
+                    rised ? "ABOVE" : "BELOW",
+                    level);
+            text = MessageFormat.format("{0, number, #.#####} {1} max: {2}",
+                    max - level,//0
+                    rised ? "to" : "from",//1
+                    max);//2
+        }
         displayTray(caption, text);
     }
 
