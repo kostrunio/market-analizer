@@ -5,16 +5,16 @@ import com.kostro.analizer.ui.MainLayout;
 import com.kostro.analizer.ui.configuration.ConfigurationView;
 import com.vaadin.flow.router.Route;
 
-@Route(value="btcusdt-configuration", layout = MainLayout.class)
-public class BTCUSDTConfigurationView extends ConfigurationView {
-    public static final String MARKET = "BTCUSDT";
+@Route(value="ethusdt-configuration", layout = MainLayout.class)
+public class ETHUSDTConfigurationView extends ConfigurationView {
+    public static final String MARKET = "ETHUSDT";
 
-    public BTCUSDTConfigurationView(ConfigurationService configurationService) {
+    public ETHUSDTConfigurationView(ConfigurationService configurationService) {
         super(MARKET, configurationService);
     }
 
     public static String getViewName() {
-        return MARKET + "\n" + VIEW_NAME;
+        return MARKET + " " + VIEW_NAME;
     }
 
 }

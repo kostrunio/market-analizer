@@ -2,6 +2,7 @@ package com.kostro.analizer.ui;
 
 import com.kostro.analizer.db.service.ConfigurationService;
 import com.kostro.analizer.ui.configuration.btcusdt.BTCUSDTConfigurationView;
+import com.kostro.analizer.ui.configuration.btcusdt.ETHUSDTConfigurationView;
 import com.kostro.analizer.ui.configuration.btcusdt.XRPUSDTConfigurationView;
 import com.kostro.analizer.ui.dashboard.btcusdt.BTCUSDTDashboardView;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -45,9 +46,12 @@ public class MainLayout extends AppLayout {
         RouterLink btcusdt = new RouterLink(BTCUSDTConfigurationView.getViewName() , BTCUSDTConfigurationView.class);
         btcusdt.setHighlightCondition(HighlightConditions.sameLocation());
 
+        RouterLink ethusdt = new RouterLink(ETHUSDTConfigurationView.getViewName() , ETHUSDTConfigurationView.class);
+        ethusdt.setHighlightCondition(HighlightConditions.sameLocation());
+
         RouterLink xrpusdt = new RouterLink(XRPUSDTConfigurationView.getViewName() , XRPUSDTConfigurationView.class);
         xrpusdt.setHighlightCondition(HighlightConditions.sameLocation());
 
-        addToDrawer(new VerticalLayout(btcusdt, xrpusdt));
+        addToDrawer(new VerticalLayout(btcusdt, ethusdt, xrpusdt));
     }
 }

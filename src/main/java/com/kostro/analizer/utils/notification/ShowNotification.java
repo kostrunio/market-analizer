@@ -33,7 +33,7 @@ public class ShowNotification implements Notification {
     public void volume(String market, Candle candle, Candle fiveMins, Candle oneHour, Candle twoHours, Candle oneDay) {
         String caption;
         String text;
-        if (candle.getClose() > 1000) {
+        if (candle.getClose() > 100) {
             caption = MessageFormat.format("{0} - {1} {2, number, #.##}",
                     market,
                     candle.getClose() > candle.getOpen() ? "RISING" : "FALLING",
@@ -57,7 +57,7 @@ public class ShowNotification implements Notification {
     public void level(String market, Candle candle, double level, double max, boolean rised) {
         String caption;
         String text;
-        if (candle.getClose() > 1000) {
+        if (candle.getClose() > 100) {
             caption = MessageFormat.format("{0} - {1} {2, number, #}",
                     market,
                     rised ? "ABOVE" : "BELOW",

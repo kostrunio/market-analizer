@@ -4,6 +4,7 @@ import com.kostro.analizer.db.service.CandleService;
 import com.kostro.analizer.db.service.ConfigurationService;
 import com.kostro.analizer.json.interfaces.MarketService;
 import com.kostro.analizer.ui.configuration.btcusdt.BTCUSDTConfigurationView;
+import com.kostro.analizer.ui.configuration.btcusdt.ETHUSDTConfigurationView;
 import com.kostro.analizer.ui.configuration.btcusdt.XRPUSDTConfigurationView;
 import com.kostro.analizer.utils.CandleOperation;
 import com.kostro.analizer.wallet.Candle;
@@ -66,6 +67,33 @@ public class Scheduler {
 //    @Scheduled(fixedDelay = 1000, initialDelay = 3000)
     public void getXRPData() {
         String market = XRPUSDTConfigurationView.MARKET;
+        if (!configurationService.isRunScheduler(market)) {
+            log.info(market + "- Scheduler stopped");
+            return;
+        }
+        LocalDateTime dateFrom = candleService.getLastCandle(market);
+        LocalDateTime dateTo = dateFrom.plusSeconds(configurationService.getMaxPeriod(market));
+        if (dateTo.isAfter(LocalDateTime.now())) {
+            dateTo = LocalDateTime.now();
+        }
+        log.debug("invoke getCandles for {} with resolution {} from {} to {}", market, configurationService.getResolution(market), formatter.format(dateFrom), formatter.format(dateTo));
+        List<Candle> candles = marketService.getCandles(market, configurationService.getResolution(market), dateFrom, dateTo);
+
+        List<Candle> newCandles = candles.stream().filter(c -> c.getTime().isAfter(candleService.getLastCandle(market))).collect(Collectors.toList());
+        if (newCandles.size() == 0) return;
+
+        candleService.refreshCandles(market, newCandles);
+
+        //push event
+        candleOperation.checkCandles(market, newCandles);
+
+        candleService.setLastCandle(market, newCandles.get(newCandles.size()-1).getTime());
+    }
+
+    @Scheduled(cron = "*/10 * * * * *")
+//    @Scheduled(fixedDelay = 1000, initialDelay = 3000)
+    public void getETHData() {
+        String market = ETHUSDTConfigurationView.MARKET;
         if (!configurationService.isRunScheduler(market)) {
             log.info(market + "- Scheduler stopped");
             return;
