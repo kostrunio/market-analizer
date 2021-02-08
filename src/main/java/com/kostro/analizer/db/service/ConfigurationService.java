@@ -2,9 +2,9 @@ package com.kostro.analizer.db.service;
 
 import com.kostro.analizer.db.model.ConfigurationEntity;
 import com.kostro.analizer.db.repository.ConfigurationRepository;
+import com.kostro.analizer.ui.configuration.btcusdt.BNBUSDTConfigurationView;
 import com.kostro.analizer.ui.configuration.btcusdt.BTCUSDTConfigurationView;
-import com.kostro.analizer.ui.configuration.btcusdt.ETHUSDTConfigurationView;
-import com.kostro.analizer.ui.configuration.btcusdt.XRPUSDTConfigurationView;
+import com.kostro.analizer.ui.configuration.btcusdt.TWTUSDTConfigurationView;
 import com.kostro.analizer.wallet.Resolution;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class ConfigurationService {
     public ConfigurationService(ConfigurationRepository configurationRepository) {
         this.configurationRepository = configurationRepository;
 
-        setInitConfiguration(ETHUSDTConfigurationView.MARKET);
+        setInitConfiguration(BNBUSDTConfigurationView.MARKET);
     }
 
     private void setInitConfiguration(String market) {
@@ -91,7 +91,7 @@ public class ConfigurationService {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setMarket(market);
             entity.setName("limit60");
-            entity.setValue("100000");
+            entity.setValue("20000");
             configurationRepository.save(entity);
         }
 
@@ -99,7 +99,7 @@ public class ConfigurationService {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setMarket(market);
             entity.setName("lastLevel");
-            entity.setValue("100");
+            entity.setValue("0.1");
             configurationRepository.save(entity);
         }
 
@@ -107,7 +107,7 @@ public class ConfigurationService {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setMarket(market);
             entity.setName("levelStep");
-            entity.setValue("100");
+            entity.setValue("0.005");
             configurationRepository.save(entity);
         }
 
@@ -123,7 +123,7 @@ public class ConfigurationService {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setMarket(market);
             entity.setName("maxLevel");
-            entity.setValue("100");
+            entity.setValue("0.1");
             configurationRepository.save(entity);
         }
     }

@@ -1,10 +1,7 @@
 package com.kostro.analizer.ui;
 
 import com.kostro.analizer.db.service.ConfigurationService;
-import com.kostro.analizer.ui.configuration.btcusdt.BTCUSDTConfigurationView;
-import com.kostro.analizer.ui.configuration.btcusdt.ETHUSDTConfigurationView;
-import com.kostro.analizer.ui.configuration.btcusdt.XRPUSDTConfigurationView;
-import com.kostro.analizer.ui.dashboard.btcusdt.BTCUSDTDashboardView;
+import com.kostro.analizer.ui.configuration.btcusdt.*;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.H1;
@@ -42,7 +39,6 @@ public class MainLayout extends AppLayout {
     }
 
     private void createDrawer() {
-//        RouterLink dashboardLink = new RouterLink(BTCUSDTDashboardView.getViewName(), BTCUSDTDashboardView.class);
         RouterLink btcusdt = new RouterLink(BTCUSDTConfigurationView.getViewName() , BTCUSDTConfigurationView.class);
         btcusdt.setHighlightCondition(HighlightConditions.sameLocation());
 
@@ -52,6 +48,12 @@ public class MainLayout extends AppLayout {
         RouterLink xrpusdt = new RouterLink(XRPUSDTConfigurationView.getViewName() , XRPUSDTConfigurationView.class);
         xrpusdt.setHighlightCondition(HighlightConditions.sameLocation());
 
-        addToDrawer(new VerticalLayout(btcusdt, ethusdt, xrpusdt));
+        RouterLink twtusdt = new RouterLink(TWTUSDTConfigurationView.getViewName() , TWTUSDTConfigurationView.class);
+        twtusdt.setHighlightCondition(HighlightConditions.sameLocation());
+
+        RouterLink bnbusdt = new RouterLink(BNBUSDTConfigurationView.getViewName() , BNBUSDTConfigurationView.class);
+        bnbusdt.setHighlightCondition(HighlightConditions.sameLocation());
+
+        addToDrawer(new VerticalLayout(btcusdt, ethusdt, xrpusdt, twtusdt, bnbusdt));
     }
 }
