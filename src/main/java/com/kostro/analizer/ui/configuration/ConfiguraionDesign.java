@@ -4,6 +4,7 @@ import com.kostro.analizer.wallet.Resolution;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
@@ -11,6 +12,7 @@ import com.vaadin.flow.component.textfield.NumberField;
 public class ConfiguraionDesign extends VerticalLayout {
     public static final String VIEW_NAME = "Configuration";
     protected String market;
+    protected DateTimePicker lastCandleField = new DateTimePicker("last candle");
     protected NumberField maxPeriodField = new NumberField("maxPeriod");
     protected ComboBox<Resolution> resolutionField = new ComboBox("resolution");
     protected Checkbox sendVolume = new Checkbox("sendVolume");
@@ -33,10 +35,16 @@ public class ConfiguraionDesign extends VerticalLayout {
 
         FormLayout layout = new FormLayout();
         layout.add(
-                maxPeriodField, resolutionField, sendVolume,
-                runSheduler, stopBuying,
-                limit60, lastLevel,
-                levelStep, sendLevel,
+                lastCandleField,
+                maxPeriodField,
+                resolutionField,
+                sendVolume,
+                runSheduler,
+                stopBuying,
+                limit60,
+                lastLevel,
+                levelStep,
+                sendLevel,
                 maxLevel,
                 saveButton);
 

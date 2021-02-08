@@ -1,5 +1,6 @@
 package com.kostro.analizer.ui.configuration;
 
+import com.kostro.analizer.db.service.CandleService;
 import com.kostro.analizer.db.service.ConfigurationService;
 import com.kostro.analizer.ui.MainLayout;
 import com.kostro.analizer.wallet.Resolution;
@@ -13,6 +14,7 @@ import com.vaadin.flow.router.Route;
 public class ConfigurationView extends ConfiguraionDesign {
 
     private ConfigurationService configurationService;
+    private CandleService candleService;
 
     ComponentEventListener<ClickEvent<Button>> saveClicked = e -> {
         configurationService.setMaxPeriod(market, maxPeriodField.getValue().intValue());
@@ -27,10 +29,12 @@ public class ConfigurationView extends ConfiguraionDesign {
         configurationService.setMaxLevel(market, maxLevel.getValue());
     };
 
-    public ConfigurationView(String market, ConfigurationService configurationService) {
+    public ConfigurationView(String market, ConfigurationService configurationService, CandleService candleService) {
         super(market);
         this.configurationService = configurationService;
+        this.candleService = candleService;
 
+        lastCandleField.setValue(candleService.getLastCandle(market));
         maxPeriodField.setValue(configurationService.getMaxPeriod(market).doubleValue());
         resolutionField.setItems(Resolution.getResolutions());
         resolutionField.setValue(configurationService.getResolution(market));
