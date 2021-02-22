@@ -66,7 +66,7 @@ public class Scheduler {
     public void getXRPData() {
         String market = XRPUSDTConfigurationView.MARKET;
         if (!configurationService.isRunScheduler(market)) {
-            log.info(market + "- Scheduler stopped");
+//            log.info(market + "- Scheduler stopped");
             return;
         }
         LocalDateTime dateFrom = candleService.getLastCandle(market);
