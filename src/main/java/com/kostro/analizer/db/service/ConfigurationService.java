@@ -37,7 +37,7 @@ public class ConfigurationService {
     public ConfigurationService(ConfigurationRepository configurationRepository) {
         this.configurationRepository = configurationRepository;
 
-        setInitConfiguration(BNBUSDTConfigurationView.MARKET);
+        setInitConfiguration(BTCUSDTConfigurationView.MARKET);
     }
 
     private void setInitConfiguration(String market) {
@@ -91,7 +91,7 @@ public class ConfigurationService {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setMarket(market);
             entity.setName("limit60");
-            entity.setValue("20000");
+            entity.setValue("300");
             configurationRepository.save(entity);
         }
 
@@ -99,7 +99,7 @@ public class ConfigurationService {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setMarket(market);
             entity.setName("lastLevel");
-            entity.setValue("0.1");
+            entity.setValue("30000");
             configurationRepository.save(entity);
         }
 
@@ -107,7 +107,7 @@ public class ConfigurationService {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setMarket(market);
             entity.setName("levelStep");
-            entity.setValue("0.005");
+            entity.setValue("500");
             configurationRepository.save(entity);
         }
 
@@ -123,7 +123,7 @@ public class ConfigurationService {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setMarket(market);
             entity.setName("maxLevel");
-            entity.setValue("0.1");
+            entity.setValue("30000");
             configurationRepository.save(entity);
         }
     }
