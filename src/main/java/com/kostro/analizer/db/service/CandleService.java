@@ -68,7 +68,7 @@ public class CandleService {
             if (lastCandle.get(market) != null)
                 return lastCandle.get(market).minusMinutes(5);
             else
-                lastCandle.put(market, LocalDateTime.of(2017, 11, 06, 00, 00, 00));
+                lastCandle.put(market, LocalDateTime.of(2021, 1, 01, 00, 00, 00));
         }
         return lastCandle.get(market);
     }
