@@ -29,7 +29,7 @@ public class BinanceService implements MarketService {
     }
 
     public List<Candle> getCandles(String market, Resolution resolution, LocalDateTime from, LocalDateTime to) {
-        String url = "https://api.binance.com/api/v3/klines?symbol="+market+"&interval="+resolution.getCode()+"&startTime="+ from.toEpochSecond(ZoneOffset.of("+1"))+"000&endTime="+to.toEpochSecond(ZoneOffset.of("+1"))+"000&limit=1000";
+        String url = "https://api.binance.com/api/v3/klines?symbol="+market+"&interval="+resolution.getCode()+"&startTime="+ from.toEpochSecond(ZoneOffset.of("+2"))+"000&endTime="+to.toEpochSecond(ZoneOffset.of("+2"))+"000&limit=1000";
         log.debug("REQUEST: " + url);
         return createCandles(rest.getForObject(url, String[][].class), resolution.getSecs());
     }
@@ -45,7 +45,7 @@ public class BinanceService implements MarketService {
                 double low = Double.parseDouble(item[3]);
                 double close = Double.parseDouble(item[4]);
                 double volume = Double.parseDouble(item[5]);
-                candles.add(new Candle(LocalDateTime.ofEpochSecond(Long.parseLong(timestamp.substring(0, 10)), Integer.parseInt(timestamp.substring(11)), ZoneOffset.of("+1")), resolution, open, high, low, close, volume));
+                candles.add(new Candle(LocalDateTime.ofEpochSecond(Long.parseLong(timestamp.substring(0, 10)), Integer.parseInt(timestamp.substring(11)), ZoneOffset.of("+2")), resolution, open, high, low, close, volume));
             }
         return candles;
     }
