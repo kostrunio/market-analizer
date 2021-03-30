@@ -20,8 +20,8 @@ public class ShowNotification implements Notification {
     public ShowNotification() {
         try {
             tray = SystemTray.getSystemTray();
-            Image image = Toolkit.getDefaultToolkit().createImage("icon.png");
-            trayIcon = new TrayIcon(image, "Tray Demo");
+            Image image = Toolkit.getDefaultToolkit().createImage("icons/icon.png");
+            trayIcon = new TrayIcon(image, "Market Analizer");
             trayIcon.setImageAutoSize(true);
             tray.add(trayIcon);
         } catch (AWTException e) {
