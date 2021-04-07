@@ -1,4 +1,4 @@
-package com.kostro.analizer.ui.configuration.btcusdt;
+package com.kostro.analizer.ui.configuration;
 
 import com.kostro.analizer.db.service.CandleService;
 import com.kostro.analizer.db.service.ConfigurationService;

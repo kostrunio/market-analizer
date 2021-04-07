@@ -2,8 +2,7 @@ package com.kostro.analizer.ui.dashboard;
 
 import com.kostro.analizer.db.service.CandleService;
 import com.kostro.analizer.db.service.ConfigurationService;
-import com.kostro.analizer.ui.MainLayout;
-import com.kostro.analizer.ui.configuration.btcusdt.BTCUSDTConfigurationView;
+import com.kostro.analizer.ui.configuration.BTCUSDTConfigurationView;
 import com.kostro.analizer.utils.CandleOperation;
 import com.kostro.analizer.wallet.Candle;
 import com.vaadin.flow.component.ClickEvent;
@@ -13,7 +12,6 @@ import com.vaadin.flow.component.charts.model.Configuration;
 import com.vaadin.flow.component.charts.model.DataSeries;
 import com.vaadin.flow.component.charts.model.DataSeriesItem;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 

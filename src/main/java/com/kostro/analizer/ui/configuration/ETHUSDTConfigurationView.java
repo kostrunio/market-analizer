@@ -1,4 +1,4 @@
-package com.kostro.analizer.ui.configuration.btcusdt;
+package com.kostro.analizer.ui.configuration;
 
 import com.kostro.analizer.db.service.CandleService;
 import com.kostro.analizer.db.service.ConfigurationService;
@@ -6,11 +6,11 @@ import com.kostro.analizer.ui.MainLayout;
 import com.kostro.analizer.ui.configuration.ConfigurationView;
 import com.vaadin.flow.router.Route;
 
-@Route(value="bnbusdt-configuration", layout = MainLayout.class)
-public class BNBUSDTConfigurationView extends ConfigurationView {
-    public static final String MARKET = "BNBUSDT";
+@Route(value="ethusdt-configuration", layout = MainLayout.class)
+public class ETHUSDTConfigurationView extends ConfigurationView {
+    public static final String MARKET = "ETHUSDT";
 
-    public BNBUSDTConfigurationView(ConfigurationService configurationService, CandleService candleService) {
+    public ETHUSDTConfigurationView(ConfigurationService configurationService, CandleService candleService) {
         super(MARKET, configurationService, candleService);
     }
 
