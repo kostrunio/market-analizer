@@ -1,7 +1,7 @@
 package com.kostro.analizer.ui;
 
 import com.kostro.analizer.db.service.ConfigurationService;
-import com.kostro.analizer.ui.configuration.btcusdt.*;
+import com.kostro.analizer.ui.configuration.*;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.H1;
@@ -54,6 +54,15 @@ public class MainLayout extends AppLayout {
         RouterLink bnbusdt = new RouterLink(BNBUSDTConfigurationView.getViewName() , BNBUSDTConfigurationView.class);
         bnbusdt.setHighlightCondition(HighlightConditions.sameLocation());
 
-        addToDrawer(new VerticalLayout(btcusdt, ethusdt, xrpusdt, twtusdt, bnbusdt));
+        RouterLink renusdt = new RouterLink(RENUSDTConfigurationView.getViewName() , RENUSDTConfigurationView.class);
+        renusdt.setHighlightCondition(HighlightConditions.sameLocation());
+
+        RouterLink oneinchusdt = new RouterLink(ONEINCHUSDTConfigurationView.getViewName() , ONEINCHUSDTConfigurationView.class);
+        oneinchusdt.setHighlightCondition(HighlightConditions.sameLocation());
+
+        RouterLink proseth = new RouterLink(PROSETHConfigurationView.getViewName() , PROSETHConfigurationView.class);
+        proseth.setHighlightCondition(HighlightConditions.sameLocation());
+
+        addToDrawer(new VerticalLayout(btcusdt, ethusdt, xrpusdt, twtusdt, bnbusdt, renusdt, oneinchusdt, proseth));
     }
 }
