@@ -2,6 +2,7 @@ package com.kostro.analizer.utils;
 
 import com.kostro.analizer.db.service.CandleService;
 import com.kostro.analizer.db.service.ConfigurationService;
+import com.kostro.analizer.db.service.QueryParams;
 import com.kostro.analizer.utils.notification.Notification;
 import com.kostro.analizer.wallet.Candle;
 import com.kostro.analizer.wallet.Resolution;
@@ -104,7 +105,8 @@ public class CandleOperation {
     private void prepareLists(String market, List<Candle> fiveMins60, List<Candle> fiveMins, Resolution resolution, Candle candle) {
         LocalDateTime dateFrom = candle.getTime().minusSeconds(resolution.getSecs()).plusMinutes(1);
         LocalDateTime dateTo = candle.getTime();
-        fiveMins60.addAll(candleService.find(market, dateFrom, dateTo, Resolution.ONE_MIN.getSecs()));
+        QueryParams params = new QueryParams.Builder(market, dateFrom, dateTo, Resolution.ONE_MIN).build();
+        fiveMins60.addAll(candleService.find(params));
         fiveMins.addAll(CandleUtils.prepareCandles(fiveMins60, resolution.getSecs(), dateFrom));
         fiveMins.stream().forEach(c -> {
             if (c.getOpen() > 100)

@@ -56,12 +56,12 @@ public class CandleUtils {
         newCandle.setVolume(newCandle.getVolume()+candle.getVolume());
     }
 
-    public static CandleEntity from(String market, Candle candle, Long id) {
-        CandleEntity entity = from(market, candle);
+    public static CandleEntity of(String market, Candle candle, Long id) {
+        CandleEntity entity = of(market, candle);
         entity.setId(id);
         return entity;
     }
-    public static CandleEntity from(String market, Candle candle) {
+    public static CandleEntity of(String market, Candle candle) {
         CandleEntity entity = new CandleEntity();
         entity.setMarket(market);
         entity.setTime(candle.getTime());
@@ -74,7 +74,11 @@ public class CandleUtils {
         return entity;
     }
 
-    public static Candle from(CandleEntity candleEntity) {
+    public static Candle of(CandleEntity candleEntity) {
         return new Candle(candleEntity.getTime(), candleEntity.getResolution(), candleEntity.getOpen(), candleEntity.getHigh(), candleEntity.getLow(), candleEntity.getClose(), candleEntity.getVolume());
+    }
+
+    public static List<Candle> asList(List<CandleEntity> entities) {
+        return entities.stream().map(entity -> of(entity)).collect(Collectors.toList());
     }
 }

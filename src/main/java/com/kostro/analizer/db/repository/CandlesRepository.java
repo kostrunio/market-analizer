@@ -19,22 +19,22 @@ public interface CandlesRepository extends JpaRepository<CandleEntity, Long> {
                             @Param("endDate") LocalDateTime endDate,
                             @Param("resolution") int resolution);
 
+    @Query(value = "select * from Candles c where c.c_market = :market and c.c_time between :startDate and :endDate and c.c_resolution = :resolution and c.c_volume > :volume", nativeQuery = true)
+    List<CandleEntity> find(@Param("market") String market,
+                            @Param("startDate") LocalDateTime startDate,
+                            @Param("endDate") LocalDateTime endDate,
+                            @Param("resolution") int resolution,
+                            @Param("volume") double volume);
+
     CandleEntity findByMarketAndTimeAndResolution(String market, LocalDateTime time, int resolution);
 
     @Query(value = "select c.c_time from Candles c where c.c_market = :market order by c.c_time desc limit 1", nativeQuery = true)
     LocalDateTime findLastCandle(@Param("market") String market);
 
-    @Query(value = "select * from Candles c where c.c_market = :market and c.c_time between :startDate and :endDate and c.c_resolution = :resolution and c.c_volume > :limit", nativeQuery = true)
-    List<CandleEntity> findWithLimit(@Param("market") String market,
-                                     @Param("startDate") LocalDateTime startDate,
-                                     @Param("endDate") LocalDateTime endDate,
-                                     @Param("resolution") int resolution,
-                                     @Param("limit") double limit);
-
-    @Query(value = "select * from Candles c where c.c_market = :market and c.c_time <= :startDate and c.c_resolution = :resolution and c.c_volume > :limit order by id desc limit :numberOfTransactions", nativeQuery = true)
+    @Query(value = "select * from Candles c where c.c_market = :market and c.c_time <= :startDate and c.c_resolution = :resolution and c.c_volume > :volume order by id desc limit :numberOfTransactions", nativeQuery = true)
     List<CandleEntity> findLast(@Param("market") String market,
                                 @Param("startDate") LocalDateTime time,
                                 @Param("resolution") int resolution,
-                                @Param("limit") int limit,
+                                @Param("volume") int volume,
                                 @Param("numberOfTransactions") int numberOfTransactions);
 }

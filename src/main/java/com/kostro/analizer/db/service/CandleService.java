@@ -9,18 +9,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class CandleService {
+    
+    private final LocalDateTime FIRST_CANDLE = LocalDateTime.of(2020, 8, 01, 00, 00, 00);
 
     private CandlesRepository repository;
 
-    private static Map<String, LocalDateTime> lastCandle = new HashMap<>();
+    private static ConcurrentMap<String, LocalDateTime> lastCandle = new ConcurrentHashMap<>();
 
     @Autowired
     public CandleService(CandlesRepository repository) {
@@ -39,38 +41,30 @@ public class CandleService {
         return repository.findAll();
     }
 
-    public List<Candle> find(String market, LocalDateTime startDate, LocalDateTime endDate, int resolution, double limit) {
-        List<Candle> candles = new ArrayList<>();
-        for(CandleEntity entity : repository.findWithLimit(market, startDate, endDate, resolution, limit)) {
-            candles.add(CandleUtils.from(entity));
-        }
-        return candles;
+    public List<Candle> find(QueryParams params) {
+        List<CandleEntity> entities = findCandles(params);
+        return CandleUtils.asList(entities);
     }
-    public List<Candle> find(String market, LocalDateTime startDate, LocalDateTime endDate, int resolution) {
-        List<Candle> candles = new ArrayList<>();
-        for(CandleEntity entity : repository.find(market, startDate, endDate, resolution)) {
-            candles.add(CandleUtils.from(entity));
+
+    private List<CandleEntity> findCandles(QueryParams params) {
+        if (params.volume > 0) {
+            return repository.find(params.market, params.startDate, params.endDate, params.resolution.getSecs(), params.volume);
+        } else {
+            return repository.find(params.market, params.startDate, params.endDate, params.resolution.getSecs());
         }
-        return candles;
     }
 
     public void refreshCandles(String market, List<Candle> candles) {
         for (Candle candle : candles) {
             CandleEntity entity = repository.findByMarketAndTimeAndResolution(market, candle.getTime(), candle.getResolution(market));
-            entity = CandleUtils.from(market, candle, entity != null ? entity.getId() : null);
+            entity = CandleUtils.of(market, candle, entity != null ? entity.getId() : null);
             repository.save(entity);
         }
     }
 
     public LocalDateTime getLastCandle(String market) {
-        if (!lastCandle.containsKey(market)) {
-            lastCandle.put(market, getLastDate(market));
-            if (lastCandle.get(market) != null)
-                return lastCandle.get(market).minusMinutes(5);
-            else
-                lastCandle.put(market, LocalDateTime.of(2021, 1, 01, 00, 00, 00));
-        }
-        return lastCandle.get(market);
+        lastCandle.putIfAbsent(market, getLastDate(market));
+        return lastCandle.getOrDefault(market, FIRST_CANDLE);
     }
 
     public void setLastCandle(String market, LocalDateTime lastCandle) {
@@ -83,10 +77,9 @@ public class CandleService {
     }
 
     public List<Candle> findLastHuge(String market, LocalDateTime time, int resolution, int limit, int numberOfTransactions) {
-        List<Candle> candles = new ArrayList<>();
-        for(CandleEntity entity : repository.findLast(market, time, resolution, limit, numberOfTransactions)) {
-            candles.add(CandleUtils.from(entity));
-        }
-        return candles;
+        return repository.findLast(market, time, resolution, limit, numberOfTransactions)
+                .stream()
+                .map(entity -> CandleUtils.of(entity))
+                .collect(Collectors.toList());
     }
 }

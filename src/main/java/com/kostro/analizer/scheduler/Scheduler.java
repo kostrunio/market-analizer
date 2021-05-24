@@ -82,6 +82,18 @@ public class Scheduler {
         runScheduler(PROSETHConfigurationView.MARKET);
     }
 
+//    @Scheduled(cron = "*/10 * * * * *")
+//    @Scheduled(fixedDelay = 1000, initialDelay = 3000)
+    public void getXRPDOWNData() {
+        runScheduler(XRPDOWNUSDTConfigurationView.MARKET);
+    }
+
+//    @Scheduled(cron = "*/10 * * * * *")
+//    @Scheduled(fixedDelay = 1000, initialDelay = 3000)
+    public void getBNBDOWNData() {
+        runScheduler(BNBDOWNUSDTConfigurationView.MARKET);
+    }
+
     private void runScheduler(String market) {
         if (!configurationService.isRunScheduler(market)) {
 //            log.info(market + "- Scheduler stopped");

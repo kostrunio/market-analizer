@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 @Slf4j
 @Service
@@ -21,17 +21,19 @@ public class ConfigurationService {
 
     private ConfigurationRepository configurationRepository;
 
-    private Map<String, Integer> maxPeriod = new HashMap<>();
+    private ConcurrentMap<String, Integer> maxPeriod = new ConcurrentHashMap<>();
     private List<String> markets;
-    private Map<String, Resolution> resolution = new HashMap<>();
-    private Map<String, Boolean> sendVolume = new HashMap<>();
-    private Map<String, Boolean> runScheduler = new HashMap<>();
-    private Map<String, Boolean> stopBuying = new HashMap<>();
-    private Map<String, Integer> limit60 = new HashMap<>();
-    private Map<String, Double> lastLevel = new HashMap<>();
-    private Map<String, Double> levelStep = new HashMap<>();
-    private Map<String, Boolean> sendLevel = new HashMap<>();
-    private Map<String, Double> maxLevel = new HashMap<>();
+    private ConcurrentMap<String, Resolution> resolution = new ConcurrentHashMap<>();
+    private ConcurrentMap<String, Boolean> sendVolume = new ConcurrentHashMap<>();
+    private ConcurrentMap<String, Boolean> runScheduler = new ConcurrentHashMap<>();
+    private ConcurrentMap<String, Boolean> stopBuying = new ConcurrentHashMap<>();
+    private ConcurrentMap<String, Integer> limit60 = new ConcurrentHashMap<>();
+    private ConcurrentMap<String, Double> lastLevel = new ConcurrentHashMap<>();
+    private ConcurrentMap<String, Double> levelStep = new ConcurrentHashMap<>();
+    private ConcurrentMap<String, Boolean> sendLevel = new ConcurrentHashMap<>();
+    private ConcurrentMap<String, Double> maxLevel = new ConcurrentHashMap<>();
+
+    private ConcurrentMap<String, ConcurrentMap> maps = new ConcurrentHashMap<>();
 
     @Autowired
     public ConfigurationService(ConfigurationRepository configurationRepository) {
@@ -165,39 +167,9 @@ public class ConfigurationService {
     }
 
     public Resolution getResolution(String market) {
-        if (resolution.containsKey(market)) return resolution.get(market);
-        ConfigurationEntity entity = configurationRepository.findByMarketAndName(market, "resolution");
-        if (entity != null)
-            switch (entity.getValue()) {
-                case "1 min":
-                    resolution.put(market, Resolution.ONE_MIN);
-                case "3 min":
-                    resolution.put(market, Resolution.THREE_MINS);
-                case "5 min":
-                    resolution.put(market, Resolution.FIVE_MINS);
-                case "15 min":
-                    resolution.put(market, Resolution.FIFTEEN_MINS);
-                case "30 min":
-                    resolution.put(market, Resolution.THIRTY_MINS);
-                case "1 hour":
-                    resolution.put(market, Resolution.ONE_HOUR);
-                case "2 hours":
-                    resolution.put(market, Resolution.TWO_HOURS);
-                case "4 hours":
-                    resolution.put(market, Resolution.FOUR_HOURS);
-                case "6 hours":
-                    resolution.put(market, Resolution.SIX_HOURS);
-                case "12 hours":
-                    resolution.put(market, Resolution.TWELWE_HOURS);
-                case "1 day":
-                    resolution.put(market, Resolution.ONE_DAY);
-                case "3 days":
-                    resolution.put(market, Resolution.THREE_DAYS);
-                case "1 week":
-                    resolution.put(market, Resolution.ONE_WEEK);
-                default:
-                    resolution.put(market, Resolution.ONE_MIN);
-            }
+        if (!resolution.containsKey(market)) {
+            resolution.put(market, Resolution.of(configurationRepository.findByMarketAndName(market, "resolution").getValue()));
+        }
         return resolution.get(market);
     }
 

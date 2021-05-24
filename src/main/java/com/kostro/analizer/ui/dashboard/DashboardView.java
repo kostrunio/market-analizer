@@ -2,9 +2,11 @@ package com.kostro.analizer.ui.dashboard;
 
 import com.kostro.analizer.db.service.CandleService;
 import com.kostro.analizer.db.service.ConfigurationService;
+import com.kostro.analizer.db.service.QueryParams;
 import com.kostro.analizer.ui.configuration.BTCUSDTConfigurationView;
 import com.kostro.analizer.utils.CandleOperation;
 import com.kostro.analizer.wallet.Candle;
+import com.kostro.analizer.wallet.Resolution;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
@@ -43,7 +45,8 @@ public class DashboardView extends DashboardDesign {
 
         DataSeries btcSeries = new DataSeries("BTC-PLN");
         DataSeries bigFishSeries = new DataSeries("HugeVolume");
-        for (Candle candle : candleService.find(market, LocalDateTime.of(fromDatePicker.getValue(), fromTimePicker.getValue()), LocalDateTime.of(toDatePicker.getValue(), toTimePicker.getValue()), resolutionBox.getValue().getSecs())) {
+        QueryParams params = new QueryParams.Builder(market, LocalDateTime.of(fromDatePicker.getValue(), fromTimePicker.getValue()), LocalDateTime.of(toDatePicker.getValue(), toTimePicker.getValue()), Resolution.of(resolutionBox.getValue().getSecs())).build();
+        for (Candle candle : candleService.find(params)) {
             boolean inserter = false;
             DataSeriesItem data = new DataSeriesItem(candle.getTime().toInstant(ZoneOffset.UTC), candle.getLow(), candle.getHigh());
             if (dataSeriesList.getSelectedItems().contains("HugeVolume"))
