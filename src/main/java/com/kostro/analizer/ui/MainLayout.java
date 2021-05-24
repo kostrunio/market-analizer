@@ -63,6 +63,12 @@ public class MainLayout extends AppLayout {
         RouterLink proseth = new RouterLink(PROSETHConfigurationView.getViewName() , PROSETHConfigurationView.class);
         proseth.setHighlightCondition(HighlightConditions.sameLocation());
 
-        addToDrawer(new VerticalLayout(btcusdt, ethusdt, xrpusdt, twtusdt, bnbusdt, renusdt, oneinchusdt, proseth));
+        RouterLink xrpdownusdt = new RouterLink(XRPDOWNUSDTConfigurationView.getViewName() , XRPDOWNUSDTConfigurationView.class);
+        xrpdownusdt.setHighlightCondition(HighlightConditions.sameLocation());
+
+        RouterLink bnbdownusdt = new RouterLink(BNBDOWNUSDTConfigurationView.getViewName() , BNBDOWNUSDTConfigurationView.class);
+        bnbdownusdt.setHighlightCondition(HighlightConditions.sameLocation());
+
+        addToDrawer(new VerticalLayout(btcusdt, ethusdt, xrpusdt, twtusdt, bnbusdt, renusdt, oneinchusdt, proseth, xrpdownusdt, bnbdownusdt));
     }
 }
