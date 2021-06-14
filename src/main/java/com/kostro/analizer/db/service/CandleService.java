@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class CandleService {
     
-    private final LocalDateTime FIRST_CANDLE = LocalDateTime.of(2020, 8, 01, 00, 00, 00);
+    private final LocalDateTime FIRST_CANDLE = LocalDateTime.of(2021, 02, 03, 00, 00, 00);
 
     private CandlesRepository repository;
 
@@ -63,8 +63,11 @@ public class CandleService {
     }
 
     public LocalDateTime getLastCandle(String market) {
-        lastCandle.putIfAbsent(market, getLastDate(market));
-        return lastCandle.getOrDefault(market, FIRST_CANDLE);
+        if (!lastCandle.containsKey(market)) {
+            LocalDateTime lastDate = getLastDate(market);
+            lastCandle.put(market, lastDate == null ? FIRST_CANDLE : lastDate);
+        }
+        return lastCandle.get(market);
     }
 
     public void setLastCandle(String market, LocalDateTime lastCandle) {

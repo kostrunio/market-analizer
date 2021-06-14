@@ -2,9 +2,7 @@ package com.kostro.analizer.db.service;
 
 import com.kostro.analizer.db.model.ConfigurationEntity;
 import com.kostro.analizer.db.repository.ConfigurationRepository;
-import com.kostro.analizer.ui.configuration.btcusdt.BNBUSDTConfigurationView;
-import com.kostro.analizer.ui.configuration.btcusdt.BTCUSDTConfigurationView;
-import com.kostro.analizer.ui.configuration.btcusdt.TWTUSDTConfigurationView;
+import com.kostro.analizer.ui.configuration.*;
 import com.kostro.analizer.wallet.Resolution;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +37,7 @@ public class ConfigurationService {
     public ConfigurationService(ConfigurationRepository configurationRepository) {
         this.configurationRepository = configurationRepository;
 
-        setInitConfiguration(BTCUSDTConfigurationView.MARKET);
+        setInitConfiguration(PROSETHConfigurationView.MARKET);
     }
 
     private void setInitConfiguration(String market) {
@@ -93,7 +91,7 @@ public class ConfigurationService {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setMarket(market);
             entity.setName("limit60");
-            entity.setValue("300");
+            entity.setValue("4000");
             configurationRepository.save(entity);
         }
 
@@ -101,7 +99,7 @@ public class ConfigurationService {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setMarket(market);
             entity.setName("lastLevel");
-            entity.setValue("30000");
+            entity.setValue("0.001");
             configurationRepository.save(entity);
         }
 
@@ -109,7 +107,7 @@ public class ConfigurationService {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setMarket(market);
             entity.setName("levelStep");
-            entity.setValue("500");
+            entity.setValue("0.001");
             configurationRepository.save(entity);
         }
 
@@ -125,7 +123,7 @@ public class ConfigurationService {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setMarket(market);
             entity.setName("maxLevel");
-            entity.setValue("30000");
+            entity.setValue("0.004");
             configurationRepository.save(entity);
         }
     }
@@ -168,7 +166,10 @@ public class ConfigurationService {
 
     public Resolution getResolution(String market) {
         if (!resolution.containsKey(market)) {
-            resolution.put(market, Resolution.of(configurationRepository.findByMarketAndName(market, "resolution").getValue()));
+            ConfigurationEntity entity = configurationRepository.findByMarketAndName(market, "resolution");
+            if (entity != null) {
+                resolution.put(market, Resolution.of(entity.getValue()));
+            }
         }
         return resolution.get(market);
     }
