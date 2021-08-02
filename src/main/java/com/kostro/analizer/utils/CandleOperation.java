@@ -37,10 +37,13 @@ public class CandleOperation {
 
     public boolean checkHugeVolume(String market, Candle candle, boolean checkSending) {
         if (candle.getVolume() > configurationService.getLimitFor(market, candle.getResolution(market))) {
-            if (candle.getOpen() > 100)
+            if (candle.getOpen() > 100) {
                 log.info(String.format("%7s - %9s: %s -> change: %5.0f", market, Resolution.ONE_MIN.name(), candle, candle.getClose() - candle.getOpen()));
-            else
+            } else if (candle.getOpen() < 0.001) {
+                log.info(String.format("%7s - %9s: %s -> change: %5.6f", market, Resolution.ONE_MIN.name(), candle, candle.getClose() - candle.getOpen()));
+            } else {
                 log.info(String.format("%7s - %9s: %s -> change: %5.5f", market, Resolution.ONE_MIN.name(), candle, candle.getClose() - candle.getOpen()));
+            }
 
             List<Candle> fiveMins60 = new ArrayList<>();
             List<Candle> fiveMins = new ArrayList<>();
@@ -89,12 +92,16 @@ public class CandleOperation {
     }
 
     private void sendLevel(String market, boolean checkSending, Candle candle, boolean rised) {
-        if (configurationService.getLastLevel(market) > 100)
+        if (configurationService.getLastLevel(market) > 100) {
             log.info(String.format("%7s - %9s: %5.0f, %4.0f %4s max: %5.0f", market, "LEVEL", configurationService.getLastLevel(market), configurationService.getMaxLevel(market) - configurationService.getLastLevel(market), rised ? "to" : "from", configurationService.getMaxLevel(market)));
-        else
+        } else if (configurationService.getLastLevel(market) < 0.001) {
+            log.info(String.format("%7s - %9s: %5.4f, %4.4f %4s max: %5.4f", market, "LEVEL", configurationService.getLastLevel(market), configurationService.getMaxLevel(market) - configurationService.getLastLevel(market), rised ? "to" : "from", configurationService.getMaxLevel(market)));
+        } else {
             log.info(String.format("%7s - %9s: %5.3f, %4.3f %4s max: %5.3f", market, "LEVEL", configurationService.getLastLevel(market), configurationService.getMaxLevel(market) - configurationService.getLastLevel(market), rised ? "to" : "from", configurationService.getMaxLevel(market)));
-        if (checkSending && configurationService.isSendLevel(market) && candle.getTime().plusMinutes(10).isAfter(LocalDateTime.now()))
+        }
+        if (checkSending && configurationService.isSendLevel(market) && candle.getTime().plusMinutes(10).isAfter(LocalDateTime.now())) {
             notification.level(market, candle, configurationService.getLastLevel(market), configurationService.getMaxLevel(market), rised);
+        }
     }
 
     private void checkMaxLevel(String market, Candle candle) {
@@ -109,10 +116,13 @@ public class CandleOperation {
         fiveMins60.addAll(candleService.find(params));
         fiveMins.addAll(CandleUtils.prepareCandles(fiveMins60, resolution.getSecs(), dateFrom));
         fiveMins.stream().forEach(c -> {
-            if (c.getOpen() > 100)
+            if (c.getOpen() > 100) {
                 log.info(String.format("%7s - %9s: %s -> change: %5.0f", market, resolution.name(), c, candle.getClose() - c.getOpen()));
-            else
+            } else if (c.getOpen() < 0.001) {
+                log.info(String.format("%7s - %9s: %s -> change: %5.6f", market, resolution.name(), c, candle.getClose() - c.getOpen()));
+            } else {
                 log.info(String.format("%7s - %9s: %s -> change: %5.5f", market, resolution.name(), c, candle.getClose() - c.getOpen()));
+            }
         });
     }
 

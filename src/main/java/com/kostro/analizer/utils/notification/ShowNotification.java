@@ -41,6 +41,14 @@ public class ShowNotification implements Notification {
             text = MessageFormat.format("to {0, number, #.##} with v:{1, number, #.##}",
                     candle.getClose(),
                     candle.getVolume());
+        } else if (candle.getClose() < 0.001) {
+            caption = MessageFormat.format("{0} - {1} {2, number, #.######}",
+                    market,
+                    candle.getClose() > candle.getOpen() ? "RISING" : "FALLING",
+                    candle.getClose() - candle.getOpen());
+            text = MessageFormat.format("to {0, number, #.######} with v:{1, number, #.######}",
+                    candle.getClose(),
+                    candle.getVolume());
         } else {
             caption = MessageFormat.format("{0} - {1} {2, number, #.#####}",
                     market,
@@ -63,6 +71,15 @@ public class ShowNotification implements Notification {
                     rised ? "ABOVE" : "BELOW",
                     level);
             text = MessageFormat.format("{0, number, #.} {1} max: {2}",
+                    max - level,//0
+                    rised ? "to" : "from",//1
+                    max);//2
+        } else if (candle.getClose() < 0.001) {
+            caption = MessageFormat.format("{0} - {1} {2, number, #.#####}",
+                    market,
+                    rised ? "ABOVE" : "BELOW",
+                    level);
+            text = MessageFormat.format("{0, number, #.#####} {1} max: {2}",
                     max - level,//0
                     rised ? "to" : "from",//1
                     max);//2

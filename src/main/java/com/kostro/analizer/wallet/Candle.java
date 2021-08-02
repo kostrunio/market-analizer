@@ -71,9 +71,12 @@ public class Candle {
 
     @Override
     public String toString() {
-        if (open > 100)
+        if (open > 100) {
             return String.format("%s [o=%5.0f, h=%5.0f, l=%5.0f, c=%5.0f, v=%7.0f", time.toString().replace("T", " "), open, high, low, close, volume);
-        else
+        } else if (open < 0.001) {
+            return String.format("%s [o=%5.6f, h=%5.6f, l=%5.6f, c=%5.6f, v=%10.0f", time.toString().replace("T", " "), open, high, low, close, volume);
+        } else {
             return String.format("%s [o=%5.5f, h=%5.5f, l=%5.5f, c=%5.5f, v=%10.0f", time.toString().replace("T", " "), open, high, low, close, volume);
+        }
     }
 }
