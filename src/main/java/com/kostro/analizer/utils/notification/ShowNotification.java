@@ -19,6 +19,10 @@ public class ShowNotification implements Notification {
 
     public ShowNotification() {
         try {
+            if (!SystemTray.isSupported()) {
+                log.error("System tray not supported!");
+                return;
+            }
             tray = SystemTray.getSystemTray();
             Image image = Toolkit.getDefaultToolkit().createImage("icons/icon.png");
             trayIcon = new TrayIcon(image, "Market Analizer");

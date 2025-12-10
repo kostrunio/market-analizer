@@ -37,7 +37,7 @@ public class ConfigurationService {
     public ConfigurationService(ConfigurationRepository configurationRepository) {
         this.configurationRepository = configurationRepository;
 
-        setInitConfiguration(PROSETHConfigurationView.MARKET);
+        setInitConfiguration(BTCUSDCConfigurationView.MARKET);
     }
 
     private void setInitConfiguration(String market) {
@@ -52,7 +52,7 @@ public class ConfigurationService {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setMarket("ALL");
             entity.setName("markets");
-            entity.setValue(BTCUSDTConfigurationView.MARKET);
+            entity.setValue(BTCUSDCConfigurationView.MARKET);
             configurationRepository.save(entity);
         }
         if (getResolution(market) == null) {
@@ -67,7 +67,7 @@ public class ConfigurationService {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setMarket(market);
             entity.setName("sendVolume");
-            entity.setValue("true");
+            entity.setValue("false");
             configurationRepository.save(entity);
         }
 
@@ -83,7 +83,7 @@ public class ConfigurationService {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setMarket(market);
             entity.setName("stopBuying");
-            entity.setValue("false");
+            entity.setValue("true");
             configurationRepository.save(entity);
         }
 
@@ -115,7 +115,7 @@ public class ConfigurationService {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setMarket(market);
             entity.setName("sendLevel");
-            entity.setValue("true");
+            entity.setValue("false");
             configurationRepository.save(entity);
         }
 

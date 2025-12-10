@@ -1,4 +1,4 @@
-package com.kostro.analizer.ui.dashboard.btcusdt;
+package com.kostro.analizer.ui.dashboard.btcusdc;
 
 import com.kostro.analizer.db.service.CandleService;
 import com.kostro.analizer.db.service.ConfigurationService;
@@ -7,11 +7,11 @@ import com.kostro.analizer.ui.dashboard.DashboardView;
 import com.kostro.analizer.utils.CandleOperation;
 import com.vaadin.flow.router.Route;
 
-@Route(value = "btcusdt-dashboard", layout = MainLayout.class)
-public class BTCUSDTDashboardView extends DashboardView {
-    public static final String MARKET = "BTCUSDT";
+@Route(value = "btcusdc-dashboard", layout = MainLayout.class)
+public class BTCUSDCDashboardView extends DashboardView {
+    public static final String MARKET = "BTCUSDC";
 
-    public BTCUSDTDashboardView(String market, CandleService candleService, ConfigurationService configurationService, CandleOperation candleOperation) {
+    public BTCUSDCDashboardView(CandleService candleService, ConfigurationService configurationService, CandleOperation candleOperation) {
         super(MARKET, candleService, configurationService, candleOperation);
     }
 

@@ -39,7 +39,7 @@ public class MainLayout extends AppLayout {
     }
 
     private void createDrawer() {
-        RouterLink btcusdt = new RouterLink(BTCUSDTConfigurationView.getViewName() , BTCUSDTConfigurationView.class);
+        RouterLink btcusdt = new RouterLink(BTCUSDCConfigurationView.getViewName() , BTCUSDCConfigurationView.class);
         btcusdt.setHighlightCondition(HighlightConditions.sameLocation());
 
         RouterLink ethusdt = new RouterLink(ETHUSDTConfigurationView.getViewName() , ETHUSDTConfigurationView.class);

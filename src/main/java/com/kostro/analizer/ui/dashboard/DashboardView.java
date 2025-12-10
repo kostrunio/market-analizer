@@ -3,7 +3,7 @@ package com.kostro.analizer.ui.dashboard;
 import com.kostro.analizer.db.service.CandleService;
 import com.kostro.analizer.db.service.ConfigurationService;
 import com.kostro.analizer.db.service.QueryParams;
-import com.kostro.analizer.ui.configuration.BTCUSDTConfigurationView;
+import com.kostro.analizer.ui.configuration.BTCUSDCConfigurationView;
 import com.kostro.analizer.utils.CandleOperation;
 import com.kostro.analizer.wallet.Candle;
 import com.kostro.analizer.wallet.Resolution;
@@ -28,7 +28,7 @@ public class DashboardView extends DashboardDesign {
     private ConfigurationService configurationService;
     private CandleOperation candleOperation;
 
-    ComponentEventListener<ClickEvent<Button>> showDataClicked = e -> loadData(BTCUSDTConfigurationView.MARKET);
+    ComponentEventListener<ClickEvent<Button>> showDataClicked = e -> loadData(BTCUSDCConfigurationView.MARKET);
 
     @Autowired
     public DashboardView(String market, CandleService candleService, ConfigurationService configurationService, CandleOperation candleOperation) {

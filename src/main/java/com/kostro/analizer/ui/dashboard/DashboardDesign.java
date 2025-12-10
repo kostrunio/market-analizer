@@ -63,7 +63,7 @@ public class DashboardDesign extends VerticalLayout {
 
         Tooltip tooltip = conf.getTooltip();
         tooltip.setShared(true);
-        tooltip.setValueSuffix("USDT");
+        tooltip.setValueSuffix("USDC");
 
         chart.setTimeline(true);
         return chart;

@@ -6,12 +6,12 @@
     <packaging>jar</packaging>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <vaadin.version>14.4.2</vaadin.version>
+        <vaadin.version>24.9.6</vaadin.version>
 
         <drivers.dir>${project.basedir}/drivers</drivers.dir>
         <drivers.downloader.phase>pre-integration-test</drivers.downloader.phase>
@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.5.RELEASE</version>
+        <version>3.3.6</version>
     </parent>
 
     <repositories>
@@ -161,7 +161,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <nodeVersion>v12.14.0</nodeVersion>
+                    <nodeVersion>v22.20.0</nodeVersion>
                 </configuration>
             </plugin>
 

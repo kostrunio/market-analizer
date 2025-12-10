@@ -37,46 +37,46 @@ public class Scheduler {
     @Scheduled(cron = "*/10 * * * * *")
 //    @Scheduled(fixedDelay = 1000, initialDelay = 3000)
     public void getBTCData() {
-        runScheduler(BTCUSDTConfigurationView.MARKET);
+        runScheduler(BTCUSDCConfigurationView.MARKET);
     }
 
-    @Scheduled(cron = "*/10 * * * * *")
+//    @Scheduled(cron = "*/10 * * * * *")
 //    @Scheduled(fixedDelay = 1000, initialDelay = 3000)
     public void getXRPData() {
         runScheduler(XRPUSDTConfigurationView.MARKET);
     }
 
-    @Scheduled(cron = "*/10 * * * * *")
+//    @Scheduled(cron = "*/10 * * * * *")
 //    @Scheduled(fixedDelay = 1000, initialDelay = 3000)
     public void getETHData() {
         runScheduler(ETHUSDTConfigurationView.MARKET);
     }
 
-    @Scheduled(cron = "*/10 * * * * *")
+//    @Scheduled(cron = "*/10 * * * * *")
 //    @Scheduled(fixedDelay = 1000, initialDelay = 3000)
     public void getTWTData() {
         runScheduler(TWTUSDTConfigurationView.MARKET);
     }
 
-    @Scheduled(cron = "*/10 * * * * *")
+//    @Scheduled(cron = "*/10 * * * * *")
 //    @Scheduled(fixedDelay = 1000, initialDelay = 3000)
     public void getBNBData() {
         runScheduler(BNBUSDTConfigurationView.MARKET);
     }
 
-    @Scheduled(cron = "*/10 * * * * *")
+//    @Scheduled(cron = "*/10 * * * * *")
 //    @Scheduled(fixedDelay = 1000, initialDelay = 3000)
     public void getRENData() {
         runScheduler(RENUSDTConfigurationView.MARKET);
     }
 
-    @Scheduled(cron = "*/10 * * * * *")
+//    @Scheduled(cron = "*/10 * * * * *")
 //    @Scheduled(fixedDelay = 1000, initialDelay = 3000)
     public void get1INCHData() {
         runScheduler(ONEINCHUSDTConfigurationView.MARKET);
     }
 
-    @Scheduled(cron = "*/10 * * * * *")
+//    @Scheduled(cron = "*/10 * * * * *")
 //    @Scheduled(fixedDelay = 1000, initialDelay = 3000)
     public void getPROSData() {
         runScheduler(PROSETHConfigurationView.MARKET);
