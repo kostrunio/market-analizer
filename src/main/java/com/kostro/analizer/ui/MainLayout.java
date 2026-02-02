@@ -39,36 +39,12 @@ public class MainLayout extends AppLayout {
     }
 
     private void createDrawer() {
-        RouterLink btcusdt = new RouterLink(BTCUSDCConfigurationView.getViewName() , BTCUSDCConfigurationView.class);
-        btcusdt.setHighlightCondition(HighlightConditions.sameLocation());
+        RouterLink btcusdc = new RouterLink(BTCUSDCConfigurationView.getViewName() , BTCUSDCConfigurationView.class);
+        btcusdc.setHighlightCondition(HighlightConditions.sameLocation());
 
-        RouterLink ethusdt = new RouterLink(ETHUSDTConfigurationView.getViewName() , ETHUSDTConfigurationView.class);
-        ethusdt.setHighlightCondition(HighlightConditions.sameLocation());
+        RouterLink paxgusdt = new RouterLink(PAXGUSDTConfigurationView.getViewName() , PAXGUSDTConfigurationView.class);
+        paxgusdt.setHighlightCondition(HighlightConditions.sameLocation());
 
-        RouterLink xrpusdt = new RouterLink(XRPUSDTConfigurationView.getViewName() , XRPUSDTConfigurationView.class);
-        xrpusdt.setHighlightCondition(HighlightConditions.sameLocation());
-
-        RouterLink twtusdt = new RouterLink(TWTUSDTConfigurationView.getViewName() , TWTUSDTConfigurationView.class);
-        twtusdt.setHighlightCondition(HighlightConditions.sameLocation());
-
-        RouterLink bnbusdt = new RouterLink(BNBUSDTConfigurationView.getViewName() , BNBUSDTConfigurationView.class);
-        bnbusdt.setHighlightCondition(HighlightConditions.sameLocation());
-
-        RouterLink renusdt = new RouterLink(RENUSDTConfigurationView.getViewName() , RENUSDTConfigurationView.class);
-        renusdt.setHighlightCondition(HighlightConditions.sameLocation());
-
-        RouterLink oneinchusdt = new RouterLink(ONEINCHUSDTConfigurationView.getViewName() , ONEINCHUSDTConfigurationView.class);
-        oneinchusdt.setHighlightCondition(HighlightConditions.sameLocation());
-
-        RouterLink proseth = new RouterLink(PROSETHConfigurationView.getViewName() , PROSETHConfigurationView.class);
-        proseth.setHighlightCondition(HighlightConditions.sameLocation());
-
-        RouterLink xrpdownusdt = new RouterLink(XRPDOWNUSDTConfigurationView.getViewName() , XRPDOWNUSDTConfigurationView.class);
-        xrpdownusdt.setHighlightCondition(HighlightConditions.sameLocation());
-
-        RouterLink bnbdownusdt = new RouterLink(BNBDOWNUSDTConfigurationView.getViewName() , BNBDOWNUSDTConfigurationView.class);
-        bnbdownusdt.setHighlightCondition(HighlightConditions.sameLocation());
-
-        addToDrawer(new VerticalLayout(btcusdt, ethusdt, xrpusdt, twtusdt, bnbusdt, renusdt, oneinchusdt, proseth, xrpdownusdt, bnbdownusdt));
+        addToDrawer(new VerticalLayout(btcusdc, paxgusdt));
     }
 }

@@ -93,11 +93,11 @@ public class CandleOperation {
 
     private void sendLevel(String market, boolean checkSending, Candle candle, boolean rised) {
         if (configurationService.getLastLevel(market) > 100) {
-            log.info(String.format("%7s - %9s: %5.0f, %4.0f %4s max: %5.0f", market, "LEVEL", configurationService.getLastLevel(market), configurationService.getMaxLevel(market) - configurationService.getLastLevel(market), rised ? "to" : "from", configurationService.getMaxLevel(market)));
+            log.info(String.format("%7s - %9s: %5.0f, %4.0f %4s max: %5.0f on %7s", market, "LEVEL", configurationService.getLastLevel(market), configurationService.getMaxLevel(market) - configurationService.getLastLevel(market), rised ? "to" : "from", configurationService.getMaxLevel(market), candle.getTime()));
         } else if (configurationService.getLastLevel(market) < 0.001) {
-            log.info(String.format("%7s - %9s: %5.4f, %4.4f %4s max: %5.4f", market, "LEVEL", configurationService.getLastLevel(market), configurationService.getMaxLevel(market) - configurationService.getLastLevel(market), rised ? "to" : "from", configurationService.getMaxLevel(market)));
+            log.info(String.format("%7s - %9s: %5.4f, %4.4f %4s max: %5.4f on %7s", market, "LEVEL", configurationService.getLastLevel(market), configurationService.getMaxLevel(market) - configurationService.getLastLevel(market), rised ? "to" : "from", configurationService.getMaxLevel(market), candle.getTime()));
         } else {
-            log.info(String.format("%7s - %9s: %5.3f, %4.3f %4s max: %5.3f", market, "LEVEL", configurationService.getLastLevel(market), configurationService.getMaxLevel(market) - configurationService.getLastLevel(market), rised ? "to" : "from", configurationService.getMaxLevel(market)));
+            log.info(String.format("%7s - %9s: %5.3f, %4.3f %4s max: %5.3f on %7s", market, "LEVEL", configurationService.getLastLevel(market), configurationService.getMaxLevel(market) - configurationService.getLastLevel(market), rised ? "to" : "from", configurationService.getMaxLevel(market), candle.getTime()));
         }
         if (checkSending && configurationService.isSendLevel(market) && candle.getTime().plusMinutes(10).isAfter(LocalDateTime.now())) {
             notification.level(market, candle, configurationService.getLastLevel(market), configurationService.getMaxLevel(market), rised);

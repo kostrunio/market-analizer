@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class CandleService {
     
-    private final LocalDateTime FIRST_CANDLE = LocalDateTime.of(2025, 10, 06, 00, 00, 00);
+    private final LocalDateTime FIRST_CANDLE = LocalDateTime.of(2025, 10, 6, 0, 0, 0);
 
     private CandlesRepository repository;
 

@@ -5,16 +5,16 @@ import com.kostro.analizer.db.service.ConfigurationService;
 import com.kostro.analizer.ui.MainLayout;
 import com.vaadin.flow.router.Route;
 
-@Route(value="renusdt-configuration", layout = MainLayout.class)
-public class RENUSDTConfigurationView extends ConfigurationView {
-    public static final String MARKET = "RENUSDT";
+@Route(value="paxgusdc-configuration", layout = MainLayout.class)
+public class PAXGUSDTConfigurationView extends ConfigurationView {
+    public static final String MARKET = "PAXGUSDT";
 
-    public RENUSDTConfigurationView(ConfigurationService configurationService, CandleService candleService) {
+    public PAXGUSDTConfigurationView(ConfigurationService configurationService, CandleService candleService) {
         super(MARKET, configurationService, candleService);
     }
 
     public static String getViewName() {
-        return MARKET + " " + VIEW_NAME;
+        return MARKET + "\n" + VIEW_NAME;
     }
 
 }

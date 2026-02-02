@@ -37,7 +37,7 @@ public class ConfigurationService {
     public ConfigurationService(ConfigurationRepository configurationRepository) {
         this.configurationRepository = configurationRepository;
 
-        setInitConfiguration(BTCUSDCConfigurationView.MARKET);
+        setInitConfiguration(PAXGUSDTConfigurationView.MARKET);
     }
 
     private void setInitConfiguration(String market) {
@@ -52,14 +52,14 @@ public class ConfigurationService {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setMarket("ALL");
             entity.setName("markets");
-            entity.setValue(BTCUSDCConfigurationView.MARKET);
+            entity.setValue(PAXGUSDTConfigurationView.MARKET);
             configurationRepository.save(entity);
         }
         if (getResolution(market) == null) {
             ConfigurationEntity entity = new ConfigurationEntity();
             entity.setMarket(market);
             entity.setName("resolution");
-            entity.setValue("1 min");
+            entity.setValue("1 hour");
             configurationRepository.save(entity);
         }
 
